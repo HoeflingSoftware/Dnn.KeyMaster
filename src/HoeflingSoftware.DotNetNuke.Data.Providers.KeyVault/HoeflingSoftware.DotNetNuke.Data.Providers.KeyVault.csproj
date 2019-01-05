@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HoeflingSoftware.Web.Security.KeyVault\HoeflingSoftware.Web.Security.KeyVault.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DotNetNuke">
+      <HintPath>E:\RochesterXamarin\Website\bin\DotNetNuke.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.Instrumentation">
+      <HintPath>E:\RochesterXamarin\Website\bin\DotNetNuke.Instrumentation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationBlocks.Data">
+      <HintPath>E:\RochesterXamarin\Website\bin\Microsoft.ApplicationBlocks.Data.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

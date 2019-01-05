@@ -13,8 +13,7 @@ namespace HoeflingSoftware.Web.Security.Providers
         {
             try
             {
-                var appsettings = SecretsProvider.GetSecrets();
-                var connectionString = KeyVaultProvider.GetSecret(appsettings);
+                var connectionString = KeyVaultProvider.GetConnectionString();
 
                 config.Add(ConnectionStringName, connectionString);
 
