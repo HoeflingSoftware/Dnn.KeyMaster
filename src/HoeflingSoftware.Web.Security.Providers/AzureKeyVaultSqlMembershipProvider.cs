@@ -7,7 +7,6 @@ namespace HoeflingSoftware.Web.Security.Providers
 {
     public class AzureKeyVaultSqlMembershipProvider : SqlMembershipProvider
     {
-        private const string DefaultSecretName = "ConnectionString";
         private const string ConnectionStringName = "connectionString";
 
         public override void Initialize(string name, NameValueCollection config)
