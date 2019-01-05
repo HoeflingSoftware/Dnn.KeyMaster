@@ -1,20 +1,32 @@
-﻿namespace HoeflingSoftware.Web.Security.Models
+﻿using Newtonsoft.Json;
+
+namespace HoeflingSoftware.Web.Security.Models
 {
+    [JsonObject]
     internal class AppSettings
     {
+        [JsonProperty("KeyVaultUri")]
         public string KeyVaultUri { get; set; }
+
+        [JsonProperty("DirectoryId")]
         public string DirectoryId { get; set; }
+
+        [JsonProperty("ClientId")]
         public string ClientId { get; set; }
+
+        [JsonProperty("ClientSecret")]
         public string ClientSecret { get; set; }
+
+        [JsonProperty("SecretName")]
         public string SecretName { get; set; }
 
-        public class Keys
+        internal class Keys
         {
-            public const string KeyVaultUri = "keyVaultUri";
-            public const string DirectoryId = "directoryId";
-            public const string ClientId = "clientId";
-            public const string ClientSecret = "clientSecret";
-            public const string SecretName = "secretName";
+            public const string KeyVaultUri = "KeyVaultUri";
+            public const string DirectoryId = "DirectoryId";
+            public const string ClientId = "ClientId";
+            public const string ClientSecret = "ClientSecret";
+            public const string SecretName = "SecretName";
             public const string ConnectionString = "connectionString";
         }
     }

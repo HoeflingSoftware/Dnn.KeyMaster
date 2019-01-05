@@ -5,6 +5,7 @@ using System.Net.Http;
 
 namespace HoeflingSoftware.Web.Security.Utilities
 {
+    //https://medium.com/@anoopt/accessing-azure-key-vault-secret-through-azure-key-vault-rest-api-using-an-azure-ad-app-4d837fed747
     internal static class AzureAccessTokenProvider
     {
         private class APIs
@@ -12,7 +13,7 @@ namespace HoeflingSoftware.Web.Security.Utilities
             public const string AccessToken = "https://login.microsoftonline.com/{0}/oauth2/v2.0/token";
         }
 
-        public static string GetToken(AppSettings appsettings)
+        public static AccessTokenResponse GetToken(AppSettings appsettings)
         {
             using (var client = new HttpClient())
             {
@@ -31,10 +32,10 @@ namespace HoeflingSoftware.Web.Security.Utilities
                 {
                     var json = result.Content.ReadAsStringAsync().Result;
                     var model = JsonConvert.DeserializeObject<AccessTokenResponse>(json);
-                    return model.Token;
+                    return model;
                 }
 
-                return string.Empty;
+                return null;
             }
         }
     }

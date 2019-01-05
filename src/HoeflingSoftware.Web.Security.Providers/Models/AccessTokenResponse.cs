@@ -10,5 +10,10 @@ namespace HoeflingSoftware.Web.Security.Models
 
         [JsonProperty("access_token")]
         public string Token { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Type} {Token}";
+        }
     }
 }
