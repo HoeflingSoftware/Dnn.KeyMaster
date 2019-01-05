@@ -1,10 +1,10 @@
-﻿using HoeflingSoftware.Web.Security.Models;
+﻿using HoeflingSoftware.Web.Security.KeyVault.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 
-namespace HoeflingSoftware.Web.Security.Utilities
+namespace HoeflingSoftware.Web.Security.KeyVault.Utilities
 {
-    internal static class KeyVaultProvider
+    public static class KeyVaultProvider
     {
         private class API
         {

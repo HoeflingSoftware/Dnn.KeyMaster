@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFramework>net45</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\HoeflingSoftware.Web.Security.KeyVault\HoeflingSoftware.Web.Security.KeyVault.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,5 +14,5 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
   </ItemGroup>
-
+  
 </Project>

@@ -1,11 +1,11 @@
-﻿using HoeflingSoftware.Web.Security.Models;
+﻿using HoeflingSoftware.Web.Security.KeyVault.Models;
 using Newtonsoft.Json;
 using System.IO;
 using System.Web.Hosting;
 
-namespace HoeflingSoftware.Web.Security.Utilities
+namespace HoeflingSoftware.Web.Security.KeyVault.Utilities
 {
-    internal static class SecretsProvider
+    public static class SecretsProvider
     {
         private const string SecretsFile = "secrets.json";
 

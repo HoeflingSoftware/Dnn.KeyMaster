@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace HoeflingSoftware.Web.Security.Models
+namespace HoeflingSoftware.Web.Security.KeyVault.Models
 {
     [JsonObject]
     internal class AccessTokenResponse
