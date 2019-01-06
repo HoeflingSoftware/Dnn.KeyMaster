@@ -9,33 +9,29 @@ define(
                     $('#test-failure').hide();
 
                     $('#keymaster-test-config').click(function () {
-                        $('#test-success').show();
-                        $('#test-failure').show();
-                        // TODO - add logic to test the keys provided
+                        $('#test-success').hide();
+                        $('#test-failure').hide();
 
-                        // we need to create a Web API that calls everything internally. We already have the code that does this so it should be pretty simple.
-                        //var payload = {
-                        //    grant_type: 'client_credentials',
-                        //    client_id: $('#keymaster-client-id').val(),
-                        //    client_secret: $('#keymaster-client-secret').val(),
-                        //    scope: 'https://vault.azure.net/.default'
-                        //};
+                        var payload = {
+                            ClientId: $('#keymaster-client-id').val(),
+                            ClientSecret: $('#keymaster-client-secret').val(),
+                            SecretName: $('#keymaster-secret-name').val(),
+                            DirectoryId: $('#keymaster-directory-id').val(),
+                            KeyVaultUrl: $('#keymaster-key-vault-url').val()
+                        };
 
-                        //$.ajax({
-                        //    url: 'https://login.microsoftonline.com/' + $('#keymaster-directory-id').val() + '/oauth2/v2.0/token',
-                        //    contentType: 'application/x-www-form-urlencoded',
-                        //    type: 'POST',
-                        //    data: $.param(payload),
-                        //    beforeSend: function (request) {
-                        //        request.setRequestHeader("Access-Control-Allow-Origin", "*");
-                        //    },
-                        //    success: function (response) {
-                        //        if (response != null) {
-                        //            alert(response.token_type);
-                        //        }
-                        //        alert('response null');
-                        //    }
-                        //});
+                        $.ajax({
+                            contentType: 'application/x-www-form-urlencoded',
+                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/TestSecrets',
+                            type: 'POST',
+                            data: $.param(payload),
+                            success: function () {
+                                $('#test-success').show();
+                            },
+                            error: function () {
+                                $('#test-failure').show();
+                            }
+                        });
                     });
 
                     $('.delete').click(function () {
