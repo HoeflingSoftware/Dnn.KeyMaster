@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Dnn.KeyMaster.dnn = Dnn.KeyMaster.dnn
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoeflingSoftware.Dnn.KeyMaster.PersonaBar", "src\HoeflingSoftware.Dnn.KeyMaster.PersonaBar\HoeflingSoftware.Dnn.KeyMaster.PersonaBar.csproj", "{1F920C76-4393-45B9-8AEF-180431B085B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{2E29F889-829B-4E58-BD0D-1C1C09FB63C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E29F889-829B-4E58-BD0D-1C1C09FB63C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E29F889-829B-4E58-BD0D-1C1C09FB63C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F920C76-4393-45B9-8AEF-180431B085B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F920C76-4393-45B9-8AEF-180431B085B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F920C76-4393-45B9-8AEF-180431B085B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F920C76-4393-45B9-8AEF-180431B085B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

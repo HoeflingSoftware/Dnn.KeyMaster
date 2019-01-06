@@ -11,7 +11,8 @@ var assemblies = new []
 {
 	"HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault",
 	"HoeflingSoftware.Web.Security.KeyVault",
-	"HoeflingSoftware.Web.Security"
+	"HoeflingSoftware.Web.Security",
+	"HoeflingSoftware.Dnn.KeyMaster.PersonaBar"
 };
 
 Task("Default")
@@ -25,6 +26,7 @@ Task("Package")
 	.Does(() =>
 {
 	Information("Creating Dnn Extension Installer. . .");
+	Information("Packing Key Master Providers . . .");
 	Information("Adding Dnn.KeyMaster Assemblies . . .");
 	
 	var files = new List<string>();
@@ -39,9 +41,25 @@ Task("Package")
 	Information("Adding secrets.json File . . .");
 	// TODO - we need to add the secrets.json file scaffolding
 
-	Zip("./", "Dnn.KeyMaster_install.zip", files);
+	Information("\r\n");
+	Information("Packing Key Master Persona Bar Admin Menu . . .");
 
+		
+	var personaBarFiles = new []
+	{
+		"./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar/App_LocalResources/KeyMaster.resx",
+		"./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar/css/KeyMaster.css",
+		"./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar/scripts/KeyMaster.js",
+		"./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar/KeyMaster.html",
+	};
+
+	Zip("./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar", "Resources.zip", personaBarFiles);
+
+	files.Add("Resources.zip");
+	Zip("./", "Dnn.KeyMaster_install.zip", files);
 	Information("Dnn Extension Installer Created - Dnn.KeyMaster.zip");
+
+	DeleteFile("./Resources.zip");
 });
 
 Task("Deploy")

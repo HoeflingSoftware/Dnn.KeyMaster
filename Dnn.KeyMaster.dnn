@@ -1,7 +1,7 @@
 ﻿<dotnetnuke type="Package" version="5.0">
-  <packages>
-    <package name="Dnn.KeyMaster" type="Provider" version="0.0.0">
-      <friendlyName>Dnn Key Master</friendlyName>
+  <packages>    
+    <package name="Dnn.KeyMaster" type="PersonaBar" version="00.00.00">
+      <friendlyName>Dnn.KeyMaster</friendlyName>
       <description />
       <iconFile />
       <owner>
@@ -12,26 +12,46 @@
       </owner>
       <license />
       <releaseNotes />
+      <azureCompatible>true</azureCompatible>
       <components>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>DesktopModules/admin/Dnn.PersonaBar/Modules/KeyMaster</basePath>
+            <resourceFile>
+              <name>Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
         <component type="Assembly">
           <assemblies>
             <assembly>
-              <name>bin/HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault.dll</name>
+              <name>HoeflingSoftware.Dnn.KeyMaster.PersonaBar.dll</name>
+              <path>bin</path>
             </assembly>
             <assembly>
-              <name>bin/HoeflingSoftware.Web.Security.KeyVault.dll</name>
+              <name>HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault.dll</name>
+              <path>bin</path>
             </assembly>
             <assembly>
-              <name>bin/HoeflingSoftware.Web.Security.dll</name>
+              <name>HoeflingSoftware.Web.Security.KeyVault.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>HoeflingSoftware.Web.Security.dll</name>
+              <path>bin</path>
             </assembly>
           </assemblies>
         </component>
-        <component type="File">
-          <files>
-            <file>
-              <name>secrets.json</name>
-            </file>
-          </files>
+        <component type="PersonaBarMenu">
+          <menu>
+            <identifier>KeyMaster</identifier>
+            <moduleName>KeyMaster</moduleName>
+            <resourceKey>nav_KeyMaster</resourceKey>
+            <path>KeyMaster</path>
+            <mobileSupport>true</mobileSupport>
+            <parent>Settings</parent>
+            <order>2</order>
+          </menu>
         </component>
       </components>
     </package>
