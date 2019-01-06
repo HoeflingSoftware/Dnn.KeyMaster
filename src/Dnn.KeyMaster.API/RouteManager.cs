@@ -6,7 +6,7 @@ namespace Dnn.KeyMaster.API
     {
         public void RegisterRoutes(IMapRoute mapRouteManager)
         {
-            mapRouteManager.MapHttpRoute("Dnn.KeyMaster.API", "default", "{controller}/{action}", new[] { "Dnn.KeyMaster.API.Controllers" });
+            mapRouteManager.MapHttpRoute("Admin/Dnn.PersonaBar/Modules/KeyMaster", "default", "{controller}/{action}", new[] { "Dnn.KeyMaster.API.Controllers" });
         }
     }
 }
