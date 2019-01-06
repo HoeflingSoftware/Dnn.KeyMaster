@@ -11,6 +11,7 @@ define(
                     $('#keymaster-test-config').click(function () {
                         $('#test-success').hide();
                         $('#test-failure').hide();
+                        $('#test-in-progess').show();
 
                         var payload = {
                             ClientId: $('#keymaster-client-id').val(),
@@ -26,9 +27,11 @@ define(
                             type: 'POST',
                             data: $.param(payload),
                             success: function () {
+                                $('#test-in-progess').hide();
                                 $('#test-success').show();
                             },
                             error: function () {
+                                $('#test-in-progess').hide();
                                 $('#test-failure').show();
                             }
                         });

@@ -15,35 +15,35 @@
         <div class="field">
             <label class="label">Client Id</label>
             <div class="control">
-                <input id="keymaster-client-id" class="input" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+                <input id="keymaster-client-id" class="input" autocomplete="false" type="text" placeholder="00000000-0000-0000-0000-000000000000">
             </div>
         </div>
 
         <div class="field">
             <label class="label">Client Secret</label>
             <div class="control">
-                <input id="keymaster-client-secret" class="input" type="text" placeholder="**************">
+                <input id="keymaster-client-secret" class="input" autocomplete="false" type="password" placeholder="**************">
             </div>
         </div>
 
         <div class="field">
             <label class="label">Secret Name</label>
             <div class="control">
-                <input id="keymaster-secret-name" class="input" type="text" placeholder="ConnectionStringName">
+                <input id="keymaster-secret-name" class="input" autocomplete="false" type="password" placeholder="ConnectionStringName">
             </div>
         </div>
 
         <div class="field">
             <label class="label">Directory Id (Tenant Id)</label>
             <div class="control">
-                <input id="keymaster-directory-id" class="input" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+                <input id="keymaster-directory-id" class="input" autocomplete="false" type="text" placeholder="00000000-0000-0000-0000-000000000000">
             </div>
         </div>
 
         <div class="field">
             <label class="label">Key Vault Url</label>
             <div class="control">
-                <input id="keymaster-key-vault-url" class="input" type="text" placeholder="https://******.vault.azure.net">
+                <input id="keymaster-key-vault-url" class="input" autocomplete="false" type="text" placeholder="https://******.vault.azure.net">
             </div>
         </div>
         <div class="field is-grouped">
@@ -54,6 +54,10 @@
             </div>
         </div>
         <div>
+            <div id="test-in-progess" hidden="hidden" class="notification is-info">
+                <button class="delete"></button>
+                Testing Configuration . . .
+            </div>
             <div id="test-success" hidden="hidden" class="notification is-success">
                 <button class="delete"></button>
                 Configuration works! You are all set to turn Key Master On
