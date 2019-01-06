@@ -3,11 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoeflingSoftware.Web.Security", "src\HoeflingSoftware.Web.Security.Providers\HoeflingSoftware.Web.Security.csproj", "{873E4F3E-637F-4A00-80D4-95054761E20E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoeflingSoftware.Web.Security", "src\HoeflingSoftware.Web.Security.Providers\HoeflingSoftware.Web.Security.csproj", "{873E4F3E-637F-4A00-80D4-95054761E20E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoeflingSoftware.Web.Security.KeyVault", "src\HoeflingSoftware.Web.Security.KeyVault\HoeflingSoftware.Web.Security.KeyVault.csproj", "{DE652728-0217-4BED-B3E0-FFD647861416}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoeflingSoftware.Web.Security.KeyVault", "src\HoeflingSoftware.Web.Security.KeyVault\HoeflingSoftware.Web.Security.KeyVault.csproj", "{DE652728-0217-4BED-B3E0-FFD647861416}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault", "src\HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault\HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault.csproj", "{2E29F889-829B-4E58-BD0D-1C1C09FB63C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault", "src\HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault\HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault.csproj", "{2E29F889-829B-4E58-BD0D-1C1C09FB63C4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{228041C4-8B36-43C0-B571-E63BE3C90F94}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		build.cake = build.cake
+		build.ps1 = build.ps1
+		cake.config = cake.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
