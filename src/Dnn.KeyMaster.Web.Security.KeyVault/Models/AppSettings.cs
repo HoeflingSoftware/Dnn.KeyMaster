@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace HoeflingSoftware.Web.Security.KeyVault.Models
+namespace Dnn.KeyMaster.Web.Security.KeyVault.Models
 {
     [JsonObject]
     public class AppSettings

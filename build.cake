@@ -3,16 +3,16 @@ var configuration = "Release";
 var buildVerbosity = Verbosity.Minimal;
 var outputDirectory = "bin";
 var outputLocation = $"../../{outputDirectory}";
-var solution = "Dnn.AzureKeyVault.sln";
+var solution = "Dnn.KeyMaster.sln";
 var projectDirectory = MakeAbsolute(Directory("./"));
 
 var websiteLocation = "E:/RochesterXamarin/Website";
 var assemblies = new []
 {
-	"HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault",
-	"HoeflingSoftware.Web.Security.KeyVault",
-	"HoeflingSoftware.Web.Security",
-	"HoeflingSoftware.Dnn.KeyMaster.PersonaBar"
+	"Dnn.KeyMaster.Data.Providers.KeyVault",
+	"Dnn.KeyMaster.Web.Security.KeyVault",
+	"Dnn.KeyMaster.Web.Security",
+	"Dnn.KeyMaster.PersonaBar"
 };
 
 Task("Default")
@@ -47,13 +47,13 @@ Task("Package")
 		
 	var personaBarFiles = new []
 	{
-		"./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar/App_LocalResources/KeyMaster.resx",
-		"./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar/css/KeyMaster.css",
-		"./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar/scripts/KeyMaster.js",
-		"./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar/KeyMaster.html",
+		"./src/Dnn.KeyMaster.PersonaBar/App_LocalResources/KeyMaster.resx",
+		"./src/Dnn.KeyMaster.PersonaBar/css/KeyMaster.css",
+		"./src/Dnn.KeyMaster.PersonaBar/scripts/KeyMaster.js",
+		"./src/Dnn.KeyMaster.PersonaBar/KeyMaster.html",
 	};
 
-	Zip("./src/HoeflingSoftware.Dnn.KeyMaster.PersonaBar", "Resources.zip", personaBarFiles);
+	Zip("./src/Dnn.KeyMaster.PersonaBar", "Resources.zip", personaBarFiles);
 
 	files.Add("Resources.zip");
 	Zip("./", "Dnn.KeyMaster_install.zip", files);

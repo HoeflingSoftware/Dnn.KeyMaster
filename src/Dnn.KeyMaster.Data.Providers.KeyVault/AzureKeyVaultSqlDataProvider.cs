@@ -14,12 +14,12 @@ using DotNetNuke.Entities.Users;
 using DotNetNuke.Instrumentation;
 using DotNetNuke.Services.Log.EventLog;
 
-using HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault.Utilities;
-using HoeflingSoftware.Web.Security.KeyVault.Utilities;
+using Dnn.KeyMaster.Data.Providers.KeyVault.Utilities;
+using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
 
 using Microsoft.ApplicationBlocks.Data;
 
-namespace HoeflingSoftware.DotNetNuke.Data.Providers
+namespace Dnn.KeyMaster.Data.Providers
 {
     public sealed class AzureKeyVaultSqlDataProvider : DataProvider
     {

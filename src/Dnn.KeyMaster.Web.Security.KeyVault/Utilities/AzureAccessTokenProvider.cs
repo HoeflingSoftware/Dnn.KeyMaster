@@ -1,9 +1,9 @@
-﻿using HoeflingSoftware.Web.Security.KeyVault.Models;
+﻿using Dnn.KeyMaster.Web.Security.KeyVault.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 
-namespace HoeflingSoftware.Web.Security.KeyVault.Utilities
+namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
 {
     //https://medium.com/@anoopt/accessing-azure-key-vault-secret-through-azure-key-vault-rest-api-using-an-azure-ad-app-4d837fed747
     internal static class AzureAccessTokenProvider

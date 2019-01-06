@@ -1,8 +1,8 @@
-﻿using HoeflingSoftware.Web.Security.KeyVault.Models;
+﻿using Dnn.KeyMaster.Web.Security.KeyVault.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 
-namespace HoeflingSoftware.Web.Security.KeyVault.Utilities
+namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
 {
     public static class KeyVaultProvider
     {

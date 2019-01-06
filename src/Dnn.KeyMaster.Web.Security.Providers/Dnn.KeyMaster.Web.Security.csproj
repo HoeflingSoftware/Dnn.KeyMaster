@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HoeflingSoftware.Web.Security.KeyVault\HoeflingSoftware.Web.Security.KeyVault.csproj" />
+    <ProjectReference Include="..\Dnn.KeyMaster.Web.Security.KeyVault\Dnn.KeyMaster.Web.Security.KeyVault.csproj" />
   </ItemGroup>
 
   <ItemGroup>

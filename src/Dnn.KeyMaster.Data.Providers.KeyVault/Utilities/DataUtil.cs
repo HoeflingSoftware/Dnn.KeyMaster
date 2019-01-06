@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 
-namespace HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault.Utilities
+namespace Dnn.KeyMaster.Data.Providers.KeyVault.Utilities
 {
     internal static class DataUtil
     {

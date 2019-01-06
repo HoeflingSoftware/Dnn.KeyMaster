@@ -1,9 +1,9 @@
-﻿using HoeflingSoftware.Web.Security.KeyVault.Utilities;
+﻿using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
 using System;
 using System.Collections.Specialized;
 using System.Web.Security;
 
-namespace HoeflingSoftware.Web.Security.Providers
+namespace Dnn.KeyMaster.Web.Security.Providers
 {
     public class AzureKeyVaultSqlMembershipProvider : SqlMembershipProvider
     {
