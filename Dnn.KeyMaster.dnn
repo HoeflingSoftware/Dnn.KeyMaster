@@ -1,0 +1,39 @@
+﻿<dotnetnuke type="Package" version="5.0">
+  <packages>
+    <package name="Dnn.KeyMaster" type="Provider" version="0.0.0">
+      <friendlyName>Dnn Key Master</friendlyName>
+      <description />
+      <iconFile />
+      <owner>
+        <name>Andrew Hoefling</name>
+        <organization>Hoefling Software, LLC</organization>
+        <url>https://www.hoeflingsoftware.com/Dnn-Key-Master</url>
+        <email>andrew@hoeflingsoftware.com</email>
+      </owner>
+      <license />
+      <releaseNotes />
+      <components>
+        <component type="Assembly">
+          <assemblies>
+            <assembly>
+              <name>bin/HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault.dll</name>
+            </assembly>
+            <assembly>
+              <name>bin/HoeflingSoftware.Web.Security.KeyVault.dll</name>
+            </assembly>
+            <assembly>
+              <name>bin/HoeflingSoftware.Web.Security.dll</name>
+            </assembly>
+          </assemblies>
+        </component>
+        <component type="File">
+          <files>
+            <file>
+              <name>secrets.json</name>
+            </file>
+          </files>
+        </component>
+      </components>
+    </package>
+  </packages>
+</dotnetnuke>
