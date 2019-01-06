@@ -45,7 +45,7 @@ namespace Dnn.KeyMaster.API.Controllers
             }
             catch(Exception ex)
             {
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
         }
     }
