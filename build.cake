@@ -20,6 +20,30 @@ Task("Default")
 Task("Build Only")
 	.IsDependentOn("Build");
 
+Task("Package")
+	.IsDependentOn("Build")
+	.Does(() =>
+{
+	Information("Creating Dnn Extension Installer. . .");
+	Information("Adding Dnn.KeyMaster Assemblies . . .");
+	
+	var files = new List<string>();
+	foreach (var assembly in assemblies)
+	{
+		files.Add($"./{outputDirectory}/{assembly}.dll");
+	}
+
+	Information("Adding Dnn Manifest File . . .");
+	files.Add("Dnn.KeyMaster.dnn");
+
+	Information("Adding secrets.json File . . .");
+	// TODO - we need to add the secrets.json file scaffolding
+
+	Zip("./", "Dnn.KeyMaster_install.zip", files);
+
+	Information("Dnn Extension Installer Created - Dnn.KeyMaster.zip");
+});
+
 Task("Deploy")
 	.IsDependentOn("Build")
 	.IsDependentOn("Deploy DLLs");
