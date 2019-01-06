@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnn.KeyMaster.Web.Security"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnn.KeyMaster.Data.Providers.KeyVault", "src\Dnn.KeyMaster.Data.Providers.KeyVault\Dnn.KeyMaster.Data.Providers.KeyVault.csproj", "{CD66A048-7648-4EFF-BF47-25A44A48562C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dnn.KeyMaster.API", "src\Dnn.KeyMaster.API\Dnn.KeyMaster.API.csproj", "{376F9D05-6DE2-46B9-89DD-4A5C807D68E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{CD66A048-7648-4EFF-BF47-25A44A48562C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD66A048-7648-4EFF-BF47-25A44A48562C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD66A048-7648-4EFF-BF47-25A44A48562C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{376F9D05-6DE2-46B9-89DD-4A5C807D68E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{376F9D05-6DE2-46B9-89DD-4A5C807D68E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{376F9D05-6DE2-46B9-89DD-4A5C807D68E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{376F9D05-6DE2-46B9-89DD-4A5C807D68E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

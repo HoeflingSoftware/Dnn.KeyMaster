@@ -11,9 +11,14 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             public const string GetSecret = "{0}/secrets/{1}?api-version=7.0";
         }
         
-        public static string GetConnectionString()
+        public static string GetConnectionString(AppSettings appsettings = null)
         {
-            var appsettings = SecretsProvider.GetSecrets();
+            if (appsettings == null)
+            {
+                // TODO - Discuss if the configuration loading code should be pulled out or not
+                appsettings = SecretsProvider.GetSecrets();
+            }
+
             var token = AzureAccessTokenProvider.GetToken(appsettings);
             using (var client = new HttpClient())
             {
