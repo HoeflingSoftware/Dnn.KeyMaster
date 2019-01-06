@@ -6,7 +6,7 @@ var outputLocation = $"../../{outputDirectory}";
 var solution = "Dnn.AzureKeyVault.sln";
 var projectDirectory = MakeAbsolute(Directory("./"));
 
-var websiteLocation = "";
+var websiteLocation = "E:/RochesterXamarin/Website";
 var assemblies = new []
 {
 	"HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault",
@@ -39,6 +39,8 @@ Task("Clean").Does(() =>
 {
 	CleanDirectories("./src/**/bin");
 	CleanDirectories("./src/**/obj");
+	Information("Cleaned bin directory for each project");
+	Information("Cleaned obj directory for each project");
 
 	if (DirectoryExists(outputDirectory))
 	{
@@ -47,6 +49,8 @@ Task("Clean").Does(() =>
 			Recursive = true,
 			Force = true
 		});
+		
+		Information("Deleted root bin directory");
 	}	
 });
 
