@@ -1,5 +1,5 @@
 ﻿<div class="dnn-persona-bar-page-header">
-    <h3>Dnn Key Master Configuration</h3>
+    <h3>Key Master Configuration</h3>
     <div class="children">
         <button class="dnn-ui-common-button large" role="secondary">Create Secrets File</button>
         <button class="dnn-ui-common-button large" role="secondary">Stop Key Master</button>
@@ -7,49 +7,61 @@
     </div>
 </div>
 <div class="dnn-grid-cell dnn-persona-bar-page-body">
-    <h2 style="color:red;font-weight:bold;">ALPHA BUILD - DO NOT USE IN PRODUCTION</h2>
-    <p>The Dnn Key Master is a security utility for using Azure KeyVault to store your Dnn's connection string instead of storing that information in plain text in your web.config file.</p>
-    <p><span style="color:red">Take a backup of your web.config, if something goes wrong use your backup.</span> The Dnn Key Master will be making changes to your web.config when everything is configured correctly.</p>
+    <div class="keymaster-container">
+        <h2 style="color:red;font-weight:bold;">ALPHA BUILD - DO NOT USE IN PRODUCTION</h2>
+        <p>The Dnn Key Master is a security utility for using Azure KeyVault to store your Dnn's connection string instead of storing that information in plain text in your web.config file.</p>
+        <p><span style="color:red">Take a backup of your web.config, if something goes wrong use your backup.</span> The Dnn Key Master will be making changes to your web.config when everything is configured correctly.</p>
 
-    <div class="field">
-        <label class="label">Client Id</label>
-        <div class="control">
-            <input class="input" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+        <div class="field">
+            <label class="label">Client Id</label>
+            <div class="control">
+                <input id="keymaster-client-id" class="input" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+            </div>
         </div>
-    </div>
 
-    <div class="field">
-        <label class="label">Client Secret</label>
-        <div class="control">
-            <input class="input" type="text" placeholder="**************">
+        <div class="field">
+            <label class="label">Client Secret</label>
+            <div class="control">
+                <input id="keymaster-client-secret" class="input" type="text" placeholder="**************">
+            </div>
         </div>
-    </div>
 
-    <div class="field">
-        <label class="label">Secret Name</label>
-        <div class="control">
-            <input class="input" type="text" placeholder="ConnectionStringName">
+        <div class="field">
+            <label class="label">Secret Name</label>
+            <div class="control">
+                <input class="input" type="text" placeholder="ConnectionStringName">
+            </div>
         </div>
-    </div>
 
-    <div class="field">
-        <label class="label">Directory Id (Tenant Id)</label>
-        <div class="control">
-            <input class="input" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+        <div class="field">
+            <label class="label">Directory Id (Tenant Id)</label>
+            <div class="control">
+                <input id="keymaster-directory-id" class="input" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+            </div>
         </div>
-    </div>
 
-    <div class="field">
-        <label class="label">Key Vault Url</label>
-        <div class="control">
-            <input class="input" type="text" placeholder="https://******.vault.azure.net">
+        <div class="field">
+            <label class="label">Key Vault Url</label>
+            <div class="control">
+                <input class="input" type="text" placeholder="https://******.vault.azure.net">
+            </div>
         </div>
-    </div>
-
-    <div class="field is-grouped">
-        <div class="control">
-            <button class="button is-link">Check Configuration</button>
-            <!-- We should test this all client side -->
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link" id="keymaster-save-config">Save</button>
+                <button class="button is-text" id="keymaster-test-config">Test</button>
+                <!-- We should test this all client side -->
+            </div>
+        </div>
+        <div>
+            <div id="test-success" hidden="hidden" class="notification is-success">
+                <button class="delete"></button>
+                Configuration works! You are all set to turn Key Master On
+            </div>
+            <div id="test-failure" hidden="hidden" class="notification is-danger">
+                <button class="delete"></button>
+                <strong>FAILURE!!</strong> The configuration specified did not work, please check the keys and try again. <strong>Attempt to turn on Key Master will crash your site.</strong>
+            </div>
         </div>
     </div>
 </div>
