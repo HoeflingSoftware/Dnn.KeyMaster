@@ -329,4 +329,9 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
+# Exclude cake tools files
 [Tt]ools/
+
+# Exclude Dnn Installer
+*_install.zip
+
