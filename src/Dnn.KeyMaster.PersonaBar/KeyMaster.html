@@ -1,3 +1,54 @@
-﻿<div>
-    Hello from the Key Master
+﻿<div class="dnn-persona-bar-page-header">
+    <h3>Dnn Key Master Configuration</h3>
+    <div class="children">
+        <button class="dnn-ui-common-button large" role="secondary">Create Secrets File</button>
+        <button class="dnn-ui-common-button large" role="secondary">Stop Key Master</button>
+        <button class="dnn-ui-common-button large" role="primary">Start Key Master</button>
+    </div>
+</div>
+<div class="dnn-grid-cell dnn-persona-bar-page-body">
+    <h2 style="color:red;font-weight:bold;">ALPHA BUILD - DO NOT USE IN PRODUCTION</h2>
+    <p>The Dnn Key Master is a security utility for using Azure KeyVault to store your Dnn's connection string instead of storing that information in plain text in your web.config file.</p>
+    <p><span style="color:red">Take a backup of your web.config, if something goes wrong use your backup.</span> The Dnn Key Master will be making changes to your web.config when everything is configured correctly.</p>
+
+    <div class="field">
+        <label class="label">Client Id</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Client Secret</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="**************">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Secret Name</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="ConnectionStringName">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Directory Id (Tenant Id)</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Key Vault Url</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="https://******.vault.azure.net">
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-link">Check Configuration</button>
+        </div>
+    </div>
 </div>
