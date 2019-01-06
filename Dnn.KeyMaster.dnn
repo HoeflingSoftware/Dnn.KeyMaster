@@ -25,19 +25,19 @@
         <component type="Assembly">
           <assemblies>
             <assembly>
-              <name>HoeflingSoftware.Dnn.KeyMaster.PersonaBar.dll</name>
+              <name>Dnn.KeyMaster.PersonaBar.dll</name>
               <path>bin</path>
             </assembly>
             <assembly>
-              <name>HoeflingSoftware.DotNetNuke.Data.Providers.KeyVault.dll</name>
+              <name>Dnn.KeyMaster.Data.Providers.KeyVault.dll</name>
               <path>bin</path>
             </assembly>
             <assembly>
-              <name>HoeflingSoftware.Web.Security.KeyVault.dll</name>
+              <name>Dnn.KeyMaster.Web.Security.KeyVault.dll</name>
               <path>bin</path>
             </assembly>
             <assembly>
-              <name>HoeflingSoftware.Web.Security.dll</name>
+              <name>Dnn.KeyMaster.Web.Security.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>
