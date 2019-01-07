@@ -19,13 +19,13 @@ jobs:
     name: Hosted VS2017
 
   steps:
-  - powershell: |
-      $tag = (git tag -l --points-at HEAD)
-      if ($tag -ne '') {
-        Write-Host "##vso[build.tag]$($tag)"
-      }
-    workingDirectory: $(System.DefaultWorkingDirectory)
-    displayName: Get Build Tag
+ # - powershell: |
+ #     $tag = (git tag -l --points-at HEAD)
+ #     if ($tag -ne '') {
+ #       Write-Host "##vso[build.tag]$($tag)"
+ #     }
+ #   workingDirectory: $(System.DefaultWorkingDirectory)
+ #   displayName: Get Build Tag
 
   - powershell: Write-Host "#vso[build.version]$(major).$(minor).$(patch).$(revision)"
     displayName: Get Version Number
