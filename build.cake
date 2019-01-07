@@ -96,7 +96,7 @@ Task("Build")
 	});
 });
 
-Task("Deploy to DNN")
+Task("Deploy")
 	.IsDependentOn("Change Configuration to Debug")
 	.IsDependentOn("Build")
 	.Does(() =>
