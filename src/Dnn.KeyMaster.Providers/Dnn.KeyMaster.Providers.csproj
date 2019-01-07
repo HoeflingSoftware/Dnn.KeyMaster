@@ -19,13 +19,13 @@
 
   <ItemGroup>
     <Reference Include="DotNetNuke">
-      <HintPath>E:\AzureKeyVault\Website\bin\DotNetNuke.dll</HintPath>
+      <HintPath>..\..\lib\DotNetNuke.dll</HintPath>
     </Reference>
     <Reference Include="DotNetNuke.Instrumentation">
-      <HintPath>E:\AzureKeyVault\Website\bin\DotNetNuke.Instrumentation.dll</HintPath>
+      <HintPath>..\..\lib\DotNetNuke.Instrumentation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ApplicationBlocks.Data">
-      <HintPath>E:\AzureKeyVault\Website\bin\Microsoft.ApplicationBlocks.Data.dll</HintPath>
+      <HintPath>..\..\lib\Microsoft.ApplicationBlocks.Data.dll</HintPath>
     </Reference>
   </ItemGroup>
 
