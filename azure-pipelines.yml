@@ -22,12 +22,12 @@ jobs:
   - powershell: |
       $tag = (git tag -l --points-at HEAD)
       if ($tag -ne '') {
-        Write-Host "##vso[Tag]$tag"
+        Write-Host "##vso[Tag]$($tag)"
       }
     workingDirectory: $(System.DefaultWorkingDirectory)
     displayName: Get Build Tag
 
-  - powershell: Write-Host "##vso[Version]$(major).$(minor).$(patch).$(revision)"
+  - powershell: Write-Host "##vso[Version]$($(major).$(minor).$(patch).$(revision))"
     displayName: Get Build Number
 
 - job: Build
