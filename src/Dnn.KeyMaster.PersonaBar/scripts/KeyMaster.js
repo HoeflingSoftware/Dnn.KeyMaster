@@ -52,6 +52,16 @@ define(
                     });
 
                     $('#keymaster-stop').click(function () {
+                        $.ajax({
+                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/DisableKeyMaster',
+                            type: 'POST',
+                            success: function () {
+                                location.reload();
+                            },
+                            error: function () {
+                                alert("UNABLE TO STOP KEY MASTER");
+                            }
+                        });
                     });
 
                     $('#keymaster-save-config').click(function () {

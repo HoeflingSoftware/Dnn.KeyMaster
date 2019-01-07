@@ -104,12 +104,53 @@ namespace Dnn.KeyMaster.API.Controllers
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
-        //[HttpPost]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        //[AllowAnonymous]
-        //public HttpResponseMessage DisableKeyMaster()
-        //{
-        //}
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [AllowAnonymous]
+        public HttpResponseMessage DisableKeyMaster()
+        {
+            var json = File.ReadAllText(_secretsFile);
+            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
+
+            var connectionString = GetConnectionString(secrets);
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+
+            var xml = XDocument.Load(_webconfigFile);
+            var doc = xml.Element("configuration");
+
+            doc.Add(XElement.Parse($"<connectionStrings><add name=\"SiteSqlServer\" connectionString=\"{connectionString}\" providerName=\"System.Data.SqlClient\" /></connectionStrings>"));
+
+            var dnnDataProviders = doc.Element("dotnetnuke")
+                ?.Elements("data")
+                .Where(x => x.Attribute("defaultProvider").Value == "SqlDataProvider")
+                .FirstOrDefault()
+                ?.Element("providers");
+
+            if (dnnDataProviders != null)
+            {
+                dnnDataProviders.Elements().Remove();
+                dnnDataProviders.Add(XElement.Parse("<clear />"));
+                dnnDataProviders.Add(XElement.Parse("<add name=\"SqlDataProvider\" type=\"DotNetNuke.Data.SqlDataProvider, DotNetNuke\" connectionStringName=\"SiteSqlServer\" upgradeConnectionString=\"\" providerPath=\"~\\Providers\\DataProviders\\SqlDataProvider\\\" objectQualifier=\"\" databaseOwner=\"dbo\" />"));
+            }
+
+            var membershipProviders = doc.Element("system.web")
+                ?.Element("membership")
+                ?.Element("providers");
+
+            if (membershipProviders != null)
+            {
+                membershipProviders.Elements().Remove();
+                membershipProviders.Add(XElement.Parse("<clear />"));
+                membershipProviders.Add(XElement.Parse("<add name=\"AspNetSqlMembershipProvider\" type=\"System.Web.Security.SqlMembershipProvider\" connectionStringName=\"SiteSqlServer\" enablePasswordRetrieval=\"false\" enablePasswordReset=\"true\" requiresQuestionAndAnswer=\"false\" minRequiredPasswordLength=\"7\" minRequiredNonalphanumericCharacters=\"0\" requiresUniqueEmail=\"false\" passwordFormat=\"Hashed\" applicationName=\"DotNetNuke\" description=\"Stores and retrieves membership data from the local Microsoft SQL Server database\" />"));
+            }
+
+            xml.Save(_webconfigFile);
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
@@ -182,6 +223,13 @@ namespace Dnn.KeyMaster.API.Controllers
 
         private bool ValidateSecrets(Secrets secrets)
         {
+            var connectionString = GetConnectionString(secrets);
+
+            return !string.IsNullOrWhiteSpace(connectionString);
+        }
+
+        private string GetConnectionString(Secrets secrets)
+        {
             var appsettings = new AppSettings
             {
                 ClientId = secrets.ClientId,
@@ -191,9 +239,7 @@ namespace Dnn.KeyMaster.API.Controllers
                 KeyVaultUrl = secrets.KeyVaultUrl
             };
 
-            var connectionString = KeyVaultProvider.GetConnectionString(appsettings);
-
-            return !string.IsNullOrWhiteSpace(connectionString);
+            return KeyVaultProvider.GetConnectionString(appsettings);
         }
     }
 }
