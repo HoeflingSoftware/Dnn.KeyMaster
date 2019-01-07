@@ -8,14 +8,14 @@ A Dnn configuration extension to secure your website with Azure Key Vault by rem
 
 ## Setup
 
-* Get the latest [installer](https://github.com/HoeflingSoftware/Dnn.KeyMaster/releases)
-* Install extension into your Dnn website
-* Create Azure Key Vault and add full connection string as a secret
-* Log into your Dnn website, log in as host and navigate to: Settings -> Key Master
-* Enter configuration secrets
-  * Click Test button to verify connection
-  * Click Save to create secrets file on your website
-  * Click Start Key Master to update the web.config and start using Key Master
+1. Get the latest [installer](https://github.com/HoeflingSoftware/Dnn.KeyMaster/releases)
+2. Install extension into your Dnn website
+3. Create Azure Key Vault and add full connection string as a secret
+4. Log into your Dnn website, log in as host and navigate to: Settings -> Key Master
+5. Enter configuration secrets
+  a. Click Test button to verify connection
+  b. Click Save to create secrets file on your website
+  c. Click Start Key Master to update the web.config and start using Key Master
 
 
 ### Platform Support
