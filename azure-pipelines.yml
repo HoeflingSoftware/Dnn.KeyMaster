@@ -1,0 +1,22 @@
+trigger:
+  branches:
+    include:
+      - master
+      
+variables:
+  major: 0
+  minor: 0
+  patch: 0
+  revision: $[counter('versioncounter', 0)]
+  system.debug: "true"
+
+jobs:
+- job: Build
+  displayName: Build and Create Installer
+  pool:
+    name: Hosted VS2017
+    demands:
+    - MSBuild
+
+  steps:
+  - powershell: 'build.ps1 -Target Package -ScriptArgs "-package_version=$(major).$(minor).$(patch).$(revision)"; exit $LASTEXITCODE'
