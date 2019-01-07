@@ -12,6 +12,21 @@ define(
                     $('#save-success').hide();
 
                     $.ajax({
+                        url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/IsKeyMasterOn',
+                        type: 'GET',
+                        success: function () {
+                            $('#keymaster-live').show();
+                            $('#keymaster-start').hide();
+                            $('#keymaster-stop').show();
+                        },
+                        error: function () {
+                            $('#keymaster-live').hide();
+                            $('#keymaster-start').show();
+                            $('#keymaster-stop').hide();
+                        }
+                    });
+
+                    $.ajax({
                         url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/GetSecrets',
                         type: 'GET',
                         success: function (response) {
@@ -21,6 +36,22 @@ define(
                             $('#keymaster-directory-id').val(response.DirectoryId);
                             $('#keymaster-key-vault-url').val(response.KeyVaultUrl);
                         }
+                    });
+
+                    $('#keymaster-start').click(function () {
+                        $.ajax({
+                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/EnableKeyMaster',
+                            type: 'POST',
+                            success: function () {
+                                location.reload();
+                            },
+                            error: function () {
+                                alert("UNABLE TO START KEY MASTER");
+                            }
+                        });
+                    });
+
+                    $('#keymaster-stop').click(function () {
                     });
 
                     $('#keymaster-save-config').click(function () {

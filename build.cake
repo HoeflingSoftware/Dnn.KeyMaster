@@ -9,9 +9,9 @@ var projectDirectory = MakeAbsolute(Directory("./"));
 var websiteLocation = "E:/RochesterXamarin/Website";
 var assemblies = new []
 {
-	"Dnn.KeyMaster.Data.Providers.KeyVault",
+	"Dnn.KeyMaster.Providers",
+	"Dnn.KeyMaster.API",
 	"Dnn.KeyMaster.Web.Security.KeyVault",
-	"Dnn.KeyMaster.Web.Security",
 	"Dnn.KeyMaster.PersonaBar"
 };
 

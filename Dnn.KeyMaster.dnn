@@ -25,19 +25,19 @@
         <component type="Assembly">
           <assemblies>
             <assembly>
+              <name>Dnn.KeyMaster.API.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
               <name>Dnn.KeyMaster.PersonaBar.dll</name>
               <path>bin</path>
             </assembly>
             <assembly>
-              <name>Dnn.KeyMaster.Data.Providers.KeyVault.dll</name>
+              <name>Dnn.KeyMaster.Providers.dll</name>
               <path>bin</path>
             </assembly>
             <assembly>
               <name>Dnn.KeyMaster.Web.Security.KeyVault.dll</name>
-              <path>bin</path>
-            </assembly>
-            <assembly>
-              <name>Dnn.KeyMaster.Web.Security.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

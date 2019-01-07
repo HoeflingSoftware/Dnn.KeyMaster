@@ -1,12 +1,13 @@
 ﻿<div class="dnn-persona-bar-page-header">
     <h3>Key Master Configuration</h3>
     <div class="children">
-        <button class="dnn-ui-common-button large" role="secondary">Stop Key Master</button>
-        <button class="dnn-ui-common-button large" role="primary">Start Key Master</button>
+        <button id="keymaster-stop" hidden="hidden" class="dnn-ui-common-button large" role="secondary">Stop Key Master</button>
+        <button id="keymaster-start" hidden="hidden" class="dnn-ui-common-button large" role="primary">Start Key Master</button>
     </div>
 </div>
 <div class="dnn-grid-cell dnn-persona-bar-page-body">
     <div class="keymaster-container">
+        <div id="keymaster-live" style="font-size:3em; color:green; margin-bottom:1em" hidden="hidden">Key Master - Enabled</div>
         <h2 style="color:red;font-weight:bold;">ALPHA BUILD - DO NOT USE IN PRODUCTION</h2>
         <p>The Dnn Key Master is a security utility for using Azure KeyVault to store your Dnn's connection string instead of storing that information in plain text in your web.config file.</p>
         <p><span style="color:red">Take a backup of your web.config, if something goes wrong use your backup.</span> The Dnn Key Master will be making changes to your web.config when everything is configured correctly.</p>
