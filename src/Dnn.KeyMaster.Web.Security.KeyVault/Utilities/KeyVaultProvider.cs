@@ -22,7 +22,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             var token = AzureAccessTokenProvider.GetToken(appsettings);
             using (var client = new HttpClient())
             {
-                var secretVersions = string.Format(API.GetSecret, appsettings.KeyVaultUri, appsettings.SecretName);
+                var secretVersions = string.Format(API.GetSecret, appsettings.KeyVaultUrl, appsettings.SecretName);
                 client.DefaultRequestHeaders.Add("Authorization", token.ToString());
                 var response = client.GetAsync(secretVersions).Result;
                 if (response.IsSuccessStatusCode)

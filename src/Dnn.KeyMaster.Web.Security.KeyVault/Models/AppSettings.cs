@@ -5,8 +5,8 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Models
     [JsonObject]
     public class AppSettings
     {
-        [JsonProperty("KeyVaultUri")]
-        public string KeyVaultUri { get; set; }
+        [JsonProperty("KeyVaultUrl")]
+        public string KeyVaultUrl { get; set; }
 
         [JsonProperty("DirectoryId")]
         public string DirectoryId { get; set; }

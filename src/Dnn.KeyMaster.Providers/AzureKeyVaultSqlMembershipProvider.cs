@@ -3,7 +3,7 @@ using System;
 using System.Collections.Specialized;
 using System.Web.Security;
 
-namespace Dnn.KeyMaster.Web.Security.Providers
+namespace Dnn.KeyMaster.Providers
 {
     public class AzureKeyVaultSqlMembershipProvider : SqlMembershipProvider
     {
