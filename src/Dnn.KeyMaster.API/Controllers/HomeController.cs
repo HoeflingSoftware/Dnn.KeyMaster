@@ -6,29 +6,97 @@ using DotNetNuke.Web.Api;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Dnn.KeyMaster.API.Controllers
 {
     [AllowAnonymous]
     public class HomeController : DnnApiController
     {
+        private string _secretsFile = $"{HostingEnvironment.MapPath("~/")}{SecretsProvider.SecretsFile}";
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [AllowAnonymous]
+        public HttpResponseMessage EnableKeyMaster()
+        {
+            if (!File.Exists(_secretsFile))
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            var json = File.ReadAllText(_secretsFile);
+            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
+            if (!ValidateSecrets(secrets))
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            var webConfig = $"{HostingEnvironment.MapPath("~/")}web.config";
+            var xml = XDocument.Load(webConfig);
+            var doc = xml.Element("configuration");
+
+            var connectionString = doc.Element("connectionStrings");
+            if (connectionString != null)
+            {
+                connectionString.Remove();
+            }
+
+
+            var dnnDataProviders = doc.Element("dotnetnuke")
+                ?.Elements("data")
+                .Where(x => x.Attribute("defaultProvider").Value == "SqlDataProvider")
+                .FirstOrDefault()
+                ?.Element("providers");
+
+            if (dnnDataProviders != null)
+            {
+                dnnDataProviders.Elements().Remove();
+                dnnDataProviders.Add(XElement.Parse("<clear />"));
+                dnnDataProviders.Add(XElement.Parse("<add name=\"SqlDataProvider\" type=\"Dnn.KeyMaster.Providers.AzureKeyVaultSqlDataProvider, Dnn.KeyMaster.Providers\" upgradeConnectionString=\"\" providerPath=\"~\\Providers\\DataProviders\\SqlDataProvider\\\" objectQualifier=\"\" databaseOwner=\"dbo\" />"));
+            }
+
+            var membershipProviders = doc.Element("system.web")
+                ?.Element("membership")
+                ?.Element("providers");
+
+            if (membershipProviders != null)
+            {
+                membershipProviders.Elements().Remove();
+                membershipProviders.Add(XElement.Parse("<clear />"));
+                membershipProviders.Add(XElement.Parse("<add name=\"AspNetSqlMembershipProvider\" type=\"Dnn.KeyMaster.Providers.AzureKeyVaultSqlMembershipProvider, Dnn.KeyMaster.Providers\" enablePasswordReset=\"true\" requiresQuestionAndAnswer=\"false\" minRequiredPasswordLength=\"7\" minRequiredNonalphanumericCharacters=\"0\" requiresUniqueEmail=\"false\" passwordFormat=\"Hashed\" applicationName=\"DotNetNuke\" description=\"Stores and retrieves membership data from the local Microsoft SQL Server database\" />"));
+            }
+            
+            xml.Save(webConfig);
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
+
+        //[HttpPost]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        //[AllowAnonymous]
+        //public HttpResponseMessage DisableKeyMaster()
+        //{
+        //}
+
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [AllowAnonymous]
         public HttpResponseMessage GetSecrets()
         {
-            var secretsFile = $"{HostingEnvironment.MapPath("~/")}{SecretsProvider.SecretsFile}";
-            if (!File.Exists(secretsFile))
+            if (!File.Exists(_secretsFile))
             {
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
 
-            var json = File.ReadAllText(secretsFile);
+            var json = File.ReadAllText(_secretsFile);
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
@@ -55,8 +123,7 @@ namespace Dnn.KeyMaster.API.Controllers
                     return new HttpResponseMessage(HttpStatusCode.NotFound);
                 }
 
-                var secretsFile = $"{HostingEnvironment.MapPath("~/")}{SecretsProvider.SecretsFile}";
-                File.WriteAllText(secretsFile, JsonConvert.SerializeObject(secrets));
+                File.WriteAllText(_secretsFile, JsonConvert.SerializeObject(secrets));
 
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
@@ -96,7 +163,7 @@ namespace Dnn.KeyMaster.API.Controllers
                 ClientSecret = secrets.ClientSecret,
                 DirectoryId = secrets.DirectoryId,
                 SecretName = secrets.SecretName,
-                KeyVaultUri = secrets.KeyVaultUrl
+                KeyVaultUrl = secrets.KeyVaultUrl
             };
 
             var connectionString = KeyVaultProvider.GetConnectionString(appsettings);
