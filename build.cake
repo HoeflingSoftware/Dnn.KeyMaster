@@ -1,9 +1,8 @@
-var target = Argument ("target", Argument ("t", "Default"));
-var version = "00.00.00";
+var target = Argument ("target", Argument ("t", "Build"));
+var version = Argument ("package_version", "0.0.0");
 var configuration = "Release"; 
 var buildVerbosity = Verbosity.Minimal;
 var outputDirectory = "bin";
-var outputLocation = $"../../{outputDirectory}";
 var solution = "Dnn.KeyMaster.sln";
 var projectDirectory = MakeAbsolute(Directory("./"));
 var assemblies = new []
@@ -84,11 +83,16 @@ Task("Build")
 	.IsDependentOn("Clean")
 	.Does(() =>
 {
-	NuGetRestore(solution);
-	MSBuild(solution, c => 
+	DotNetCoreRestore(solution);
+
+	var msbuildSettings = new DotNetCoreMSBuildSettings();
+	msbuildSettings.Properties.Add("Version", new [] { version} );
+
+	DotNetCoreBuild(solution, new DotNetCoreBuildSettings
 	{
-		c.Configuration = "Debug";
-		c.WithProperty("OutputPath", outputLocation);
+		Configuration = configuration,
+		OutputDirectory = outputDirectory,
+		MSBuildSettings = msbuildSettings
 	});
 });
 
