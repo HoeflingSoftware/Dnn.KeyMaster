@@ -39,7 +39,9 @@ jobs:
     - MSBuild
 
   steps:
-  - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$(version)"; exit $LASTEXITCODE'
+  - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
+    env:
+      VERSION: $(version)
     displayName: 'Cake Build - Clean, NuGet, Build and Package'
 
   - task: CopyFiles@2
