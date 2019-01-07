@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.ps1 = build.ps1
 		cake.config = cake.config
 		Dnn.KeyMaster.dnn = Dnn.KeyMaster.dnn
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnn.KeyMaster.PersonaBar", "src\Dnn.KeyMaster.PersonaBar\Dnn.KeyMaster.PersonaBar.csproj", "{1B3B5578-2418-4A90-B46B-9B617B0B2700}"

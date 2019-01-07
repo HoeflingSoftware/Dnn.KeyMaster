@@ -1,20 +1,77 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Dnn Key Master
+A Dnn configuration extension to secure your website with Azure Key Vault by removing database connection strings from the web.config and into an Azure Key Vault
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+## Build
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+* [![Build Status](https://hoeflingsoftware.visualstudio.com/Dnn%20Key%20Master/_apis/build/status/HoeflingSoftware.Dnn.KeyMaster?branchName=master)](https://hoeflingsoftware.visualstudio.com/Dnn%20Key%20Master/_build/latest?definitionId=72?branchName=master)
+    
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Setup
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+* Get the latest [installer](https://github.com/HoeflingSoftware/Dnn.KeyMaster/releases)
+* Install extension into your Dnn website
+* Create Azure Key Vault and add full connection string as a secret
+* Log into your Dnn website, log in as host and navigate to: Settings -> Key Master
+* Enter configuration secrets
+  * Click Test button to verify connection
+  * Click Save to create secrets file on your website
+  * Click Start Key Master to update the web.config and start using Key Master
+
+
+### Platform Support
+Dnn.KeyMaster is in a pre-alpha stage and should not be used in production environments.
+
+| Supported Platforms | Supported | Version     |
+|---------------------|-----------|-------------|
+| Dnn 9			      | Yes       | 9.2.2 +     |
+| Dnn 8               | No        | No          |
+
+| Supported Admin Controls | Supported |
+|--------------------------|-----------|
+| Persona Bar              | Yes       |
+| Traditional Menu         | No        |
+
+
+## Contribute
+
+Download Code
+
+1. `$ git clone https://github.com/HoeflingSoftware/Dnn.KeyMaster.git'
+2. `$ cd ./Dnn.KeyMaster`
+
+Build 
+
+1. `$ ./build.ps1`
+
+Package
+
+1. `$ ./build.ps1 -Target Package`
+
+Deploy for Debugging
+
+1. Open Visual Studio
+2. Open build.cake located in solution items
+3. Change variable `websiteLocation` to the location of a local install of Dnn
+4. Execute `$ ./build.ps1 -Target Package`
+5. Install the generated installer into your local install of Dnn
+6. Execute `$ ./build.ps1 -Target Deploy`
+7. Debug->Attach to Process: select w3wp.exe process
+
+## Technology
+
+This Dnn extension is built using the following features of Dnn:
+
+* Dnn Persona Bar
+* Dnn Web API
+* Dnn Data Providers
+* Dnn Membership Providers
+
+## Created By: [@Andrew_Hoefling](https://twitter.com/andrew_hoefling) of [Hoefling Software](https://www.hoeflingsoftware.com)
+
+* Twitter: [@Andrew_Hoefling](https://twitter.com/andrew_hoefling)
+* Website [hoeflingsoftware.com](https://www.hoeflingsoftware.com)
+* Blog: [andrewhoefling.com](http://www.andrewhoefling.com)
+
+### License
+
+The MIT License (MIT) see License File
