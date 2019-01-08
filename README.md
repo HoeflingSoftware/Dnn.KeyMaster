@@ -34,7 +34,7 @@ Dnn.KeyMaster is in a pre-alpha stage and should not be used in production envir
 
 Download Code
 
-1. `$ git clone https://github.com/HoeflingSoftware/Dnn.KeyMaster.git'
+1. `$ git clone https://github.com/HoeflingSoftware/Dnn.KeyMaster.git`
 2. `$ cd ./Dnn.KeyMaster`
 
 Build 
