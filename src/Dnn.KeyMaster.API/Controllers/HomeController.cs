@@ -1,7 +1,8 @@
 ﻿using Dnn.KeyMaster.API.Models;
 using Dnn.KeyMaster.Web.Security.KeyVault.Models;
 using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
-using DotNetNuke.Security;
+using Dnn.PersonaBar.Library;
+using Dnn.PersonaBar.Library.Attributes;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json;
 using System;
@@ -16,16 +17,16 @@ using System.Xml.Linq;
 
 namespace Dnn.KeyMaster.API.Controllers
 {
-    [AllowAnonymous]
+    [MenuPermission(Scope = ServiceScope.Host)]
     public class HomeController : DnnApiController
     {
         private readonly string _secretsFile = $"{HostingEnvironment.MapPath("~/")}{SecretsProvider.SecretsFile}";
         private readonly string _webconfigFile = $"{HostingEnvironment.MapPath("~/")}web.config";
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
-        public HttpResponseMessage IsKeyMasterOn()
+        [ValidateAntiForgeryToken]
+        [RequireHost]
+        public HttpResponseMessage Status()
         {
             if (!File.Exists(_secretsFile))
             {
@@ -44,15 +45,40 @@ namespace Dnn.KeyMaster.API.Controllers
 
             var connectionString = doc.Element("connectionStrings");
 
-            return connectionString == null ?
-                new HttpResponseMessage(HttpStatusCode.OK) :
-                new HttpResponseMessage(HttpStatusCode.NotFound);
+            var response = new APIResponse<Status>
+            {
+                IsSuccessful = true,
+                Result = new Status
+                {                    
+                    IsEnabled = connectionString == null
+                }
+            };
+
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+            };
         }
 
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
-        public HttpResponseMessage EnableKeyMaster()
+        [ValidateAntiForgeryToken]
+        [RequireHost]
+        public HttpResponseMessage Toggle([FromBody] Status status)
+        {
+            if (!ModelState.IsValid || status == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            if (status.IsEnabled)
+            {
+                return EnableKeyMaster();
+            }
+
+            return DisableKeyMaster();
+        }
+
+        private HttpResponseMessage EnableKeyMaster()
         {
             if (!File.Exists(_secretsFile))
             {
@@ -101,12 +127,12 @@ namespace Dnn.KeyMaster.API.Controllers
             
             xml.Save(_webconfigFile);
 
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(new APIResponse { IsSuccessful = true }.ToJson(), Encoding.UTF8, "application/json")
+            };
         }
 
-        [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
         public HttpResponseMessage DisableKeyMaster()
         {
             var json = File.ReadAllText(_secretsFile);
@@ -149,12 +175,15 @@ namespace Dnn.KeyMaster.API.Controllers
 
             xml.Save(_webconfigFile);
 
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(new APIResponse { IsSuccessful = true }.ToJson(), Encoding.UTF8, "application/json")
+            };
         }
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
         public HttpResponseMessage GetSecrets()
         {
             if (!File.Exists(_secretsFile))
@@ -163,16 +192,22 @@ namespace Dnn.KeyMaster.API.Controllers
             }
 
             var json = File.ReadAllText(_secretsFile);
+            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
+            var response = new APIResponse<Secrets>
+            {
+                IsSuccessful = true,
+                Result = secrets
+            };
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
+                Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
             };
         }
 
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
         public HttpResponseMessage SaveSecrets([FromBody] Secrets secrets)
         {
             if (!ModelState.IsValid || secrets == null)
@@ -186,38 +221,59 @@ namespace Dnn.KeyMaster.API.Controllers
 
                 if (!isSecretsValid)
                 {
-                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    var response = new APIResponse { IsSuccessful = false };
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+                    };
                 }
 
                 File.WriteAllText(_secretsFile, JsonConvert.SerializeObject(secrets));
 
-                return new HttpResponseMessage(HttpStatusCode.OK);
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(new APIResponse { IsSuccessful = true }.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
             catch (Exception ex)
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                var response = new APIResponse { IsSuccessful = false };
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
         }
 
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
         public HttpResponseMessage TestSecrets([FromBody] Secrets secrets)
         {
             if (!ModelState.IsValid || secrets == null)
             {
-                return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
             
             try
             {
-                return ValidateSecrets(secrets) ?
-                    new HttpResponseMessage(HttpStatusCode.OK) :
-                    new HttpResponseMessage(HttpStatusCode.NotFound);
+                var isValid = ValidateSecrets(secrets);
+                var response = new APIResponse
+                {
+                    IsSuccessful = true
+                };
+
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
             catch(Exception ex)
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(new APIResponse { IsSuccessful = false }.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
         }
 

@@ -11,57 +11,69 @@ define(
                     $('#test-in-progess').hide();
                     $('#save-success').hide();
 
-                    $.ajax({
-                        url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/IsKeyMasterOn',
-                        type: 'GET',
-                        success: function () {
-                            $('#keymaster-live').show();
-                            $('#keymaster-start').hide();
-                            $('#keymaster-stop').show();
-                        },
-                        error: function () {
-                            $('#keymaster-live').hide();
-                            $('#keymaster-start').show();
-                            $('#keymaster-stop').hide();
-                        }
-                    });
+                    var baseRoute = 'Dnn.KeyMaster';
+                    var sf = window.dnn.utility.sf;
 
-                    $.ajax({
-                        url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/GetSecrets',
-                        type: 'GET',
+                    var status = {
+                        route: baseRoute + '/Home/Status',
                         success: function (response) {
-                            $('#keymaster-client-id').val(response.ClientId);
-                            $('#keymaster-client-secret').val(response.ClientSecret);
-                            $('#keymaster-secret-name').val(response.SecretName);
-                            $('#keymaster-directory-id').val(response.DirectoryId);
-                            $('#keymaster-key-vault-url').val(response.KeyVaultUrl);
+                            if (response.result.isEnabled) {
+                                $('#keymaster-live').show();
+                                $('#keymaster-start').hide();
+                                $('#keymaster-stop').show();
+                            } else {
+                                $('#keymaster-live').hide();
+                                $('#keymaster-start').show();
+                                $('#keymaster-stop').hide();
+                            }
                         }
-                    });
+                    };
+
+                    sf.get(status.route, {}, status.success);
+
+                    var getSecrets = {
+                        route: baseRoute + '/Home/GetSecrets',
+                        success: function (response) {
+                            $('#keymaster-client-id').val(response.result.ClientId);
+                            $('#keymaster-client-secret').val(response.result.ClientSecret);
+                            $('#keymaster-secret-name').val(response.result.SecretName);
+                            $('#keymaster-directory-id').val(response.result.DirectoryId);
+                            $('#keymaster-key-vault-url').val(response.result.KeyVaultUrl);
+                        }
+                    };
+
+                    sf.get(getSecrets.route, {}, getSecrets.success);
 
                     $('#keymaster-start').click(function () {
-                        $.ajax({
-                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/EnableKeyMaster',
-                            type: 'POST',
-                            success: function () {
-                                location.reload();
-                            },
-                            error: function () {
-                                alert("UNABLE TO START KEY MASTER");
+                        var toggle = {
+                            route: baseRoute + '/Home/Toggle',
+                            payload: { isEnabled: true },
+                            success: function (response) {
+                                if (response.isSuccessful) {
+                                    location.reload();
+                                } else {
+                                    // todo - display error message somewhere
+                                }
                             }
-                        });
+                        };
+
+                        sf.post(toggle.route, toggle.payload, toggle.success);
                     });
 
                     $('#keymaster-stop').click(function () {
-                        $.ajax({
-                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/DisableKeyMaster',
-                            type: 'POST',
-                            success: function () {
-                                location.reload();
-                            },
-                            error: function () {
-                                alert("UNABLE TO STOP KEY MASTER");
+                        var toggle = {
+                            route: baseRoute + '/Home/Toggle',
+                            payload: { isEnabled: false },
+                            success: function (response) {
+                                if (response.isSuccessful) {
+                                    location.reload();
+                                } else {
+                                    // todo - display error message somewhere
+                                }
                             }
-                        });
+                        };
+
+                        sf.post(toggle.route, toggle.payload, toggle.success);
                     });
 
                     $('#keymaster-save-config').click(function () {
@@ -79,20 +91,21 @@ define(
                             KeyVaultUrl: $('#keymaster-key-vault-url').val()
                         };
 
-                        $.ajax({
-                            contentType: 'application/x-www-form-urlencoded',
-                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/SaveSecrets',
-                            type: 'POST',
-                            data: $.param(payload),
-                            success: function () {
-                                $('#save-in-progress').hide();
-                                $('#save-success').show();
-                            },
-                            error: function () {
-                                $('#save-in-progress').hide();
-                                $('#test-failure').show();
+                        var saveConfig = {
+                            route: baseRoute + '/Home/SaveSecrets',
+                            payload: payload,
+                            success: function (response) {
+                                if (response.isSuccessful) {
+                                    $('#save-in-progress').hide();
+                                    $('#save-success').show();
+                                } else {
+                                    $('#save-in-progress').hide();
+                                    $('#test-failure').show();
+                                }
                             }
-                        });
+                        };
+
+                        sf.post(saveConfig.route, saveConfig.payload, saveConfig.success);
                     });
 
                     $('#keymaster-test-config').click(function () {
@@ -110,20 +123,21 @@ define(
                             KeyVaultUrl: $('#keymaster-key-vault-url').val()
                         };
 
-                        $.ajax({
-                            contentType: 'application/x-www-form-urlencoded',
-                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/TestSecrets',
-                            type: 'POST',
-                            data: $.param(payload),
-                            success: function () {
-                                $('#test-in-progess').hide();
-                                $('#test-success').show();
-                            },
-                            error: function () {
-                                $('#test-in-progess').hide();
-                                $('#test-failure').show();
+                        var testConfig = {
+                            route: baseRoute + '/Home/TestSecrets',
+                            payload: payload,
+                            success: function (response) {
+                                if (response.isSuccessful) {
+                                    $('#test-in-progess').hide();
+                                    $('#test-success').show();
+                                } else {
+                                    $('#test-in-progess').hide();
+                                    $('#test-failure').show();
+                                }
                             }
-                        });
+                        };
+
+                        sf.post(testConfig.route, testConfig.payload, testConfig.success);
                     });
 
                     $('.delete').click(function () {
