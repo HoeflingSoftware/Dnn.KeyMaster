@@ -1,9 +1,9 @@
 trigger:
-  - refs/heads/*
-  - refs/tags/*
   branches:
     include:
       - master
+      - refs/heads/*
+      - refs/tags/*
       
 variables:
   major: 1
