@@ -28,9 +28,22 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Status()
         {
+            APIResponse<Status> response = null;
             if (!File.Exists(_secretsFile))
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                response = new APIResponse<Status>
+                {
+                    IsSuccessful = true,
+                    Result = new Status
+                    {
+                        IsEnabled = false
+                    }
+                };
+
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
 
             var json = File.ReadAllText(_secretsFile);
@@ -45,7 +58,7 @@ namespace Dnn.KeyMaster.API.Controllers
 
             var connectionString = doc.Element("connectionStrings");
 
-            var response = new APIResponse<Status>
+            response = new APIResponse<Status>
             {
                 IsSuccessful = true,
                 Result = new Status
