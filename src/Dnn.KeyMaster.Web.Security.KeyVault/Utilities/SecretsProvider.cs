@@ -7,7 +7,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
 {
     public static class SecretsProvider
     {
-        public const string SecretsFile = "secrets.json";
+        public const string SecretsFile = "secrets.json.resources";
 
         public static AppSettings GetSecrets()
         {

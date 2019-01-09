@@ -28,9 +28,22 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Status()
         {
+            APIResponse<Status> response = null;
             if (!File.Exists(_secretsFile))
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                response = new APIResponse<Status>
+                {
+                    IsSuccessful = true,
+                    Result = new Status
+                    {
+                        IsEnabled = false
+                    }
+                };
+
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
 
             var json = File.ReadAllText(_secretsFile);
@@ -45,7 +58,7 @@ namespace Dnn.KeyMaster.API.Controllers
 
             var connectionString = doc.Element("connectionStrings");
 
-            var response = new APIResponse<Status>
+            response = new APIResponse<Status>
             {
                 IsSuccessful = true,
                 Result = new Status
@@ -186,14 +199,22 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage GetSecrets()
         {
+            APIResponse response = null;
             if (!File.Exists(_secretsFile))
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                response = new APIResponse
+                {
+                    IsSuccessful = false
+                };
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
 
             var json = File.ReadAllText(_secretsFile);
             var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-            var response = new APIResponse<Secrets>
+            response = new APIResponse<Secrets>
             {
                 IsSuccessful = true,
                 Result = secrets
@@ -212,7 +233,7 @@ namespace Dnn.KeyMaster.API.Controllers
         {
             if (!ModelState.IsValid || secrets == null)
             {
-                return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
 
             try

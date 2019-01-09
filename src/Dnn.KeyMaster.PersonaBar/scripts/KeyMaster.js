@@ -34,11 +34,13 @@ define(
                     var getSecrets = {
                         route: baseRoute + '/Home/GetSecrets',
                         success: function (response) {
-                            $('#keymaster-client-id').val(response.result.ClientId);
-                            $('#keymaster-client-secret').val(response.result.ClientSecret);
-                            $('#keymaster-secret-name').val(response.result.SecretName);
-                            $('#keymaster-directory-id').val(response.result.DirectoryId);
-                            $('#keymaster-key-vault-url').val(response.result.KeyVaultUrl);
+                            if (response.isSuccessful) {
+                                $('#keymaster-client-id').val(response.result.ClientId);
+                                $('#keymaster-client-secret').val(response.result.ClientSecret);
+                                $('#keymaster-secret-name').val(response.result.SecretName);
+                                $('#keymaster-directory-id').val(response.result.DirectoryId);
+                                $('#keymaster-key-vault-url').val(response.result.KeyVaultUrl);
+                            }
                         }
                     };
 
