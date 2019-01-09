@@ -13,23 +13,6 @@ variables:
   githubRepo: 'Dnn.KeyMaster'
 
 jobs:
-- job: PreBuild
-  displayName: Get Build variables
-  pool:
-    name: Hosted VS2017
-
-  steps:
-  - powershell: |
-      $tag = (git tag -l --points-at HEAD)
-      if ($tag -ne '') {
-        Write-Host "##vso[task.setvariable variable=tag]$($tag)"
-      }
-    workingDirectory: $(System.DefaultWorkingDirectory)
-    displayName: Get Build Tag
-
-  - powershell: Write-Host "#vso[task.setvariable variable=version]$(major).$(minor).$(patch).$(revision)"
-    displayName: Get Version Number
-    
 - job: Build
   dependsOn: PreBuild
   displayName: Build and Create Installer
@@ -39,9 +22,12 @@ jobs:
     - MSBuild
 
   steps:
+  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
+    displayName: Build Variables
+
   - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
     env:
-      VERSION: "$(version)"
+      VERSION: "$(major).$(minor).$(patch).$(revision)"
     displayName: 'Cake Build - Clean, NuGet, Build and Package'
 
   - task: CopyFiles@2
@@ -66,7 +52,13 @@ jobs:
   condition: and(succeeded(), ne(variables['tag'], ''))
 
   steps:
+  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
+    displayName: Build Variables
+
   - powershell: Write-Host "Hello World"
+
+  - powershell: SKip this steps
+    condition: and(succeeded(), ne(variables['tag'], ''))
   #- task: Npm@1
   #  displayName: 'npm install github-release-notes'
   #  inputs:
