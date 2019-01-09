@@ -10,7 +10,7 @@ define(
                     $('#save-in-progress').hide();
                     $('#test-in-progess').hide();
                     $('#save-success').hide();
-
+                                        
                     var baseRoute = 'Dnn.KeyMaster';
                     var sf = window.dnn.utility.sf;
 
@@ -32,14 +32,14 @@ define(
                     sf.get(status.route, {}, status.success);
 
                     var getSecrets = {
-                        route: baseRoute + '/Home/GetSecrets',
+                        route: baseRoute + '/Secrets/Get',
                         success: function (response) {
-                            if (response.isSuccessful) {
-                                $('#keymaster-client-id').val(response.result.ClientId);
-                                $('#keymaster-client-secret').val(response.result.ClientSecret);
-                                $('#keymaster-secret-name').val(response.result.SecretName);
-                                $('#keymaster-directory-id').val(response.result.DirectoryId);
-                                $('#keymaster-key-vault-url').val(response.result.KeyVaultUrl);
+                            if (response.Success) {
+                                $('#keymaster-client-id').val(response.Result.ClientId);
+                                $('#keymaster-client-secret').val(response.Result.ClientSecret);
+                                $('#keymaster-secret-name').val(response.Result.SecretName);
+                                $('#keymaster-directory-id').val(response.Result.DirectoryId);
+                                $('#keymaster-key-vault-url').val(response.Result.KeyVaultUrl);
                             }
                         }
                     };
@@ -112,10 +112,10 @@ define(
                         };
 
                         var saveConfig = {
-                            route: baseRoute + '/Home/SaveSecrets',
+                            route: baseRoute + '/Secrets/Save',
                             payload: payload,
                             success: function (response) {
-                                if (response.isSuccessful) {
+                                if (response.Success) {
                                     $('#save-in-progress').hide();
                                     $('#save-success').show();
                                 } else {
@@ -144,10 +144,10 @@ define(
                         };
 
                         var testConfig = {
-                            route: baseRoute + '/Home/TestSecrets',
+                            route: baseRoute + '/Secrets/Test',
                             payload: payload,
                             success: function (response) {
-                                if (response.isSuccessful) {
+                                if (response.Success) {
                                     $('#test-in-progess').hide();
                                     $('#test-success').show();
                                 } else {
