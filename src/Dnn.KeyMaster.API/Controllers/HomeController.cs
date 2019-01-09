@@ -47,8 +47,9 @@ namespace Dnn.KeyMaster.API.Controllers
 
             var response = new APIResponse<Status>
             {
+                IsSuccessful = true,
                 Result = new Status
-                {
+                {                    
                     IsEnabled = connectionString == null
                 }
             };
@@ -62,7 +63,22 @@ namespace Dnn.KeyMaster.API.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RequireHost]
-        public HttpResponseMessage EnableKeyMaster()
+        public HttpResponseMessage Toggle([FromBody] Status status)
+        {
+            if (!ModelState.IsValid || status == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            if (status.IsEnabled)
+            {
+                return EnableKeyMaster();
+            }
+
+            return DisableKeyMaster();
+        }
+
+        private HttpResponseMessage EnableKeyMaster()
         {
             if (!File.Exists(_secretsFile))
             {
@@ -111,12 +127,12 @@ namespace Dnn.KeyMaster.API.Controllers
             
             xml.Save(_webconfigFile);
 
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(new APIResponse { IsSuccessful = true }.ToJson(), Encoding.UTF8, "application/json")
+            };
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [RequireHost]
         public HttpResponseMessage DisableKeyMaster()
         {
             var json = File.ReadAllText(_secretsFile);
@@ -159,7 +175,10 @@ namespace Dnn.KeyMaster.API.Controllers
 
             xml.Save(_webconfigFile);
 
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(new APIResponse { IsSuccessful = true }.ToJson(), Encoding.UTF8, "application/json")
+            };
         }
 
         [HttpGet]
@@ -176,6 +195,7 @@ namespace Dnn.KeyMaster.API.Controllers
             var secrets = JsonConvert.DeserializeObject<Secrets>(json);
             var response = new APIResponse<Secrets>
             {
+                IsSuccessful = true,
                 Result = secrets
             };
 
@@ -201,16 +221,27 @@ namespace Dnn.KeyMaster.API.Controllers
 
                 if (!isSecretsValid)
                 {
-                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    var response = new APIResponse { IsSuccessful = false };
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+                    };
                 }
 
                 File.WriteAllText(_secretsFile, JsonConvert.SerializeObject(secrets));
 
-                return new HttpResponseMessage(HttpStatusCode.OK);
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(new APIResponse { IsSuccessful = true }.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
             catch (Exception ex)
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                var response = new APIResponse { IsSuccessful = false };
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
         }
 
@@ -221,18 +252,28 @@ namespace Dnn.KeyMaster.API.Controllers
         {
             if (!ModelState.IsValid || secrets == null)
             {
-                return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
             
             try
             {
-                return ValidateSecrets(secrets) ?
-                    new HttpResponseMessage(HttpStatusCode.OK) :
-                    new HttpResponseMessage(HttpStatusCode.NotFound);
+                var isValid = ValidateSecrets(secrets);
+                var response = new APIResponse
+                {
+                    IsSuccessful = true
+                };
+
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
             catch(Exception ex)
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(new APIResponse { IsSuccessful = false }.ToJson(), Encoding.UTF8, "application/json")
+                };
             }
         }
 

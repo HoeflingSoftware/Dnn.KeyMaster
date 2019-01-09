@@ -3,14 +3,21 @@
 namespace Dnn.KeyMaster.API.Models
 {
     [JsonObject]
-    public class APIResponse<T>
+    public class APIResponse
     {
-        [JsonProperty("result")]
-        public T Result { get; set; }
+        [JsonProperty("isSuccessful")]
+        public bool IsSuccessful { get; set; }
 
         public string ToJson()
         {
             return JsonConvert.SerializeObject(this);
         }
+    }
+
+    [JsonObject]
+    public class APIResponse<T> : APIResponse
+    {
+        [JsonProperty("result")]
+        public T Result { get; set; }        
     }
 }
