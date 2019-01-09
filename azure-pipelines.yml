@@ -1,4 +1,5 @@
 trigger:
+  - refs/tags/*
   branches:
     include:
       - master

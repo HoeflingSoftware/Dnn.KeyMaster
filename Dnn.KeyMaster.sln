@@ -18,9 +18,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnn.KeyMaster.PersonaBar", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnn.KeyMaster.Web.Security.KeyVault", "src\Dnn.KeyMaster.Web.Security.KeyVault\Dnn.KeyMaster.Web.Security.KeyVault.csproj", "{ADF7F8C3-E31A-4047-A67B-1DC5C25646DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dnn.KeyMaster.API", "src\Dnn.KeyMaster.API\Dnn.KeyMaster.API.csproj", "{376F9D05-6DE2-46B9-89DD-4A5C807D68E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnn.KeyMaster.API", "src\Dnn.KeyMaster.API\Dnn.KeyMaster.API.csproj", "{376F9D05-6DE2-46B9-89DD-4A5C807D68E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnn.KeyMaster.Providers", "src\Dnn.KeyMaster.Providers\Dnn.KeyMaster.Providers.csproj", "{91215715-A5B1-43F9-89DD-AF3614FF4F8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildUtilities", "BuildUtilities", "{5364AB36-A184-43F6-9028-6A46EC0BB502}"
+	ProjectSection(SolutionItems) = preProject
+		BuildUtilities\getBuildVariables.ps1 = BuildUtilities\getBuildVariables.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
