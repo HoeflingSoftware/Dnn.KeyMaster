@@ -86,7 +86,7 @@ define(
                             message: 'Stop the Key Master, this may take a few seconds and will automatically reload the page',
                             confirm: 'OK',
                             cancel: 'Cancel',
-                            confirmationCallback: function () {
+                            confirmCallback: function () {
                                 sf.post(toggle.route, toggle.payload, toggle.success);
                             }
                         };   
