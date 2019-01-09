@@ -1,4 +1,4 @@
-Log "Start Build Variables"
+Write-Host "Start Build Variables"
 
 # Get commit tag if exists
 $tag = (git tag -l --points-at HEAD)
