@@ -14,7 +14,6 @@ variables:
 
 jobs:
 - job: Build
-  dependsOn: PreBuild
   displayName: Build and Create Installer
   pool:
     name: Hosted VS2017
