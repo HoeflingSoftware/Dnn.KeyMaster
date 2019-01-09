@@ -19,15 +19,15 @@ jobs:
     name: Hosted VS2017
 
   steps:
- # - powershell: |
- #     $tag = (git tag -l --points-at HEAD)
- #     if ($tag -ne '') {
- #       Write-Host "##vso[build.tag]$($tag)"
- #     }
- #   workingDirectory: $(System.DefaultWorkingDirectory)
- #   displayName: Get Build Tag
+  - powershell: |
+      $tag = (git tag -l --points-at HEAD)
+      if ($tag -ne '') {
+        Write-Host "##vso[task.setvariable variable.tag]$($tag)"
+      }
+    workingDirectory: $(System.DefaultWorkingDirectory)
+    displayName: Get Build Tag
 
-  - powershell: Write-Host "#vso[build.version]$(major).$(minor).$(patch).$(revision)"
+  - powershell: Write-Host "#vso[task.setvariable variable=version]$(major).$(minor).$(patch).$(revision)"
     displayName: Get Version Number
     
 - job: Build
@@ -41,7 +41,7 @@ jobs:
   steps:
   - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
     env:
-      VERSION: $(major).$(minor).$(patch).$(revision)
+      VERSION: $(version)
     displayName: 'Cake Build - Clean, NuGet, Build and Package'
 
   - task: CopyFiles@2
@@ -63,18 +63,19 @@ jobs:
   displayName: GitHub Release
   pool:
     name: "Hosted VS2017"
-  condition: and(succeeded(), ne(variables['Tag'], ''))
+  condition: and(succeeded(), ne(variables['tag'], ''))
 
   steps:
-  - task: Npm@1
-    displayName: 'npm install github-release-notes'
-    inputs:
-      command: custom
-      verbose: false
-      customCommand: 'install github-release-notes -g'
+  - powershell: Write-Host "Hello World"
+  #- task: Npm@1
+  #  displayName: 'npm install github-release-notes'
+  #  inputs:
+  #    command: custom
+  #    verbose: false
+  #    customCommand: 'install github-release-notes -g'
 
-  - powershell: 'gren release --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
-    env:
-      TOKEN: $(githubToken)
-    displayName: 'gren release'
+  #- powershell: 'gren release --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
+  #  env:
+  #    TOKEN: $(githubToken)
+  #  displayName: 'gren release'
 
