@@ -48,7 +48,6 @@ jobs:
   displayName: GitHub Release
   pool:
     name: "Hosted VS2017"
-  condition: and(succeeded(), ne(variables['tag'], ''))
 
   steps:
   - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
