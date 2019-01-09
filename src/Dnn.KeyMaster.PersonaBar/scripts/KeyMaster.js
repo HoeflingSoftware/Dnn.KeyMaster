@@ -57,7 +57,16 @@ define(
                             }
                         };
 
-                        sf.post(toggle.route, toggle.payload, toggle.success);
+                        var modal = {
+                            message: 'Start the Key Master, this may take a few seconds and will automatically reload the page',
+                            confirm: 'OK',
+                            cancel: 'Cancel',
+                            confirmCallback: function () {
+                                sf.post(toggle.route, toggle.payload, toggle.success);
+                            }
+                        };
+
+                        window.dnn.utility.confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback);                        
                     });
 
                     $('#keymaster-stop').click(function () {
@@ -73,7 +82,16 @@ define(
                             }
                         };
 
-                        sf.post(toggle.route, toggle.payload, toggle.success);
+                        var modal = {
+                            message: 'Stop the Key Master, this may take a few seconds and will automatically reload the page',
+                            confirm: 'OK',
+                            cancel: 'Cancel',
+                            confirmationCallback: function () {
+                                sf.post(toggle.route, toggle.payload, toggle.success);
+                            }
+                        };   
+
+                        window.dnn.utility.confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback); 
                     });
 
                     $('#keymaster-save-config').click(function () {
