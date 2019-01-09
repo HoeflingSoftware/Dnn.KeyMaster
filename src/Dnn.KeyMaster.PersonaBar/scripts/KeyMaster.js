@@ -14,7 +14,7 @@ define(
                     var baseRoute = 'Dnn.KeyMaster';
                     var sf = window.dnn.utility.sf;
 
-                    var isKeyMasterOn = {
+                    var status = {
                         route: baseRoute + '/Home/Status',
                         success: function (response) {
                             if (response.result.isEnabled) {
@@ -29,19 +29,20 @@ define(
                         }
                     };
 
-                    sf.get(isKeyMasterOn.route, {}, isKeyMasterOn.success);
+                    sf.get(status.route, {}, status.success);
 
-                    $.ajax({
-                        url: '/API/personabar/' + baseRoute + '/Home/GetSecrets',
-                        type: 'GET',
+                    var getSecrets = {
+                        route: baseRoute + '/Home/GetSecrets',
                         success: function (response) {
-                            $('#keymaster-client-id').val(response.ClientId);
-                            $('#keymaster-client-secret').val(response.ClientSecret);
-                            $('#keymaster-secret-name').val(response.SecretName);
-                            $('#keymaster-directory-id').val(response.DirectoryId);
-                            $('#keymaster-key-vault-url').val(response.KeyVaultUrl);
+                            $('#keymaster-client-id').val(response.result.ClientId);
+                            $('#keymaster-client-secret').val(response.result.ClientSecret);
+                            $('#keymaster-secret-name').val(response.result.SecretName);
+                            $('#keymaster-directory-id').val(response.result.DirectoryId);
+                            $('#keymaster-key-vault-url').val(response.result.KeyVaultUrl);
                         }
-                    });
+                    };
+
+                    sf.get(getSecrets.route, {}, getSecrets.success);
 
                     $('#keymaster-start').click(function () {
                         $.ajax({

@@ -173,10 +173,15 @@ namespace Dnn.KeyMaster.API.Controllers
             }
 
             var json = File.ReadAllText(_secretsFile);
+            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
+            var response = new APIResponse<Secrets>
+            {
+                Result = secrets
+            };
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(json, Encoding.UTF8, "application/json")
+                Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
             };
         }
 
