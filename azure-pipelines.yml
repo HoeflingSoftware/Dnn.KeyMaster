@@ -58,7 +58,7 @@ jobs:
 
   - powershell: Write-Host "Hello World"
 
-  - powershell: SKip this steps
+  - powershell: Write-Host "This only runs if we have a tag"
     condition: and(succeeded(), ne(variables['tag'], ''))
   #- task: Npm@1
   #  displayName: 'npm install github-release-notes'
