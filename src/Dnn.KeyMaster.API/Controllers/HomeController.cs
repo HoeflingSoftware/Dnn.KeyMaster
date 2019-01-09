@@ -1,7 +1,8 @@
 ﻿using Dnn.KeyMaster.API.Models;
 using Dnn.KeyMaster.Web.Security.KeyVault.Models;
 using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
-using DotNetNuke.Security;
+using Dnn.PersonaBar.Library;
+using Dnn.PersonaBar.Library.Attributes;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json;
 using System;
@@ -16,15 +17,15 @@ using System.Xml.Linq;
 
 namespace Dnn.KeyMaster.API.Controllers
 {
-    [AllowAnonymous]
+    [MenuPermission(Scope = ServiceScope.Host)]
     public class HomeController : DnnApiController
     {
         private readonly string _secretsFile = $"{HostingEnvironment.MapPath("~/")}{SecretsProvider.SecretsFile}";
         private readonly string _webconfigFile = $"{HostingEnvironment.MapPath("~/")}web.config";
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
         public HttpResponseMessage IsKeyMasterOn()
         {
             if (!File.Exists(_secretsFile))
@@ -50,8 +51,8 @@ namespace Dnn.KeyMaster.API.Controllers
         }
 
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
         public HttpResponseMessage EnableKeyMaster()
         {
             if (!File.Exists(_secretsFile))
@@ -105,8 +106,8 @@ namespace Dnn.KeyMaster.API.Controllers
         }
 
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
         public HttpResponseMessage DisableKeyMaster()
         {
             var json = File.ReadAllText(_secretsFile);
@@ -153,8 +154,8 @@ namespace Dnn.KeyMaster.API.Controllers
         }
 
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
         public HttpResponseMessage GetSecrets()
         {
             if (!File.Exists(_secretsFile))
@@ -171,8 +172,8 @@ namespace Dnn.KeyMaster.API.Controllers
         }
 
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
         public HttpResponseMessage SaveSecrets([FromBody] Secrets secrets)
         {
             if (!ModelState.IsValid || secrets == null)
@@ -200,8 +201,8 @@ namespace Dnn.KeyMaster.API.Controllers
         }
 
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
         public HttpResponseMessage TestSecrets([FromBody] Secrets secrets)
         {
             if (!ModelState.IsValid || secrets == null)
