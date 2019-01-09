@@ -26,7 +26,7 @@ namespace Dnn.KeyMaster.API.Controllers
         [HttpGet]
         [ValidateAntiForgeryToken]
         [RequireHost]
-        public HttpResponseMessage IsKeyMasterOn()
+        public HttpResponseMessage Status()
         {
             if (!File.Exists(_secretsFile))
             {
@@ -45,9 +45,18 @@ namespace Dnn.KeyMaster.API.Controllers
 
             var connectionString = doc.Element("connectionStrings");
 
-            return connectionString == null ?
-                new HttpResponseMessage(HttpStatusCode.OK) :
-                new HttpResponseMessage(HttpStatusCode.NotFound);
+            var response = new APIResponse<Status>
+            {
+                Result = new Status
+                {
+                    IsEnabled = connectionString == null
+                }
+            };
+
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
+            };
         }
 
         [HttpPost]

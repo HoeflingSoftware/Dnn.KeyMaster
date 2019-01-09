@@ -11,23 +11,28 @@ define(
                     $('#test-in-progess').hide();
                     $('#save-success').hide();
 
-                    $.ajax({
-                        url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/IsKeyMasterOn',
-                        type: 'GET',
-                        success: function () {
-                            $('#keymaster-live').show();
-                            $('#keymaster-start').hide();
-                            $('#keymaster-stop').show();
-                        },
-                        error: function () {
-                            $('#keymaster-live').hide();
-                            $('#keymaster-start').show();
-                            $('#keymaster-stop').hide();
+                    var baseRoute = 'Dnn.KeyMaster';
+                    var sf = window.dnn.utility.sf;
+
+                    var isKeyMasterOn = {
+                        route: baseRoute + '/Home/Status',
+                        success: function (response) {
+                            if (response.result.isEnabled) {
+                                $('#keymaster-live').show();
+                                $('#keymaster-start').hide();
+                                $('#keymaster-stop').show();
+                            } else {
+                                $('#keymaster-live').hide();
+                                $('#keymaster-start').show();
+                                $('#keymaster-stop').hide();
+                            }
                         }
-                    });
+                    };
+
+                    sf.get(isKeyMasterOn.route, {}, isKeyMasterOn.success);
 
                     $.ajax({
-                        url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/GetSecrets',
+                        url: '/API/personabar/' + baseRoute + '/Home/GetSecrets',
                         type: 'GET',
                         success: function (response) {
                             $('#keymaster-client-id').val(response.ClientId);
@@ -40,7 +45,7 @@ define(
 
                     $('#keymaster-start').click(function () {
                         $.ajax({
-                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/EnableKeyMaster',
+                            url: '/API/personabar/' + baseRoute + '/Home/EnableKeyMaster',
                             type: 'POST',
                             success: function () {
                                 location.reload();
@@ -53,7 +58,7 @@ define(
 
                     $('#keymaster-stop').click(function () {
                         $.ajax({
-                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/DisableKeyMaster',
+                            url: '/API/personabar/' + baseRoute + '/Home/DisableKeyMaster',
                             type: 'POST',
                             success: function () {
                                 location.reload();
@@ -81,7 +86,7 @@ define(
 
                         $.ajax({
                             contentType: 'application/x-www-form-urlencoded',
-                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/SaveSecrets',
+                            url: '/API/personabar/' + baseRoute + '/Home/SaveSecrets',
                             type: 'POST',
                             data: $.param(payload),
                             success: function () {
@@ -112,7 +117,7 @@ define(
 
                         $.ajax({
                             contentType: 'application/x-www-form-urlencoded',
-                            url: '/desktopmodules/Admin/Dnn.PersonaBar/Modules/KeyMaster/API/Home/TestSecrets',
+                            url: '/API/personabar/' + baseRoute + '/Home/TestSecrets',
                             type: 'POST',
                             data: $.param(payload),
                             success: function () {
