@@ -6,9 +6,7 @@ using DotNetNuke.Web.Api;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Web.Http;
 using System.Xml.Linq;
 
@@ -22,29 +20,19 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Status()
         {
-            PersonaBarResponse<Status> response = null;
+            PersonaBarResponse response = new PersonaBarResponse();
             if (!File.Exists(SecretsProvider.SecretsFile))
             {
-                response = new PersonaBarResponse<Status>
-                {
-                    Success = true,
-                    Result = new Status
-                    {
-                        IsEnabled = false
-                    }
-                };
-
-                return new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
-                };
+                response.Success = false;
+                return response.ToHttpResponseMessage();
             }
 
             var json = File.ReadAllText(SecretsProvider.SecretsFile);
             var secrets = JsonConvert.DeserializeObject<Secrets>(json);
             if (!SecretsProvider.ValidateSecrets(secrets))
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                response.Success = false;
+                return response.ToHttpResponseMessage();
             }
 
             var xml = XDocument.Load(SecretsProvider.WebconfigFile);
@@ -52,19 +40,8 @@ namespace Dnn.KeyMaster.API.Controllers
 
             var connectionString = doc.Element("connectionStrings");
 
-            response = new PersonaBarResponse<Status>
-            {
-                Success = true,
-                Result = new Status
-                {                    
-                    IsEnabled = connectionString == null
-                }
-            };
-
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(response.ToJson(), Encoding.UTF8, "application/json")
-            };
+            response.Success = connectionString == null;
+            return response.ToHttpResponseMessage();
         }
 
         [HttpPost]
@@ -72,9 +49,11 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Toggle([FromBody] Status status)
         {
+            PersonaBarResponse response = new PersonaBarResponse();
             if (!ModelState.IsValid || status == null)
             {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                response.Success = false;
+                return response.ToHttpResponseMessage();
             }
 
             if (status.IsEnabled)
@@ -87,16 +66,19 @@ namespace Dnn.KeyMaster.API.Controllers
 
         private HttpResponseMessage EnableKeyMaster()
         {
+            var response = new PersonaBarResponse();
             if (!File.Exists(SecretsProvider.SecretsFile))
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                response.Success = false;
+                return response.ToHttpResponseMessage();
             }
 
             var json = File.ReadAllText(SecretsProvider.SecretsFile);
             var secrets = JsonConvert.DeserializeObject<Secrets>(json);
             if (!SecretsProvider.ValidateSecrets(secrets))
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                response.Success = false;
+                return response.ToHttpResponseMessage();
             }
 
             var xml = XDocument.Load(SecretsProvider.WebconfigFile);
@@ -134,21 +116,21 @@ namespace Dnn.KeyMaster.API.Controllers
             
             xml.Save(SecretsProvider.WebconfigFile);
 
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(new PersonaBarResponse { Success = true }.ToJson(), Encoding.UTF8, "application/json")
-            };
+            response.Success = true;
+            return response.ToHttpResponseMessage();
         }
 
         public HttpResponseMessage DisableKeyMaster()
         {
+            var response = new PersonaBarResponse();
             var json = File.ReadAllText(SecretsProvider.SecretsFile);
             var secrets = JsonConvert.DeserializeObject<Secrets>(json);
 
             var connectionString = SecretsProvider.GetConnectionString(secrets);
             if (string.IsNullOrEmpty(connectionString))
             {
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                response.Success = false;
+                return response.ToHttpResponseMessage();
             }
 
             var xml = XDocument.Load(SecretsProvider.WebconfigFile);
@@ -182,10 +164,8 @@ namespace Dnn.KeyMaster.API.Controllers
 
             xml.Save(SecretsProvider.WebconfigFile);
 
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(new PersonaBarResponse { Success = true }.ToJson(), Encoding.UTF8, "application/json")
-            };
+            response.Success = true;
+            return response.ToHttpResponseMessage();
         }
     }
 }

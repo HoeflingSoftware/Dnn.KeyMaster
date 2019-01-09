@@ -17,7 +17,7 @@ define(
                     var status = {
                         route: baseRoute + '/Home/Status',
                         success: function (response) {
-                            if (response.result.isEnabled) {
+                            if (response.Success) {
                                 $('#keymaster-live').show();
                                 $('#keymaster-start').hide();
                                 $('#keymaster-stop').show();
@@ -51,10 +51,10 @@ define(
                             route: baseRoute + '/Home/Toggle',
                             payload: { isEnabled: true },
                             success: function (response) {
-                                if (response.isSuccessful) {
+                                if (response.Success) {
                                     location.reload();
                                 } else {
-                                    // todo - display error message somewhere
+                                    window.dnn.utility.notifyError("Something went wrong, check the logs for more information");
                                 }
                             }
                         };
@@ -76,10 +76,10 @@ define(
                             route: baseRoute + '/Home/Toggle',
                             payload: { isEnabled: false },
                             success: function (response) {
-                                if (response.isSuccessful) {
+                                if (response.Success) {
                                     location.reload();
                                 } else {
-                                    // todo - display error message somewhere
+                                    window.dnn.utility.notifyError("Something went wrong, check the logs for more information");
                                 }
                             }
                         };
