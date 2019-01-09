@@ -1,5 +1,6 @@
 trigger:
-  - +:refs/heads/*
+  - refs/heads/*
+  - refs/tags/*
   branches:
     include:
       - master
