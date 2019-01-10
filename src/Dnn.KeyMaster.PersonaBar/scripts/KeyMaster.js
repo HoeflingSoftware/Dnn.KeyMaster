@@ -414,7 +414,9 @@ define(
 
                     $('#keymaster-add-appsetting').click(function () {
                         var row = createRow('');
-                        $(row).find("input[name='value']")[0].value = '';
+                        var secretInput = $(row).find("input[name='value']")[0];
+                        secretInput.type = 'text';
+                        secretInput.value = '';
                         $(row).find('.delete').click(function () { row.remove(); });
                         openSecret($(row).find('.view-secret')[0], 'Save');
                         $('#keymaster-appsettings-container').append(row);
