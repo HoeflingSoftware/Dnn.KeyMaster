@@ -233,10 +233,12 @@ define(
                                     }
                                 };
 
+                                $('#keymaster-appsettings-add').show();
                                 sf.get(appsettings.route, {}, appsettings.success);
                                                                 
                                 
                             } else {
+                                $('#keymaster-appsettings-add').hide();
                                 $('#keymaster-live').hide();
                                 $('#keymaster-start').show();
                                 $('#keymaster-stop').hide();
