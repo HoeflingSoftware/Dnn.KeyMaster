@@ -22,12 +22,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnn.KeyMaster.API", "src\Dn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dnn.KeyMaster.Providers", "src\Dnn.KeyMaster.Providers\Dnn.KeyMaster.Providers.csproj", "{91215715-A5B1-43F9-89DD-AF3614FF4F8B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildUtilities", "BuildUtilities", "{5364AB36-A184-43F6-9028-6A46EC0BB502}"
-	ProjectSection(SolutionItems) = preProject
-		BuildUtilities\getBuildVariables.ps1 = BuildUtilities\getBuildVariables.ps1
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dnn.KeyMaster.Exceptions", "src\Dnn.KeyMaster.Exceptions\Dnn.KeyMaster.Exceptions.csproj", "{4FD4E3C6-9309-46CE-97D4-EC1658F52E15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildUtilities", "BuildUtilities", "{EC1E5ED7-858C-45B5-9B9B-FDBFF8D9EE22}"
+	ProjectSection(SolutionItems) = preProject
+		BuildUtilities\buildDnnManifest.ps1 = BuildUtilities\buildDnnManifest.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
