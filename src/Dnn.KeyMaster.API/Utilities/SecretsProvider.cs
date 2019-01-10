@@ -83,7 +83,7 @@ namespace Dnn.KeyMaster.API.Utilities
             };
 
             
-            return KeyVaultProvider.DeleteSecret(key, appsettings);
+            return KeyVaultProvider.DeleteSecretAsync(key, appsettings).Result;
         }
 
         internal static bool CreateOrUpdateAppSetting(string key, string value, Secrets secrets)
@@ -97,7 +97,7 @@ namespace Dnn.KeyMaster.API.Utilities
                 KeyVaultUrl = secrets.KeyVaultUrl
             };
 
-            return KeyVaultProvider.CreateOrUpdateAppSetting(key, value, appsettings).Result;
+            return KeyVaultProvider.CreateOrUpdateAppSettingAsync(key, value, appsettings).Result;
         }
     }
 }

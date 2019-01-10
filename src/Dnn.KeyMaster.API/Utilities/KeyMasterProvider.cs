@@ -64,7 +64,7 @@ namespace Dnn.KeyMaster.API.Utilities
             var tasks = new List<Task<bool>>();
             foreach (var key in ConfigurationManager.AppSettings.AllKeys)
             {
-                tasks.Add(Task.Run(async () => await KeyVaultProvider.CreateOrUpdateAppSetting(key, ConfigurationManager.AppSettings[key])));
+                tasks.Add(Task.Run(async () => await KeyVaultProvider.CreateOrUpdateAppSettingAsync(key, ConfigurationManager.AppSettings[key])));
             }
 
             var results = Task.WhenAll(tasks).Result;
@@ -100,13 +100,21 @@ namespace Dnn.KeyMaster.API.Utilities
 
             appSettings.Elements().Remove();
 
+            var tasks = new List<Task<bool>>();
             foreach (var key in ConfigurationManager.AppSettings.AllKeys)
             {
+                tasks.Add(Task.Run(async () => await KeyVaultProvider.DeleteSecretAsync(key)));
                 var secret = ConfigurationManager.AppSettings[key];
                 appSettings.Add(XElement.Parse($"<add key=\"{key}\" value=\"{secret}\" />"));
             }
 
             xml.Save(SecretsProvider.WebconfigFile);
+
+            var results = Task.WhenAll(tasks).Result;
+            if (results.Any(x => !x))
+            {
+                throw new KeyMasterException("Key Master couldn't delete all secrets from azure");
+            }
         }
 
         internal static bool ToggleOn()

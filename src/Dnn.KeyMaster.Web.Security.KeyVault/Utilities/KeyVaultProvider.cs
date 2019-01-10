@@ -123,7 +123,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             throw new KeyMasterException("Azure Key Vault App Settings are empty");
         }
 
-        public static bool DeleteSecret(string key, AppSettings config = null)
+        public static async Task<bool> DeleteSecretAsync(string key, AppSettings config = null)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
                     var secret = string.Format(API.Secret, config.KeyVaultUrl, name);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
 
-                    var response = client.DeleteAsync(secret).Result;
+                    var response = await client.DeleteAsync(secret);
                     if (response.IsSuccessStatusCode)
                     {
                         AppSettings.Remove(key);
@@ -166,7 +166,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             return false;
         }
 
-        public static async Task<bool> CreateOrUpdateAppSetting(string key, string value, AppSettings config = null)
+        public static async Task<bool> CreateOrUpdateAppSettingAsync(string key, string value, AppSettings config = null)
         {
             try
             {
