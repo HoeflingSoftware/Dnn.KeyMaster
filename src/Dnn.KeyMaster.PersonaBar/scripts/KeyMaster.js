@@ -22,6 +22,76 @@ define(
                                 $('#keymaster-live').show();
                                 $('#keymaster-start').hide();
                                 $('#keymaster-stop').show();
+
+                                var appsettings = {
+                                    route: baseRoute + '/AppSettings/List',
+                                    success: function (response) {
+                                        if (response.Success) {
+                                            var createRow = function (name) {
+                                                var row = document.createElement('div');
+                                                row.classList = 'field-body';
+
+                                                var createControl = function (value, type, isProtected) {
+                                                    var field = document.createElement('div');
+                                                    field.classList = 'field';
+
+                                                    var control = document.createElement('p');
+
+                                                    if (type === 'input') {
+                                                        control.classList = 'control is-expanded';
+                                                    } else {
+                                                        control.classList = 'control';
+                                                    }
+
+                                                    var contents = {};
+                                                    if (type === 'input') {
+                                                        contents = document.createElement('input');
+                                                        contents.classList = 'input';
+
+                                                        if (isProtected) {
+                                                            contents.type = 'password';
+                                                            contents.value = '********************';
+                                                        } else {
+                                                            contents.type = 'text';
+                                                            contents.value = value;
+                                                        }
+                                                    } else if (type === 'delete') {
+                                                        contents = document.createElement('button');
+                                                        contents.classList = 'delete';
+                                                    } else if (type === 'view') {
+                                                        contents = document.createElement('span');
+                                                        contents.classList = 'tag is-warning';
+                                                        contents.innerHTML = value;
+                                                    }
+
+                                                    control.appendChild(contents);
+                                                    field.appendChild(control);
+
+                                                    return field;
+                                                };
+
+                                                var nameField = createControl(name, 'input', false);
+                                                var passwordField = createControl({}, 'input', true);
+                                                var viewField = createControl('View Secret', 'view');
+                                                var deleteField = createControl({}, 'delete');
+
+                                                row.appendChild(nameField);
+                                                row.appendChild(passwordField);
+                                                row.appendChild(viewField);
+                                                row.appendChild(deleteField);
+
+                                                return row;
+                                            };
+
+                                            var container = document.getElementById('keymaster-appsettings-container');
+                                            for (var index = 0; index < response.Result.length; index++) {
+                                                container.append(createRow(response.Result[index].name));
+                                            }
+                                        }
+                                    }
+                                };
+
+                                sf.get(appsettings.route, {}, appsettings.success);
                             } else {
                                 $('#keymaster-live').hide();
                                 $('#keymaster-start').show();
