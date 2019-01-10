@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetNuke.Core" Version="9.2.1.533" />
+    <PackageReference Include="DotNetNuke.Instrumentation" Version="9.2.1.533" />
+    <PackageReference Include="Microsoft.ApplicationBlocks.Data" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dnn.KeyMaster.Exceptions\Dnn.KeyMaster.Exceptions.csproj" />
     <ProjectReference Include="..\Dnn.KeyMaster.Web.Security.KeyVault\Dnn.KeyMaster.Web.Security.KeyVault.csproj" />
   </ItemGroup>
@@ -16,18 +22,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="DotNetNuke">
-      <HintPath>..\..\lib\DotNetNuke.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetNuke.Instrumentation">
-      <HintPath>..\..\lib\DotNetNuke.Instrumentation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.ApplicationBlocks.Data">
-      <HintPath>..\..\lib\Microsoft.ApplicationBlocks.Data.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
