@@ -45,22 +45,18 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             }
             catch (FileNotFoundException ex)
             {
-                // TODO - add additional logging about the file not being found
                 throw new KeyMasterException("Unable to find Key Master Secrets file, check logs for more details", ex);
             }
             catch (AzureSecretsKeyMasterException ex)
             {
-                // TODO - handle any specific logging
                 throw new KeyMasterException("Unable to verify Key Master secrets with Azure, check logs for more details", ex);
             }
             catch (AzureKeyMasterException ex)
             {
-                // TODO - add additional logging about the file not being found
                 throw new KeyMasterException("Unable to verify Key Master secrets with Azure, check logs for more details", ex);
             }
             catch (Exception ex)
             {
-                // todo - add additional logging
                 throw new KeyMasterException("Internal Key Master Error Occurred. Check the logs for more details", ex);
             }
         }
