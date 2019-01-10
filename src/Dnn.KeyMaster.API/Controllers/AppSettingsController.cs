@@ -81,5 +81,17 @@ namespace Dnn.KeyMaster.API.Controllers
 
             return response.ToHttpResponseMessage();
         }
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
+        public HttpResponseMessage Delete(string key)
+        {
+            var response = new PersonaBarResponse
+            {
+                Success = true
+            };
+            return response.ToHttpResponseMessage();
+        }
     }
 }
