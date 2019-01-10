@@ -34,7 +34,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
                 return _appsettings;
             }
         }
-
+        
         private static KeyValuePair<string, string> GetSecret(KeyVaultSecretListItem item, AccessTokenResponse token = null, AppSettings config = null)
         {
             if (config == null)

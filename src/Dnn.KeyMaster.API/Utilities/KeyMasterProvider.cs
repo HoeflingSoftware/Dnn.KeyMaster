@@ -1,5 +1,9 @@
 ﻿using Dnn.KeyMaster.API.Models;
+using Dnn.KeyMaster.Exceptions;
+using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
 using Newtonsoft.Json;
+using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -51,6 +55,53 @@ namespace Dnn.KeyMaster.API.Utilities
             xml.Save(SecretsProvider.WebconfigFile);
 
             return true;
+        }
+
+        internal static void SendAppSettings()
+        {
+            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            {
+                var result = KeyVaultProvider.CreateOrUpdateAppSetting(key, ConfigurationManager.AppSettings[key]);
+                if (!result)
+                {
+                    throw new KeyMasterException("Key master couldn't send app secrets to azure");
+                }
+            }
+
+            var xml = XDocument.Load(SecretsProvider.WebconfigFile);
+            var doc = xml.Element("configuration");
+
+            var appSettings = doc.Element("appSettings");
+            if (appSettings != null)
+            {
+                appSettings.Remove();
+            }
+
+            xml.Save(SecretsProvider.WebconfigFile);
+        }
+
+        internal static void DownloadAppSettings()
+        {
+            var xml = XDocument.Load(SecretsProvider.WebconfigFile);
+            var doc = xml.Element("configuration");
+
+
+            var appSettings = doc.Element("appSettings");
+            if (appSettings == null)
+            {
+                doc.Add(XElement.Parse("<appSettings></appSettings>"));
+                appSettings = doc.Element("appSettings");
+            }
+
+            appSettings.Elements().Remove();
+
+            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            {
+                var secret = ConfigurationManager.AppSettings[key];
+                appSettings.Add(XElement.Parse($"<add key=\"{key}\" value=\"{secret}\" />"));
+            }
+
+            xml.Save(SecretsProvider.WebconfigFile);
         }
 
         internal static bool ToggleOn()

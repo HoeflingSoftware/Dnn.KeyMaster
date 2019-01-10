@@ -58,10 +58,12 @@ namespace Dnn.KeyMaster.API.Controllers
 
             if (status.IsEnabled)
             {
+                KeyMasterProvider.SendAppSettings();
                 response.Success = KeyMasterProvider.ToggleOn();
             }
             else
             {
+                KeyMasterProvider.DownloadAppSettings();
                 response.Success = KeyMasterProvider.ToggleOff();
             }
 
