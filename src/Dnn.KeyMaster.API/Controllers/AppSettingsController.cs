@@ -82,10 +82,10 @@ namespace Dnn.KeyMaster.API.Controllers
             return response.ToHttpResponseMessage();
         }
 
-        [HttpGet]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [RequireHost]
-        public HttpResponseMessage Delete(string key)
+        public HttpResponseMessage Delete([FromBody] AppSetting appsetting)
         {
             var response = new PersonaBarResponse
             {

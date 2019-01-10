@@ -150,12 +150,27 @@ define(
                                             });
 
                                             $($('#keymaster-appsettings-container')[0]).find('.delete').click(function () {
+                                                var parent = $(this).parent().parent().parent();
+
                                                 var modal = {
                                                     message: 'Are you sure you want to delete your secret?',
                                                     confirm: 'Delete',
                                                     cancel: 'Cancel',
                                                     confirmCallback: function () {
-                                                        alert('deleting secret');
+                                                        var key = parent.find("input[name='key']").val();
+                                                        var deleteSecret = {
+                                                            route: baseRoute + '/AppSettings/Delete',
+                                                            payload: {
+                                                                Key: key
+                                                            },
+                                                            success: function (response) {
+                                                                if (response.Success) {
+                                                                    alert('Secret Deleted!!');
+                                                                }
+                                                            }
+                                                        };
+
+                                                        sf.post(deleteSecret.route, deleteSecret.payload, deleteSecret.success);
                                                     }
                                                 };
 
