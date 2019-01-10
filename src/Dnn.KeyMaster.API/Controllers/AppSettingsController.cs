@@ -33,7 +33,8 @@ namespace Dnn.KeyMaster.API.Controllers
 
             var json = File.ReadAllText(SecretsProvider.SecretsFile);
             var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-            var keys = SecretsProvider.GetAppSettings(secrets);
+
+            var keys = SecretsProvider.GetAppSettingsKeys(secrets);
 
             response = new PersonaBarResponse<IEnumerable<AppSetting>>
             {
@@ -52,13 +53,29 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Get(string key)
         {
-            var response = new PersonaBarResponse<AppSetting>
+            PersonaBarResponse response = null;
+            if (!File.Exists(SecretsProvider.SecretsFile))
+            {
+                response = new PersonaBarResponse
+                {
+                    Success = false
+                };
+
+                return response.ToHttpResponseMessage();
+            }
+
+            var json = File.ReadAllText(SecretsProvider.SecretsFile);
+            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
+
+            var value = SecretsProvider.GetAppSettingValue(secrets, key);
+
+            response = new PersonaBarResponse<AppSetting>
             {
                 Success = true,
                 Result = new AppSetting
                 {
-                    Key = "Demo",
-                    Value = "value"
+                    Key = key,
+                    Value = value
                 }
             };
 

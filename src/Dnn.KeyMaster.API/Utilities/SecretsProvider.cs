@@ -43,7 +43,7 @@ namespace Dnn.KeyMaster.API.Utilities
             return KeyVaultProvider.GetConnectionString(appsettings);
         }
 
-        internal static IEnumerable<string> GetAppSettings(Secrets secrets)
+        internal static IEnumerable<string> GetAppSettingsKeys(Secrets secrets)
         {
             var appsettings = new AppSettings
             {
@@ -56,6 +56,20 @@ namespace Dnn.KeyMaster.API.Utilities
 
 
             return KeyVaultProvider.AppSettings.AllKeys;
+        }
+
+        internal static string GetAppSettingValue(Secrets secrets, string key)
+        {
+            var appsettings = new AppSettings
+            {
+                ClientId = secrets.ClientId,
+                ClientSecret = secrets.ClientSecret,
+                DirectoryId = secrets.DirectoryId,
+                SecretName = secrets.SecretName,
+                KeyVaultUrl = secrets.KeyVaultUrl
+            };
+
+            return KeyVaultProvider.AppSettings[key];
         }
     }
 }
