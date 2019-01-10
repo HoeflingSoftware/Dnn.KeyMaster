@@ -182,6 +182,10 @@ define(
                                                         sf.get(getSecret.route, getSecret.parameter, getSecret.success);
                                                     });
 
+                                                    var delButton = $(row).find('.delete');
+                                                    delButton.off('click');
+                                                    delButton.on('click', deleteSecretRow);
+
                                                     window.dnn.utility.notify('Successfully updated secret');
                                                 } else {
                                                     window.dnn.utility.notifyError('Unable to update secret!');
@@ -411,7 +415,7 @@ define(
                     $('#keymaster-add-appsetting').click(function () {
                         var row = createRow('');
                         $(row).find("input[name='value']")[0].value = '';
-                        $(row).find('.delete').click(deleteSecretRow);
+                        $(row).find('.delete').click(function () { row.remove(); });
                         openSecret($(row).find('.view-secret')[0], 'Save');
                         $('#keymaster-appsettings-container').append(row);
                     });
