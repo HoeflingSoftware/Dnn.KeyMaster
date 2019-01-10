@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetNuke.Instrumentation" Version="9.2.1.533" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
@@ -15,9 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="DotNetNuke.Instrumentation">
-      <HintPath>..\..\lib\DotNetNuke.Instrumentation.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
