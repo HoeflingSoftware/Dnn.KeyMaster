@@ -86,7 +86,7 @@ Task("Dnn Manifest")
 	.Does(() =>
 {
 	Information("Updating Dnn Manifest File");
-	StartPowershellFile("buildDnnManifest.ps1", new PowershellSettings()
+	StartPowershellFile("./BuildUtilities/buildDnnManifest.ps1", new PowershellSettings()
 		.WithArguments(args => 
 		{
 			args.Append("Version", version);

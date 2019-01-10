@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Dnn.KeyMaster" type="PersonaBar" version="2.8.0">
+    <package name="Dnn.KeyMaster" type="PersonaBar" version="1.0.0">
       <friendlyName>Dnn.KeyMaster</friendlyName>
       <description />
       <iconFile />
