@@ -3,9 +3,11 @@ using Dnn.KeyMaster.Exceptions;
 using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Dnn.KeyMaster.API.Utilities
@@ -59,13 +61,16 @@ namespace Dnn.KeyMaster.API.Utilities
 
         internal static void SendAppSettings()
         {
+            var tasks = new List<Task<bool>>();
             foreach (var key in ConfigurationManager.AppSettings.AllKeys)
             {
-                var result = KeyVaultProvider.CreateOrUpdateAppSetting(key, ConfigurationManager.AppSettings[key]);
-                if (!result)
-                {
-                    throw new KeyMasterException("Key master couldn't send app secrets to azure");
-                }
+                tasks.Add(Task.Run(async () => await KeyVaultProvider.CreateOrUpdateAppSetting(key, ConfigurationManager.AppSettings[key])));
+            }
+
+            var results = Task.WhenAll(tasks).Result;
+            if (results.Any(x => !x))
+            {
+                throw new KeyMasterException("Key master couldn't send app secrets to azure");
             }
 
             var xml = XDocument.Load(SecretsProvider.WebconfigFile);

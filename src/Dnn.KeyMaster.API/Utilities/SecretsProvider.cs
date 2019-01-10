@@ -97,7 +97,7 @@ namespace Dnn.KeyMaster.API.Utilities
                 KeyVaultUrl = secrets.KeyVaultUrl
             };
 
-            return KeyVaultProvider.CreateOrUpdateAppSetting(key, value, appsettings);
+            return KeyVaultProvider.CreateOrUpdateAppSetting(key, value, appsettings).Result;
         }
     }
 }

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
 {
@@ -165,7 +166,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             return false;
         }
 
-        public static bool CreateOrUpdateAppSetting(string key, string value, AppSettings config = null)
+        public static async Task<bool> CreateOrUpdateAppSetting(string key, string value, AppSettings config = null)
         {
             try
             {
@@ -193,7 +194,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
                     };
                     var json = JsonConvert.SerializeObject(keyVaultSecret);
 
-                    var response = client.PutAsync(secret, new StringContent(json, Encoding.UTF8, "application/json")).Result;
+                    var response = await client.PutAsync(secret, new StringContent(json, Encoding.UTF8, "application/json"));
                     if (response.IsSuccessStatusCode)
                     {
                         AppSettings[key] = value;
