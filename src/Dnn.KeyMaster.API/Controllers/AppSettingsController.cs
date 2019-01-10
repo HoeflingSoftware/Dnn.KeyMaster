@@ -46,5 +46,23 @@ namespace Dnn.KeyMaster.API.Controllers
 
             return response.ToHttpResponseMessage();
         }
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
+        public HttpResponseMessage Get(string key)
+        {
+            var response = new PersonaBarResponse<AppSetting>
+            {
+                Success = true,
+                Result = new AppSetting
+                {
+                    Key = "Demo",
+                    Value = "value"
+                }
+            };
+
+            return response.ToHttpResponseMessage();
+        }
     }
 }

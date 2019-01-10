@@ -95,17 +95,27 @@ define(
                                                 var key = parent.find("input[name='key']").val();
                                                 /// get secret value
 
-                                                var secret = parent.find("input[name='value']")[0];
-                                                secret.type = 'text';
-                                                secret.value = 'retrieved value';
+                                                var getSecret = {
+                                                    route: baseRoute + '/AppSettings/Get',
+                                                    parameter: { key: key },
+                                                    success: function (response) {
+                                                        if (response.Success) {
+                                                            var secret = parent.find("input[name='value']")[0];
+                                                            secret.type = 'text';
+                                                            secret.value = response.Result.Value;
 
-                                                var button = parent.find('span')[0];
-                                                button.classList = 'update-secret tag is-danger';
-                                                button.innerHTML = 'Update';
-                                                $(button).off('click');
-                                                $(button).on('click', function () {
-                                                    alert('saving secret');
-                                                });
+                                                            var button = parent.find('span')[0];
+                                                            button.classList = 'update-secret tag is-danger';
+                                                            button.innerHTML = 'Update';
+                                                            $(button).off('click');
+                                                            $(button).on('click', function () {
+                                                                alert('saving secret');
+                                                            });
+                                                        }
+                                                    }
+                                                };
+
+                                                sf.get(getSecret.route, getSecret.parameter, getSecret.success);                                                
                                             });
 
                                         }
