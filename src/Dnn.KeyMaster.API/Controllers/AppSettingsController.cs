@@ -87,10 +87,27 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Delete([FromBody] AppSetting appsetting)
         {
-            var response = new PersonaBarResponse
+            var response = new PersonaBarResponse();
+            if (string.IsNullOrEmpty(appsetting.Key))
             {
-                Success = true
-            };
+                response.Success = false;
+                return response.ToHttpResponseMessage();
+            }
+            
+            if (!File.Exists(SecretsProvider.SecretsFile))
+            {
+                response = new PersonaBarResponse
+                {
+                    Success = false
+                };
+
+                return response.ToHttpResponseMessage();
+            }
+
+            var json = File.ReadAllText(SecretsProvider.SecretsFile);
+            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
+
+            response.Success = SecretsProvider.DeleteAppSetting(secrets, appsetting.Key);
             return response.ToHttpResponseMessage();
         }
 

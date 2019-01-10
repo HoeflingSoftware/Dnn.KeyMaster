@@ -4,8 +4,8 @@ using Dnn.KeyMaster.Web.Security.KeyVault.Models;
 using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Web.Hosting;
-using System.Linq;
 
 namespace Dnn.KeyMaster.API.Utilities
 {
@@ -70,6 +70,21 @@ namespace Dnn.KeyMaster.API.Utilities
             };
 
             return KeyVaultProvider.AppSettings[key];
+        }
+
+        internal static bool DeleteAppSetting(Secrets secrets, string key)
+        {
+            var appsettings = new AppSettings
+            {
+                ClientId = secrets.ClientId,
+                ClientSecret = secrets.ClientSecret,
+                DirectoryId = secrets.DirectoryId,
+                SecretName = secrets.SecretName,
+                KeyVaultUrl = secrets.KeyVaultUrl
+            };
+
+            
+            return KeyVaultProvider.DeleteSecret(key, appsettings);
         }
     }
 }
