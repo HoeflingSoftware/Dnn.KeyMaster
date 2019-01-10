@@ -1,4 +1,5 @@
-﻿using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
+﻿using Dnn.KeyMaster.Exceptions;
+using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
 using System;
 using System.Collections.Specialized;
 using System.Web.Security;
@@ -19,8 +20,9 @@ namespace Dnn.KeyMaster.Providers
 
                 base.Initialize(name, config);
             }
-            catch (Exception ex)
+            catch (KeyMasterException ex)
             {
+                throw ex;
             }
         }
     }
