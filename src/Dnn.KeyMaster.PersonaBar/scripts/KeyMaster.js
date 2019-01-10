@@ -141,6 +141,7 @@ define(
                         $(button).on('click', function () {
                             var parent = $(this)[0].parentElement.parentElement.parentElement;
                             var key = $(row).find("input[name='key']")[0].value;
+                            var value = $(row).find("input[name='value']")[0].value;
                             var inputs = $(parent.parentElement).find("input[name='key']");
 
                             var count = 0;
@@ -152,6 +153,8 @@ define(
 
                             if (count > 1) {
                                 window.dnn.utility.notifyError("Can't create duplicate App Setting!");
+                            } else if (key === '' || value === '') {
+                                window.dnn.utility.notifyError("Can't save empty key/value App Setting!");
                             } else {
                                 var modal = {
                                     message: 'Are you sure you want to update your secret?',
