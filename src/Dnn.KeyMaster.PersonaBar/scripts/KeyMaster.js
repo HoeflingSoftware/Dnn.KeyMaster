@@ -130,8 +130,12 @@ define(
                                                                                     button.innerHTML = 'View Secret';
                                                                                     $(button).off('click');
                                                                                     $(button).on('click', function () {
-                                                                                        sf.get(getSecret.route, getSecret.parameter, getSecret.success);     
+                                                                                        sf.get(getSecret.route, getSecret.parameter, getSecret.success);
                                                                                     });
+
+                                                                                    window.dnn.utility.notify('Successfully updated secret');
+                                                                                } else {
+                                                                                    window.dnn.utility.notifyError('Unable to update secret!');
                                                                                 }
                                                                             }
                                                                         };
@@ -167,6 +171,9 @@ define(
                                                             success: function (response) {
                                                                 if (response.Success) {
                                                                     row.remove();
+                                                                    window.dnn.utility.notify('Deleted secret');
+                                                                } else {
+                                                                    window.dnn.utility.notifyError('Unable to delete secret!');
                                                                 }
                                                             }
                                                         };
