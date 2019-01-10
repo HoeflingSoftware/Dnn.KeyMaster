@@ -1,4 +1,4 @@
-#addin "Cake.Powershell"
+#addin "Cake.Powershell&version=0.4.7"
 
 var target = Argument ("target", Argument ("t", "Build"));
 var version = Argument ("package_version", "1.0.0");
