@@ -14,6 +14,7 @@ define(
                                         
                     var baseRoute = 'Dnn.KeyMaster';
                     var sf = window.dnn.utility.sf;
+                    var confirm = window.dnn.utility.confirm;
 
                     var status = {
                         route: baseRoute + '/Home/Status',
@@ -109,8 +110,16 @@ define(
                                                             button.innerHTML = 'Update';
                                                             $(button).off('click');
                                                             $(button).on('click', function () {
-                                                                // Add a confirmation modal before processing the save
-                                                                alert('saving secret');
+                                                                var modal = {
+                                                                    message: 'Are you sure you want to update your secret?',
+                                                                    confirm: 'Save',
+                                                                    cancel: 'Cancel',
+                                                                    confirmCallback: function () {
+                                                                        alert('saving secret');
+                                                                    }
+                                                                };
+
+                                                                confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback);
                                                             });
                                                         }
                                                     }
@@ -120,8 +129,16 @@ define(
                                             });
 
                                             $($('#keymaster-appsettings-container')[0]).find('.delete').click(function () {
-                                                // add a confirmation modal before processing the delete
-                                                alert('deleting secret');
+                                                var modal = {
+                                                    message: 'Are you sure you want to delete your secret?',
+                                                    confirm: 'Delete',
+                                                    cancel: 'Cancel',
+                                                    confirmCallback: function () {
+                                                        alert('deleting secret');
+                                                    }
+                                                };
+
+                                                confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback);
                                             });
                                         }
                                     }
