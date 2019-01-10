@@ -16,6 +16,111 @@ define(
                     var sf = window.dnn.utility.sf;
                     var confirm = window.dnn.utility.confirm;
 
+                    var createRow = function (name) {
+                        var row = document.createElement('div');
+                        row.classList = 'field-body';
+
+                        var createControl = function (value, type, isProtected) {
+                            var field = document.createElement('div');
+                            field.classList = 'field';
+
+                            var control = document.createElement('p');
+
+                            if (type === 'input') {
+                                control.classList = 'control is-expanded';
+                            } else {
+                                control.classList = 'control';
+                            }
+
+                            var contents = {};
+                            if (type === 'input') {
+                                contents = document.createElement('input');
+                                contents.classList = 'input';
+
+                                if (isProtected) {
+                                    contents.name = 'value';
+                                    contents.type = 'password';
+                                    contents.value = '********************';
+                                } else {
+                                    contents.name = 'key';
+                                    contents.type = 'text';
+                                    contents.value = value;
+                                }
+                            } else if (type === 'delete') {
+                                contents = document.createElement('button');
+                                contents.classList = 'delete';
+                            } else if (type === 'view') {
+                                contents = document.createElement('span');
+                                contents.classList = 'view-secret tag is-warning';
+                                contents.innerHTML = value;
+                            }
+
+                            control.appendChild(contents);
+                            field.appendChild(control);
+
+                            return field;
+                        };
+
+                        var nameField = createControl(name, 'input', false);
+                        var passwordField = createControl({}, 'input', true);
+                        var viewField = createControl('View Secret', 'view');
+                        var deleteField = createControl({}, 'delete');
+
+                        row.appendChild(nameField);
+                        row.appendChild(passwordField);
+                        row.appendChild(viewField);
+                        row.appendChild(deleteField);
+
+                        return row;
+                    };
+
+                    var openSecret = function (element, title) {
+                        var button = element;
+                        var row = button.parentElement.parentElement.parentElement;
+                        button.classList = 'update-secret tag is-danger';
+                        button.innerHTML = title;
+                        $(button).off('click');
+                        $(button).on('click', function () {
+                            var parent = $(this)[0].parentElement.parentElement.parentElement;
+                            var modal = {
+                                message: 'Are you sure you want to update your secret?',
+                                confirm: 'Save',
+                                cancel: 'Cancel',
+                                confirmCallback: function () {
+                                    var saveSecret = {
+                                        route: baseRoute + '/AppSettings/Save',
+                                        payload: {
+                                            Key: $(row).find("input[name='key']")[0].value,
+                                            Value: $(row).find("input[name='value']")[0].value
+                                        },
+                                        success: function (response) {
+                                            if (response.Success) {
+                                                var secret = $(parent).find("input[name='value']")[0];
+                                                secret.type = 'password';
+                                                secret.value = '********************';
+
+                                                button.classList = 'view-secret tag is-warning';
+                                                button.innerHTML = 'View Secret';
+                                                $(button).off('click');
+                                                $(button).on('click', function () {
+                                                    sf.get(getSecret.route, getSecret.parameter, getSecret.success);
+                                                });
+
+                                                window.dnn.utility.notify('Successfully updated secret');
+                                            } else {
+                                                window.dnn.utility.notifyError('Unable to update secret!');
+                                            }
+                                        }
+                                    };
+
+                                    sf.post(saveSecret.route, saveSecret.payload, saveSecret.success);
+                                }
+                            };
+
+                            confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback);
+                        });
+                    };
+
                     var status = {
                         route: baseRoute + '/Home/Status',
                         success: function (response) {
@@ -28,70 +133,11 @@ define(
                                     route: baseRoute + '/AppSettings/List',
                                     success: function (response) {
                                         if (response.Success) {
-                                            var createRow = function (name) {
-                                                var row = document.createElement('div');
-                                                row.classList = 'field-body';
-
-                                                var createControl = function (value, type, isProtected) {
-                                                    var field = document.createElement('div');
-                                                    field.classList = 'field';
-
-                                                    var control = document.createElement('p');
-
-                                                    if (type === 'input') {
-                                                        control.classList = 'control is-expanded';
-                                                    } else {
-                                                        control.classList = 'control';
-                                                    }
-
-                                                    var contents = {};
-                                                    if (type === 'input') {
-                                                        contents = document.createElement('input');
-                                                        contents.classList = 'input';
-
-                                                        if (isProtected) {
-                                                            contents.name = 'value';
-                                                            contents.type = 'password';
-                                                            contents.value = '********************';
-                                                        } else {
-                                                            contents.name = 'key';
-                                                            contents.type = 'text';
-                                                            contents.value = value;
-                                                        }
-                                                    } else if (type === 'delete') {
-                                                        contents = document.createElement('button');
-                                                        contents.classList = 'delete';
-                                                    } else if (type === 'view') {
-                                                        contents = document.createElement('span');
-                                                        contents.classList = 'view-secret tag is-warning';
-                                                        contents.innerHTML = value;
-                                                    }
-
-                                                    control.appendChild(contents);
-                                                    field.appendChild(control);
-
-                                                    return field;
-                                                };
-
-                                                var nameField = createControl(name, 'input', false);
-                                                var passwordField = createControl({}, 'input', true);
-                                                var viewField = createControl('View Secret', 'view');
-                                                var deleteField = createControl({}, 'delete');
-
-                                                row.appendChild(nameField);
-                                                row.appendChild(passwordField);
-                                                row.appendChild(viewField);
-                                                row.appendChild(deleteField);
-
-                                                return row;
-                                            };
-
                                             var container = document.getElementById('keymaster-appsettings-container');
                                             for (var index = 0; index < response.Result.length; index++) {
                                                 container.append(createRow(response.Result[index].Key));
                                             }
 
-                                            var viewSecretClick = 
                                             $('.view-secret').on('click', function () {
                                                 var parent = $(this).parent().parent().parent();
                                                 var key = parent.find("input[name='key']").val();
@@ -105,47 +151,7 @@ define(
                                                             secret.type = 'text';
                                                             secret.value = response.Result.Value;
 
-                                                            var button = parent.find('span')[0];
-                                                            button.classList = 'update-secret tag is-danger';
-                                                            button.innerHTML = 'Update';
-                                                            $(button).off('click');
-                                                            $(button).on('click', function () {
-                                                                var modal = {
-                                                                    message: 'Are you sure you want to update your secret?',
-                                                                    confirm: 'Save',
-                                                                    cancel: 'Cancel',
-                                                                    confirmCallback: function () {
-                                                                        var saveSecret = {
-                                                                            route: baseRoute + '/AppSettings/Save',
-                                                                            payload: {
-                                                                                Key: key,
-                                                                                Value: secret.value
-                                                                            },
-                                                                            success: function (response) {
-                                                                                if (response.Success) {
-                                                                                    secret.type = 'password';
-                                                                                    secret.value = '********************';
-
-                                                                                    button.classList = 'view-secret tag is-warning';
-                                                                                    button.innerHTML = 'View Secret';
-                                                                                    $(button).off('click');
-                                                                                    $(button).on('click', function () {
-                                                                                        sf.get(getSecret.route, getSecret.parameter, getSecret.success);
-                                                                                    });
-
-                                                                                    window.dnn.utility.notify('Successfully updated secret');
-                                                                                } else {
-                                                                                    window.dnn.utility.notifyError('Unable to update secret!');
-                                                                                }
-                                                                            }
-                                                                        };
-
-                                                                        sf.post(saveSecret.route, saveSecret.payload, saveSecret.success);
-                                                                    }
-                                                                };
-
-                                                                confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback);
-                                                            });
+                                                            openSecret(parent.find('span')[0], 'Update');
                                                         }
                                                     }
                                                 };
@@ -365,6 +371,13 @@ define(
                         $('#keymaster-tabs-configuration').addClass('is-active');
                         $('#keymaster-appsettings').hide();
                         $('#keymaster-configuration').show();
+                    });
+
+                    $('#keymaster-add-appsetting').click(function () {
+                        var row = createRow('');
+                        $(row).find("input[name='value']")[0].value = '';
+                        openSecret($(row).find('.view-secret')[0], 'Save');
+                        $('#keymaster-appsettings-container').append(row);
                     });
                 });
             },
