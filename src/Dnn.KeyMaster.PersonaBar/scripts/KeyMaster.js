@@ -82,42 +82,56 @@ define(
                         $(button).off('click');
                         $(button).on('click', function () {
                             var parent = $(this)[0].parentElement.parentElement.parentElement;
-                            var modal = {
-                                message: 'Are you sure you want to update your secret?',
-                                confirm: 'Save',
-                                cancel: 'Cancel',
-                                confirmCallback: function () {
-                                    var saveSecret = {
-                                        route: baseRoute + '/AppSettings/Save',
-                                        payload: {
-                                            Key: $(row).find("input[name='key']")[0].value,
-                                            Value: $(row).find("input[name='value']")[0].value
-                                        },
-                                        success: function (response) {
-                                            if (response.Success) {
-                                                var secret = $(parent).find("input[name='value']")[0];
-                                                secret.type = 'password';
-                                                secret.value = '********************';
+                            var key = $(row).find("input[name='key']")[0].value;
+                            var inputs = $(parent.parentElement).find("input[name='key']");
 
-                                                button.classList = 'view-secret tag is-warning';
-                                                button.innerHTML = 'View Secret';
-                                                $(button).off('click');
-                                                $(button).on('click', function () {
-                                                    sf.get(getSecret.route, getSecret.parameter, getSecret.success);
-                                                });
-
-                                                window.dnn.utility.notify('Successfully updated secret');
-                                            } else {
-                                                window.dnn.utility.notifyError('Unable to update secret!');
-                                            }
-                                        }
-                                    };
-
-                                    sf.post(saveSecret.route, saveSecret.payload, saveSecret.success);
+                            var count = 0;
+                            for (var index = 0; index < inputs.length; index++) {
+                                if (inputs[index].value === key) {
+                                    count++;
                                 }
-                            };
+                            }
 
-                            confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback);
+                            if (count > 1) {
+                                window.dnn.utility.notifyError("Can't create duplicate App Setting!");
+                            } else {
+                                var modal = {
+                                    message: 'Are you sure you want to update your secret?',
+                                    confirm: 'Save',
+                                    cancel: 'Cancel',
+                                    confirmCallback: function () {
+                                        var saveSecret = {
+                                            route: baseRoute + '/AppSettings/Save',
+                                            payload: {
+                                                Key: key,
+                                                Value: $(row).find("input[name='value']")[0].value
+                                            },
+                                            success: function (response) {
+                                                if (response.Success) {
+                                                    var secret = $(parent).find("input[name='value']")[0];
+                                                    secret.type = 'password';
+                                                    secret.value = '********************';
+
+                                                    button.classList = 'view-secret tag is-warning';
+                                                    button.innerHTML = 'View Secret';
+                                                    $(button).off('click');
+                                                    $(button).on('click', function () {
+                                                        sf.get(getSecret.route, getSecret.parameter, getSecret.success);
+                                                    });
+
+                                                    window.dnn.utility.notify('Successfully updated secret');
+                                                } else {
+                                                    window.dnn.utility.notifyError('Unable to update secret!');
+                                                }
+                                            }
+                                        };
+
+                                        sf.post(saveSecret.route, saveSecret.payload, saveSecret.success);
+                                    }
+                                };
+
+                                confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback);
+                            }
                         });
                     };
 
