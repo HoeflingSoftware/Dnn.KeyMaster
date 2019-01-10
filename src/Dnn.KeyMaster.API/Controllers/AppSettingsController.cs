@@ -93,5 +93,17 @@ namespace Dnn.KeyMaster.API.Controllers
             };
             return response.ToHttpResponseMessage();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RequireHost]
+        public HttpResponseMessage Save([FromBody] AppSetting appsetting)
+        {
+            var response = new PersonaBarResponse
+            {
+                Success = true
+            };
+            return response.ToHttpResponseMessage();
+        }
     }
 }
