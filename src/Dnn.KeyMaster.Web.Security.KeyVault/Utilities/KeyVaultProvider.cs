@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 
 namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
 {
@@ -55,7 +56,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
                     if (secretResponse.IsSuccessStatusCode)
                     {
                         var secretJson = secretResponse.Content.ReadAsStringAsync().Result;
-                        var secret = JsonConvert.DeserializeObject<KeyVaultSecretResponse>(secretJson);
+                        var secret = JsonConvert.DeserializeObject<KeyVaultSecret>(secretJson);
 
                         var name = item.Id
                             .Split('/').LastOrDefault()
@@ -164,6 +165,56 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             return false;
         }
 
+        public static bool CreateOrUpdateAppSetting(string key, string value, AppSettings config = null)
+        {
+            try
+            {
+                if (config == null)
+                {
+                    config = SecretsProvider.GetSecrets();
+                }
+
+                var token = AzureAccessTokenProvider.GetToken(config);
+                using (var client = new HttpClient())
+                {
+                    var name = key
+                        .Replace(":", "--")
+                        .Replace(".", "---");
+
+                    name = $"{config.SecretName}--AppSettings--{name}";
+
+                    var secret = string.Format(API.Secret, config.KeyVaultUrl, name);
+                    client.DefaultRequestHeaders.Add("Authorization", token.ToString());
+
+                    var keyVaultSecret = new KeyVaultSecret
+                    {
+                        Id = secret,
+                        Value = value
+                    };
+                    var json = JsonConvert.SerializeObject(keyVaultSecret);
+
+                    var response = client.PutAsync(secret, new StringContent(json, Encoding.UTF8, "application/json")).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        AppSettings[key] = value;
+                        return true;
+                    }
+                    else if (response.ReasonPhrase == "FORBIDDEN")
+                    {
+                        throw new ForbiddenKeyMasterException();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                logger.Error(ex.Message, ex);
+                throw new KeyMasterException("Unable to delete secret", ex);
+            }
+
+            return false;
+        }
+
         public static string GetConnectionString(AppSettings appsettings = null)
         {
             try
@@ -182,7 +233,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
                     if (response.IsSuccessStatusCode)
                     {
                         var json = response.Content.ReadAsStringAsync().Result;
-                        var secret = JsonConvert.DeserializeObject<KeyVaultSecretResponse>(json);
+                        var secret = JsonConvert.DeserializeObject<KeyVaultSecret>(json);
 
                         if (secret != null)
                         {

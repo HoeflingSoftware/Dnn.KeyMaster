@@ -116,10 +116,27 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Save([FromBody] AppSetting appsetting)
         {
-            var response = new PersonaBarResponse
+            var response = new PersonaBarResponse();
+            if (!ModelState.IsValid || appsetting == null)
             {
-                Success = true
+                response.Success = false;
+                return response.ToHttpResponseMessage();
             };
+
+            if (!File.Exists(SecretsProvider.SecretsFile))
+            {
+                response = new PersonaBarResponse
+                {
+                    Success = false
+                };
+
+                return response.ToHttpResponseMessage();
+            }
+
+            var json = File.ReadAllText(SecretsProvider.SecretsFile);
+            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
+
+            response.Success = SecretsProvider.CreateOrUpdateAppSetting(appsetting.Key, appsetting.Value, secrets);
             return response.ToHttpResponseMessage();
         }
     }
