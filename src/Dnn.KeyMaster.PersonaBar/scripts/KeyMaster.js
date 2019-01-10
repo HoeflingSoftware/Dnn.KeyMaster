@@ -151,6 +151,7 @@ define(
 
                                             $($('#keymaster-appsettings-container')[0]).find('.delete').click(function () {
                                                 var parent = $(this).parent().parent().parent();
+                                                var row = this.parentElement.parentElement.parentElement;
 
                                                 var modal = {
                                                     message: 'Are you sure you want to delete your secret?',
@@ -165,7 +166,7 @@ define(
                                                             },
                                                             success: function (response) {
                                                                 if (response.Success) {
-                                                                    alert('Secret Deleted!!');
+                                                                    row.remove();
                                                                 }
                                                             }
                                                         };
