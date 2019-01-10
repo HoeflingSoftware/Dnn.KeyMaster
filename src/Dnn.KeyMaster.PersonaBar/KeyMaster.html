@@ -8,71 +8,82 @@
 <div class="dnn-grid-cell dnn-persona-bar-page-body">
     <div class="keymaster-container">
         <div id="keymaster-live" style="font-size:3em; color:green; margin-bottom:1em" hidden="hidden">Key Master - Enabled</div>
-        <p>The Dnn Key Master is a security utility for using Azure KeyVault to store your Dnn's connection string instead of storing that information in plain text in your web.config file.</p>
-        <p><span style="color:red">Take a backup of your web.config, if something goes wrong use your backup.</span> The Dnn Key Master will be making changes to your web.config when everything is configured correctly.</p>
-
-        <div class="field">
-            <label class="label">Client Id</label>
-            <div class="control">
-                <input id="keymaster-client-id" class="input" autocomplete="false" type="text" placeholder="00000000-0000-0000-0000-000000000000">
-            </div>
+        <div class="tabs">
+            <ul>
+                <li id="keymaster-tabs-configuration" class="is-active"><a>Configuration</a></li>
+                <li id="keymaster-tabs-appsettings"><a>App Settings</a></li>
+            </ul>
         </div>
 
-        <div class="field">
-            <label class="label">Client Secret</label>
-            <div class="control">
-                <input id="keymaster-client-secret" class="input" autocomplete="false" type="password" placeholder="**************">
-            </div>
-        </div>
+        <div id="keymaster-configuration">        
+            <p>The Dnn Key Master is a security utility for using Azure KeyVault to store your Dnn's connection string instead of storing that information in plain text in your web.config file.</p>
+            <p><span style="color:red">Take a backup of your web.config, if something goes wrong use your backup.</span> The Dnn Key Master will be making changes to your web.config when everything is configured correctly.</p>
 
-        <div class="field">
-            <label class="label">Secret Name</label>
-            <div class="control">
-                <input id="keymaster-secret-name" class="input" autocomplete="false" type="password" placeholder="ConnectionStringName">
+            <div class="field">
+                <label class="label">Client Id</label>
+                <div class="control">
+                    <input id="keymaster-client-id" class="input" autocomplete="false" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+                </div>
             </div>
-        </div>
 
-        <div class="field">
-            <label class="label">Directory Id (Tenant Id)</label>
-            <div class="control">
-                <input id="keymaster-directory-id" class="input" autocomplete="false" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+            <div class="field">
+                <label class="label">Client Secret</label>
+                <div class="control">
+                    <input id="keymaster-client-secret" class="input" autocomplete="false" type="password" placeholder="**************">
+                </div>
             </div>
-        </div>
 
-        <div class="field">
-            <label class="label">Key Vault Url</label>
-            <div class="control">
-                <input id="keymaster-key-vault-url" class="input" autocomplete="false" type="text" placeholder="https://******.vault.azure.net">
+            <div class="field">
+                <label class="label">Secret Name</label>
+                <div class="control">
+                    <input id="keymaster-secret-name" class="input" autocomplete="false" type="password" placeholder="ConnectionStringName">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Directory Id (Tenant Id)</label>
+                <div class="control">
+                    <input id="keymaster-directory-id" class="input" autocomplete="false" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Key Vault Url</label>
+                <div class="control">
+                    <input id="keymaster-key-vault-url" class="input" autocomplete="false" type="text" placeholder="https://******.vault.azure.net">
+                </div>
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" id="keymaster-save-config">Save</button>
+                    <button class="button is-text" id="keymaster-test-config">Test</button>
+                    <!-- We should test this all client side -->
+                </div>
+            </div>
+            <div>
+                <div id="save-in-progress" hidden="hidden" class="notification is-info">
+                    <button class="delete"></button>
+                    Saving Configuration . . .
+                </div>
+                <div id="test-in-progess" hidden="hidden" class="notification is-info">
+                    <button class="delete"></button>
+                    Testing Configuration . . .
+                </div>
+                <div id="test-success" hidden="hidden" class="notification is-success">
+                    <button class="delete"></button>
+                    Configuration works! You are all set to turn Key Master On
+                </div>
+                <div id="save-success" hidden="hidden" class="notification is-success">
+                    <button class="delete"></button>
+                    Configuration Saved!
+                </div>
+                <div id="test-failure" hidden="hidden" class="notification is-danger">
+                    <button class="delete"></button>
+                    <strong>FAILURE!!</strong> The configuration specified did not work, please check the keys and try again. <strong>Attempt to turn on Key Master will crash your site.</strong>
+                </div>
             </div>
         </div>
-        <div class="field is-grouped">
-            <div class="control">
-                <button class="button is-link" id="keymaster-save-config">Save</button>
-                <button class="button is-text" id="keymaster-test-config">Test</button>
-                <!-- We should test this all client side -->
-            </div>
-        </div>
-        <div>
-            <div id="save-in-progress" hidden="hidden" class="notification is-info">
-                <button class="delete"></button>
-                Saving Configuration . . .
-            </div>
-            <div id="test-in-progess" hidden="hidden" class="notification is-info">
-                <button class="delete"></button>
-                Testing Configuration . . .
-            </div>
-            <div id="test-success" hidden="hidden" class="notification is-success">
-                <button class="delete"></button>
-                Configuration works! You are all set to turn Key Master On
-            </div>
-            <div id="save-success" hidden="hidden" class="notification is-success">
-                <button class="delete"></button>
-                Configuration Saved!
-            </div>
-            <div id="test-failure" hidden="hidden" class="notification is-danger">
-                <button class="delete"></button>
-                <strong>FAILURE!!</strong> The configuration specified did not work, please check the keys and try again. <strong>Attempt to turn on Key Master will crash your site.</strong>
-            </div>
+        <div id="keymaster-appsettings" hidden="hidden">
         </div>
     </div>
 </div>

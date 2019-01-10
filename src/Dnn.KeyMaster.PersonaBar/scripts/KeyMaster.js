@@ -10,10 +10,10 @@ define(
                     $('#save-in-progress').hide();
                     $('#test-in-progess').hide();
                     $('#save-success').hide();
+                    $('#keymaster-appsettings').hide();
                                         
                     var baseRoute = 'Dnn.KeyMaster';
                     var sf = window.dnn.utility.sf;
-                    var isEnabled = false;
 
                     var status = {
                         route: baseRoute + '/Home/Status',
@@ -182,6 +182,20 @@ define(
 
                     $('.delete').click(function () {
                         $(this).parent().hide();
+                    });
+
+                    $('#keymaster-tabs-appsettings').click(function () {
+                        $('#keymaster-tabs-configuration').removeClass('is-active');
+                        $('#keymaster-tabs-appsettings').addClass('is-active');
+                        $('#keymaster-configuration').hide();
+                        $('#keymaster-appsettings').show();
+                    });
+
+                    $('#keymaster-tabs-configuration').click(function () {
+                        $('#keymaster-tabs-appsettings').removeClass('is-active');
+                        $('#keymaster-tabs-configuration').addClass('is-active');
+                        $('#keymaster-appsettings').hide();
+                        $('#keymaster-configuration').show();
                     });
                 });
             },
