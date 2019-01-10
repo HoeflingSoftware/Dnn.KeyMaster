@@ -74,6 +74,24 @@ define(
                         return row;
                     };
 
+                    var buildGetSecret = function (parent, key) {
+                        var model = {
+                            route: baseRoute + '/AppSettings/Get',
+                            parameter: { key: key },
+                            success: function (response) {
+                                if (response.Success) {
+                                    var secret = parent.find("input[name='value']")[0];
+                                    secret.type = 'text';
+                                    secret.value = response.Result.Value;
+
+                                    openSecret(parent.find('span')[0], 'Update');
+                                }
+                            }
+                        };
+
+                        return model;
+                    };
+
                     var openSecret = function (element, title) {
                         var button = element;
                         var row = button.parentElement.parentElement.parentElement;
@@ -116,6 +134,8 @@ define(
                                                     button.innerHTML = 'View Secret';
                                                     $(button).off('click');
                                                     $(button).on('click', function () {
+                                                        var parent = $(this).parent().parent().parent();
+                                                        var getSecret = buildGetSecret(parent, key);
                                                         sf.get(getSecret.route, getSecret.parameter, getSecret.success);
                                                     });
 
@@ -134,6 +154,7 @@ define(
                             }
                         });
                     };
+
 
                     var status = {
                         route: baseRoute + '/Home/Status',
@@ -156,20 +177,7 @@ define(
                                                 var parent = $(this).parent().parent().parent();
                                                 var key = parent.find("input[name='key']").val();
 
-                                                var getSecret = {
-                                                    route: baseRoute + '/AppSettings/Get',
-                                                    parameter: { key: key },
-                                                    success: function (response) {
-                                                        if (response.Success) {
-                                                            var secret = parent.find("input[name='value']")[0];
-                                                            secret.type = 'text';
-                                                            secret.value = response.Result.Value;
-
-                                                            openSecret(parent.find('span')[0], 'Update');
-                                                        }
-                                                    }
-                                                };
-
+                                                var getSecret = buildGetSecret(parent, key);
                                                 sf.get(getSecret.route, getSecret.parameter, getSecret.success);                                                
                                             });
 
