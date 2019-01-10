@@ -92,6 +92,46 @@ define(
                         return model;
                     };
 
+                    var deleteSecretRow = function () {
+                        var parent = $(this).parent().parent().parent();
+                        var row = this.parentElement.parentElement.parentElement;
+
+                        var key = parent.find("input[name='key']");
+                        var value = parent.find("input[name='value']");
+
+                        if (key === '' || value === '') {
+                            window.dnn.utility.notifyError("Can't delete empty app setting");
+                        } else {
+
+                            var modal = {
+                                message: 'Are you sure you want to delete your secret?',
+                                confirm: 'Delete',
+                                cancel: 'Cancel',
+                                confirmCallback: function () {
+                                    var key = parent.find("input[name='key']").val();
+                                    var deleteSecret = {
+                                        route: baseRoute + '/AppSettings/Delete',
+                                        payload: {
+                                            Key: key
+                                        },
+                                        success: function (response) {
+                                            if (response.Success) {
+                                                row.remove();
+                                                window.dnn.utility.notify('Deleted secret');
+                                            } else {
+                                                window.dnn.utility.notifyError('Unable to delete secret!');
+                                            }
+                                        }
+                                    };
+
+                                    sf.post(deleteSecret.route, deleteSecret.payload, deleteSecret.success);
+                                }
+                            };
+
+                            confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback);
+                        }
+                    };
+
                     var openSecret = function (element, title) {
                         var button = element;
                         var row = button.parentElement.parentElement.parentElement;
@@ -181,37 +221,7 @@ define(
                                                 sf.get(getSecret.route, getSecret.parameter, getSecret.success);                                                
                                             });
 
-                                            $($('#keymaster-appsettings-container')[0]).find('.delete').click(function () {
-                                                var parent = $(this).parent().parent().parent();
-                                                var row = this.parentElement.parentElement.parentElement;
-
-                                                var modal = {
-                                                    message: 'Are you sure you want to delete your secret?',
-                                                    confirm: 'Delete',
-                                                    cancel: 'Cancel',
-                                                    confirmCallback: function () {
-                                                        var key = parent.find("input[name='key']").val();
-                                                        var deleteSecret = {
-                                                            route: baseRoute + '/AppSettings/Delete',
-                                                            payload: {
-                                                                Key: key
-                                                            },
-                                                            success: function (response) {
-                                                                if (response.Success) {
-                                                                    row.remove();
-                                                                    window.dnn.utility.notify('Deleted secret');
-                                                                } else {
-                                                                    window.dnn.utility.notifyError('Unable to delete secret!');
-                                                                }
-                                                            }
-                                                        };
-
-                                                        sf.post(deleteSecret.route, deleteSecret.payload, deleteSecret.success);
-                                                    }
-                                                };
-
-                                                confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback);
-                                            });
+                                            $($('#keymaster-appsettings-container')[0]).find('.delete').click(deleteSecretRow);
                                         }
                                     }
                                 };
@@ -398,6 +408,7 @@ define(
                     $('#keymaster-add-appsetting').click(function () {
                         var row = createRow('');
                         $(row).find("input[name='value']")[0].value = '';
+                        $(row).find('.delete').click(deleteSecretRow);
                         openSecret($(row).find('.view-secret')[0], 'Save');
                         $('#keymaster-appsettings-container').append(row);
                     });
