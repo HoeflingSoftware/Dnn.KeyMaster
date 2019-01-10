@@ -10,7 +10,8 @@ var assemblies = new []
 	"Dnn.KeyMaster.Providers",
 	"Dnn.KeyMaster.API",
 	"Dnn.KeyMaster.Web.Security.KeyVault",
-	"Dnn.KeyMaster.PersonaBar"
+	"Dnn.KeyMaster.PersonaBar",
+	"Dnn.KeyMaster.Exceptions"
 };
 
 // Assumes you have a DNN website installed at the following location

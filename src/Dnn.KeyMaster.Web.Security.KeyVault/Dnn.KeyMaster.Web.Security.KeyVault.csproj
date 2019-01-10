@@ -11,6 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Dnn.KeyMaster.Exceptions\Dnn.KeyMaster.Exceptions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DotNetNuke.Instrumentation">
+      <HintPath>..\..\lib\DotNetNuke.Instrumentation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />

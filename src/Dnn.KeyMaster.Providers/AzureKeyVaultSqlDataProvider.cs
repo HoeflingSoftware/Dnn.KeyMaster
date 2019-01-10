@@ -18,6 +18,7 @@ using Dnn.KeyMaster.Data.Providers.KeyVault.Utilities;
 using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
 
 using Microsoft.ApplicationBlocks.Data;
+using Dnn.KeyMaster.Exceptions;
 
 namespace Dnn.KeyMaster.Providers
 {
@@ -43,7 +44,15 @@ namespace Dnn.KeyMaster.Providers
             {
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    connectionString = KeyVaultProvider.GetConnectionString();
+                    try
+                    {
+                        connectionString = KeyVaultProvider.GetConnectionString();
+                    }
+                    catch (KeyMasterException ex)
+                    {
+                        var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                        logger.Fatal("Unrecoverable Key Master Error", ex);
+                    }
                 }
 
                 return connectionString;
