@@ -14,10 +14,13 @@ namespace Dnn.KeyMaster.Providers
         {
             try
             {
+                // this should be moved to another entry point hook, but this is the easiest way for now.
+                AzureKeyVaultConfigurationProvider.Initialize();
+
                 var connectionString = KeyVaultProvider.GetConnectionString();
 
                 config.Add(ConnectionStringName, connectionString);
-
+                                
                 base.Initialize(name, config);
             }
             catch (KeyMasterException ex)
