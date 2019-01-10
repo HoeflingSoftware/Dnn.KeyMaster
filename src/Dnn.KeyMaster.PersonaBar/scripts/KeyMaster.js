@@ -13,6 +13,7 @@ define(
                                         
                     var baseRoute = 'Dnn.KeyMaster';
                     var sf = window.dnn.utility.sf;
+                    var isEnabled = false;
 
                     var status = {
                         route: baseRoute + '/Home/Status',
@@ -125,7 +126,26 @@ define(
                             }
                         };
 
-                        sf.post(saveConfig.route, saveConfig.payload, saveConfig.success);
+                        sf.get(status.route, {}, function (response) {
+                            if (response.Success) {
+                                var modal = {
+                                    message: 'Changing secrets while Key Master is running is dangerous. Your site may no longer work after saving.', 
+                                    confirm: 'OK',
+                                    cancel: 'Cancel',
+                                    confirmCallback: function () {
+                                        sf.post(saveConfig.route, saveConfig.payload, saveConfig.success);
+                                    },
+                                    cancelCallback: function () {
+                                        $('#save-in-progress').hide();
+                                    }
+                                };
+
+                                window.dnn.utility.confirm(modal.message, modal.confirm, modal.cancel, modal.confirmCallback, modal.cancelCallback); 
+
+                            } else {
+                                sf.post(saveConfig.route, saveConfig.payload, saveConfig.success);
+                            }
+                        });                        
                     });
 
                     $('#keymaster-test-config').click(function () {
