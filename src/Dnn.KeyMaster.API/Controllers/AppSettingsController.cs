@@ -20,13 +20,13 @@ namespace Dnn.KeyMaster.API.Controllers
                 Success = true,
                 Result = new []
                 {
-                    new
+                    new AppSetting
                     {
-                        name = "Test"
+                        Key = "Test"
                     },
-                    new
+                    new AppSetting
                     {
-                        name = "Demo"
+                        Key = "Demo"
                     }
                 }
             };

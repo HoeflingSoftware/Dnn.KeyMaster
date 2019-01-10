@@ -85,7 +85,7 @@ define(
 
                                             var container = document.getElementById('keymaster-appsettings-container');
                                             for (var index = 0; index < response.Result.length; index++) {
-                                                container.append(createRow(response.Result[index].name));
+                                                container.append(createRow(response.Result[index].Key));
                                             }
                                         }
                                     }
