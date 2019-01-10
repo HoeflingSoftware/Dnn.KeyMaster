@@ -1,3 +1,5 @@
+#addin "Cake.Powershell"
+
 var target = Argument ("target", Argument ("t", "Build"));
 var version = Argument ("package_version", "1.0.0");
 var configuration = "Release"; 
@@ -80,10 +82,22 @@ Task("Clean").Does(() =>
 	}	
 });
 
-Task("Build")
-	.IsDependentOn("Clean")
+Task("Dnn Manifest")
 	.Does(() =>
 {
+	Information("Updating Dnn Manifest File");
+	StartPowershellFile("buildDnnManifest.ps1", new PowershellSettings()
+		.WithArguments(args => 
+		{
+			args.Append("Version", version);
+		}));
+});
+
+Task("Build")
+	.IsDependentOn("Clean")
+	.IsDependentOn("Dnn Manifest")
+	.Does(() =>
+{	   
 	DotNetCoreRestore(solution);
 
 	var msbuildSettings = new DotNetCoreMSBuildSettings();
