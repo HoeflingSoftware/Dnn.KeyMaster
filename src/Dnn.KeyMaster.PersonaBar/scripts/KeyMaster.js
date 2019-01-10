@@ -91,10 +91,10 @@ define(
                                                 container.append(createRow(response.Result[index].Key));
                                             }
 
+                                            var viewSecretClick = 
                                             $('.view-secret').on('click', function () {
                                                 var parent = $(this).parent().parent().parent();
                                                 var key = parent.find("input[name='key']").val();
-                                                /// get secret value
 
                                                 var getSecret = {
                                                     route: baseRoute + '/AppSettings/Get',
@@ -115,7 +115,28 @@ define(
                                                                     confirm: 'Save',
                                                                     cancel: 'Cancel',
                                                                     confirmCallback: function () {
-                                                                        alert('saving secret');
+                                                                        var saveSecret = {
+                                                                            route: baseRoute + '/AppSettings/Save',
+                                                                            payload: {
+                                                                                Key: key,
+                                                                                Value: secret.value
+                                                                            },
+                                                                            success: function (response) {
+                                                                                if (response.Success) {
+                                                                                    secret.type = 'password';
+                                                                                    secret.value = '********************';
+
+                                                                                    button.classList = 'view-secret tag is-warning';
+                                                                                    button.innerHTML = 'View Secret';
+                                                                                    $(button).off('click');
+                                                                                    $(button).on('click', function () {
+                                                                                        sf.get(getSecret.route, getSecret.parameter, getSecret.success);     
+                                                                                    });
+                                                                                }
+                                                                            }
+                                                                        };
+
+                                                                        sf.post(saveSecret.route, saveSecret.payload, saveSecret.success);
                                                                     }
                                                                 };
 
