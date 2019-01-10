@@ -49,9 +49,11 @@ define(
                                                         contents.classList = 'input';
 
                                                         if (isProtected) {
+                                                            contents.name = 'value';
                                                             contents.type = 'password';
                                                             contents.value = '********************';
                                                         } else {
+                                                            contents.name = 'key';
                                                             contents.type = 'text';
                                                             contents.value = value;
                                                         }
@@ -60,7 +62,7 @@ define(
                                                         contents.classList = 'delete';
                                                     } else if (type === 'view') {
                                                         contents = document.createElement('span');
-                                                        contents.classList = 'tag is-warning';
+                                                        contents.classList = 'view-secret tag is-warning';
                                                         contents.innerHTML = value;
                                                     }
 
@@ -87,11 +89,32 @@ define(
                                             for (var index = 0; index < response.Result.length; index++) {
                                                 container.append(createRow(response.Result[index].Key));
                                             }
+
+                                            $('.view-secret').on('click', function () {
+                                                var parent = $(this).parent().parent().parent();
+                                                var key = parent.find("input[name='key']").val();
+                                                /// get secret value
+
+                                                var secret = parent.find("input[name='value']")[0];
+                                                secret.type = 'text';
+                                                secret.value = 'retrieved value';
+
+                                                var button = parent.find('span')[0];
+                                                button.classList = 'update-secret tag is-danger';
+                                                button.innerHTML = 'Update';
+                                                $(button).off('click');
+                                                $(button).on('click', function () {
+                                                    alert('saving secret');
+                                                });
+                                            });
+
                                         }
                                     }
                                 };
 
                                 sf.get(appsettings.route, {}, appsettings.success);
+                                                                
+                                
                             } else {
                                 $('#keymaster-live').hide();
                                 $('#keymaster-start').show();
