@@ -1,5 +1,6 @@
 ﻿using Dnn.KeyMaster.Exceptions;
 using Dnn.KeyMaster.Web.Security.KeyVault.Models;
+using DotNetNuke.Instrumentation;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -53,6 +54,8 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             }
             catch (AzureKeyMasterException ex)
             {
+                var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                logger.Error(JsonConvert.SerializeObject(ex.TokenError), ex);
                 throw new KeyMasterException("Unable to verify Key Master secrets with Azure, check logs for more details", ex);
             }
             catch (Exception ex)
