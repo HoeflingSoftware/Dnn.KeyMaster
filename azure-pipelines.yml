@@ -8,7 +8,7 @@ variables:
   major: 1
   minor: 0
   patch: 0
-  revision: $[counter('versioncounter', 0)]
+  revision: $[counter('$(major).$(minor).$(patch)', 0)]
   system.debug: "true"
   githubOrganization: 'HoeflingSoftware'
   githubRepo: 'Dnn.KeyMaster'
