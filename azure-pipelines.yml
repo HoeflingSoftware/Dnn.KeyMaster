@@ -8,7 +8,7 @@ variables:
   major: 1
   minor: 0
   patch: 0
-  revision: $[counter('versioncounter', 0)]
+  revision: $[counter('$(major).$(minor).$(patch)', 0)]
   system.debug: "true"
   githubOrganization: 'HoeflingSoftware'
   githubRepo: 'Dnn.KeyMaster'
@@ -71,6 +71,11 @@ jobs:
       TOKEN: $(githubToken)
     displayName: 'Update CHANGELOG.md'
 
-  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\uploadReleaseArtifacts.ps1 -Organization $(githubOrganization) -Repo $(githubRepo) -Token $(githubToken) -Artifact $(System.DefaultWorkingDirectory)/*_install.zip  -Name "$(githubRepo)_$(major).$(minor).$(patch).$(revision)_install.zip"; exit $LASTEXITCODE'
-    displayName: 'Upload Artifacts to GitHub Release'
-
+  - task: hoefling-software.GitHubTasks.GitHubPublishReleaseArtifact.GitHubPublishReleaseArtifact@1
+    displayName: Publish GitHub Release Artifact
+    inputs:
+      githubRepo: $(githubRepo)
+      githubOrganization: $(githubOrganization)
+      githubToken: $(githubToken)
+      artifact: '$(System.DefaultWorkingDirectory)/*_install.zip'
+      artifactDisplayName: '$(githubRepo)_$(major).$(minor).$(patch).$(revision)_install.zip'
