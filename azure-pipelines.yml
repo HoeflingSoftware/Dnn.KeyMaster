@@ -59,8 +59,8 @@ jobs:
   displayName: Release
   pool:
     name: "Hosted VS2017"
-  variables:
-    tag: $[ dependencies.Prebuild.outputs['CustomVariables.tag'] ]
+  #variables:
+  #  tag: $[ dependencies.Prebuild.outputs['CustomVariables.tag'] ]
     # todo - add a conditional that excludes all Pull Requests
 
   steps:
