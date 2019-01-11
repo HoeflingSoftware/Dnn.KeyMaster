@@ -58,8 +58,10 @@ jobs:
   displayName: Release
   pool:
     name: "Hosted VS2017"
+  variables:
+    tag: $[ dependencies.Prebuild.outputs['CustomVariables.tag'] ]
     # todo - add a conditional that excludes all Pull Requests
-  condition: and(succeeded(), ne(dependencies.Prebuild.outputs['CustomVariables.tag'], ''))
+  condition: and(succeeded(), ne('$(tag)', ''))
 
   steps:
   - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
