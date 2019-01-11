@@ -2,7 +2,7 @@
   <packages>
     <package name="Dnn.KeyMaster" type="PersonaBar" version="1.0.0">
       <friendlyName>Dnn.KeyMaster</friendlyName>
-      <description></description>
+      <description>A Dnn configuration extension to secure your website with Azure Key Vault by removing database connection strings from the web.config and into an Azure Key Vault</description>
       <iconFile />
       <owner>
         <name>Andrew Hoefling</name>
