@@ -2,16 +2,18 @@
   <packages>
     <package name="Dnn.KeyMaster" type="PersonaBar" version="1.0.0">
       <friendlyName>Dnn.KeyMaster</friendlyName>
-      <description />
-      <iconFile />
+      <description>A Dnn configuration extension to secure your website with Azure Key Vault by removing database connection strings from the web.config and into an Azure Key Vault</description>
+      <iconFile>~/DesktopModules/admin/Dnn.PersonaBar/Modules/KeyMaster/icon.png</iconFile>
       <owner>
         <name>Andrew Hoefling</name>
         <organization>Hoefling Software, LLC</organization>
         <url>https://www.hoeflingsoftware.com/Dnn-Key-Master</url>
         <email>andrew@hoeflingsoftware.com</email>
       </owner>
-      <license />
-      <releaseNotes />
+      <license src="License.txt">
+      </license>
+      <releaseNotes src="ReleaseNotes.txt">
+      </releaseNotes>
       <azureCompatible>true</azureCompatible>
       <components>
         <component type="ResourceFile">
@@ -38,6 +40,10 @@
             </assembly>
             <assembly>
               <name>Dnn.KeyMaster.Web.Security.KeyVault.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Dnn.KeyMaster.Exceptions.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>
