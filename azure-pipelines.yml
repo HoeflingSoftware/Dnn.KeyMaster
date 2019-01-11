@@ -64,13 +64,9 @@ jobs:
   condition: and(succeeded(), ne('$(tag)', ''))
 
   steps:
-  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
-    displayName: Build Variables
+  - powershell: Write-Host "Hello World - $(tag)"
+    displayName: Hello World
 
-  - powershell: Write-Host "Hello World"
-
-  - powershell: Write-Host "This only runs if we have a tag"
-    condition: and(succeeded(), ne(variables['tag'], ''))
   #- task: Npm@1
   #  displayName: 'npm install github-release-notes'
   #  inputs:
