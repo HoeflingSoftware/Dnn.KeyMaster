@@ -64,8 +64,12 @@ jobs:
     # todo - add a conditional that excludes all Pull Requests
 
   steps:
-  - powershell: Write-Host "IsFork: $(System.PullRequest.IsFork) Branch: $(Build.SourceBranch) Branch Name: $(Build.SourceBranchName)"
+  - powershell: Write-Host "IsFork: $env:IS_FORK Branch: $env:SOURCE_BRANCH Branch Name: $env:BRANCH_NAME"
     displayName: Hello World
+    env:
+      IS_FORK: $(System.PullRequest.IsFork)
+      SOURCE_BRANCH: $(Build.SourceBranch)
+      BRANCH_NAME: $(Build.SourceBranchName)
 
   #- task: Npm@1
   #  displayName: 'npm install github-release-notes'
