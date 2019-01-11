@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetNuke.Instrumentation" Version="9.2.1.533" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dnn.KeyMaster.Exceptions\Dnn.KeyMaster.Exceptions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

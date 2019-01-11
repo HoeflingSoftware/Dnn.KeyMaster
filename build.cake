@@ -1,3 +1,5 @@
+#addin "Cake.Powershell&version=0.4.7"
+
 var target = Argument ("target", Argument ("t", "Build"));
 var version = Argument ("package_version", "1.0.0");
 var configuration = "Release"; 
@@ -10,7 +12,8 @@ var assemblies = new []
 	"Dnn.KeyMaster.Providers",
 	"Dnn.KeyMaster.API",
 	"Dnn.KeyMaster.Web.Security.KeyVault",
-	"Dnn.KeyMaster.PersonaBar"
+	"Dnn.KeyMaster.PersonaBar",
+	"Dnn.KeyMaster.Exceptions"
 };
 
 // Assumes you have a DNN website installed at the following location
@@ -79,10 +82,22 @@ Task("Clean").Does(() =>
 	}	
 });
 
-Task("Build")
-	.IsDependentOn("Clean")
+Task("Dnn Manifest")
 	.Does(() =>
 {
+	Information("Updating Dnn Manifest File");
+	StartPowershellFile("./BuildUtilities/buildDnnManifest.ps1", new PowershellSettings()
+		.WithArguments(args => 
+		{
+			args.Append("Version", version);
+		}));
+});
+
+Task("Build")
+	.IsDependentOn("Clean")
+	.IsDependentOn("Dnn Manifest")
+	.Does(() =>
+{	   
 	DotNetCoreRestore(solution);
 
 	var msbuildSettings = new DotNetCoreMSBuildSettings();

@@ -1,4 +1,6 @@
-﻿using Dnn.KeyMaster.Web.Security.KeyVault.Models;
+﻿using Dnn.KeyMaster.Exceptions;
+using Dnn.KeyMaster.Exceptions.Models;
+using Dnn.KeyMaster.Web.Security.KeyVault.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -35,7 +37,9 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
                     return model;
                 }
 
-                return null;
+                var errorJson = result.Content.ReadAsStringAsync().Result;
+                var error = JsonConvert.DeserializeObject<AzureTokenError>(errorJson);
+                throw new AzureKeyMasterException(error);
             }
         }
     }

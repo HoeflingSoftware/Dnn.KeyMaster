@@ -3,7 +3,7 @@
 namespace Dnn.KeyMaster.Web.Security.KeyVault.Models
 {
     [JsonObject]
-    internal class KeyVaultSecretResponse
+    internal class KeyVaultSecret
     {
         [JsonProperty("value")]
         public string Value { get; set; }
