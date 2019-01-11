@@ -41,21 +41,33 @@ Task("Package")
 	Information("Packing Key Master Persona Bar Admin Menu . . .");
 
 		
+	CopyFile("./icon.png", "./src/Dnn.KeyMaster.PersonaBar/icon.png");
 	var personaBarFiles = new []
 	{
 		"./src/Dnn.KeyMaster.PersonaBar/App_LocalResources/KeyMaster.resx",
 		"./src/Dnn.KeyMaster.PersonaBar/css/KeyMaster.css",
 		"./src/Dnn.KeyMaster.PersonaBar/scripts/KeyMaster.js",
 		"./src/Dnn.KeyMaster.PersonaBar/KeyMaster.html",
+		"./src/Dnn.KeyMaster.PersonaBar/icon.png"
 	};
 
 	Zip("./src/Dnn.KeyMaster.PersonaBar", "Resources.zip", personaBarFiles);
 
 	files.Add("Resources.zip");
+
+	Information("Adding License file");
+	CopyFile("./LICENSE", "License.txt");
+	files.Add("License.txt");
+
+	Information("Adding Release Notes file");
+	files.Add("./ReleaseNotes.txt");
+
 	Zip("./", $"Dnn.KeyMaster_{version}_install.zip", files);
 	Information($"Dnn Extension Installer Created - Dnn.KeyMaster_{version}_install.zip");
 
 	DeleteFile("./Resources.zip");
+	DeleteFile("./License.txt");
+	DeleteFile("./src/Dnn.KeyMaster.PersonaBar/icon.png");
 });
 
 Task("Change Configuration to Debug").Does(() =>
