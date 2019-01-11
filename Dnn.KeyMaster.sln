@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{228041C4-8B36-43C0-B571-E63BE3C90F94}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.grenrc.js = .grenrc.js
 		azure-pipelines.yml = azure-pipelines.yml
 		build.cake = build.cake
 		build.ps1 = build.ps1
@@ -27,7 +28,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildUtilities", "BuildUtilities", "{EC1E5ED7-858C-45B5-9B9B-FDBFF8D9EE22}"
 	ProjectSection(SolutionItems) = preProject
 		BuildUtilities\buildDnnManifest.ps1 = BuildUtilities\buildDnnManifest.ps1
-		BuildUtilities\getBuildVariables.ps1 = BuildUtilities\getBuildVariables.ps1
 	EndProjectSection
 EndProject
 Global
