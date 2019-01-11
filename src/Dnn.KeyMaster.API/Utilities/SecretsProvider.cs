@@ -3,6 +3,7 @@ using Dnn.KeyMaster.API.Models;
 using Dnn.KeyMaster.Web.Security.KeyVault.Models;
 using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Web.Hosting;
 
 namespace Dnn.KeyMaster.API.Utilities
@@ -39,6 +40,64 @@ namespace Dnn.KeyMaster.API.Utilities
             };
 
             return KeyVaultProvider.GetConnectionString(appsettings);
+        }
+
+        internal static IEnumerable<string> GetAppSettingsKeys(Secrets secrets)
+        {
+            var appsettings = new AppSettings
+            {
+                ClientId = secrets.ClientId,
+                ClientSecret = secrets.ClientSecret,
+                DirectoryId = secrets.DirectoryId,
+                SecretName = secrets.SecretName,
+                KeyVaultUrl = secrets.KeyVaultUrl
+            };
+
+
+            return KeyVaultProvider.AppSettings.AllKeys;
+        }
+
+        internal static string GetAppSettingValue(Secrets secrets, string key)
+        {
+            var appsettings = new AppSettings
+            {
+                ClientId = secrets.ClientId,
+                ClientSecret = secrets.ClientSecret,
+                DirectoryId = secrets.DirectoryId,
+                SecretName = secrets.SecretName,
+                KeyVaultUrl = secrets.KeyVaultUrl
+            };
+
+            return KeyVaultProvider.AppSettings[key];
+        }
+
+        internal static bool DeleteAppSetting(Secrets secrets, string key)
+        {
+            var appsettings = new AppSettings
+            {
+                ClientId = secrets.ClientId,
+                ClientSecret = secrets.ClientSecret,
+                DirectoryId = secrets.DirectoryId,
+                SecretName = secrets.SecretName,
+                KeyVaultUrl = secrets.KeyVaultUrl
+            };
+
+            
+            return KeyVaultProvider.DeleteSecretAsync(key, appsettings).Result;
+        }
+
+        internal static bool CreateOrUpdateAppSetting(string key, string value, Secrets secrets)
+        {
+            var appsettings = new AppSettings
+            {
+                ClientId = secrets.ClientId,
+                ClientSecret = secrets.ClientSecret,
+                DirectoryId = secrets.DirectoryId,
+                SecretName = secrets.SecretName,
+                KeyVaultUrl = secrets.KeyVaultUrl
+            };
+
+            return KeyVaultProvider.CreateOrUpdateAppSettingAsync(key, value, appsettings).Result;
         }
     }
 }
