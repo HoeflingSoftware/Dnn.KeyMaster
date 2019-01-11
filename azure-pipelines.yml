@@ -16,7 +16,18 @@ variables:
   githubRepo: 'Dnn.KeyMaster'
 
 jobs:
+- job: Prebuild
+  displayName: Pre-Build steps
+  pool:
+    name: Hosted VS2017
+
+  steps:
+  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
+    displayName: Build Variables
+    name: CustomVariables
+    
 - job: Build
+  dependsOn: Prebuild
   displayName: Build and Create Installer
   pool:
     name: Hosted VS2017
@@ -24,9 +35,6 @@ jobs:
     - MSBuild
 
   steps:
-  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
-    displayName: Build Variables
-
   - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
     env:
       VERSION: "$(major).$(minor).$(patch).$(revision)"
@@ -45,31 +53,30 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
-# this job is scaffolded out and we need to do more work before it is ready
 - job: Release
   dependsOn: Build
   displayName: Release
   pool:
     name: "Hosted VS2017"
-    # todo - add a conditional that excludes all Pull Requests
+  condition: and(succeeded(), startswith(variables['Build.SourceBranch'], 'refs/tags'))
 
   steps:
-  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
-    displayName: Build Variables
+  - powershell: Write-Host "IsFork $env:IS_FORK Branch $env:SOURCE_BRANCH Branch Name $env:BRANCH_NAME"
+    displayName: Hello World
+    env:
+      IS_FORK: $(System.PullRequest.IsFork)
+      SOURCE_BRANCH: $(Build.SourceBranch)
+      BRANCH_NAME: $(Build.SourceBranchName)
 
-  - powershell: Write-Host "Hello World"
+  - task: Npm@1
+    displayName: 'npm install github-release-notes'
+    inputs:
+      command: custom
+      verbose: false
+      customCommand: 'install github-release-notes -g'
 
-  - powershell: Write-Host "This only runs if we have a tag"
-    condition: and(succeeded(), ne(variables['tag'], ''))
-  #- task: Npm@1
-  #  displayName: 'npm install github-release-notes'
-  #  inputs:
-  #    command: custom
-  #    verbose: false
-  #    customCommand: 'install github-release-notes -g'
-
-  #- powershell: 'gren release --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
-  #  env:
-  #    TOKEN: $(githubToken)
-  #  displayName: 'gren release'
+  - powershell: 'gren release --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
+    env:
+      TOKEN: $(githubToken)
+    displayName: 'gren release'
 
