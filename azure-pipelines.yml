@@ -48,6 +48,8 @@ jobs:
   condition: and(succeeded(), startswith(variables['Build.SourceBranch'], 'refs/tags'))
 
   steps:
+  - checkout: none
+  
   - task: DownloadBuildArtifacts@0
     displayName: 'Download Build Artifacts'
     inputs:
