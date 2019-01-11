@@ -3,6 +3,8 @@ trigger:
     include:
       - master
       - refs/tags/*
+
+
       
 variables:
   major: 1
