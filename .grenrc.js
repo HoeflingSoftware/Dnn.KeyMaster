@@ -2,18 +2,20 @@ module.exports = {
     "dataSource": "issues",
     "prefix": "",
     "onlyMilestones": false,
+    "ignoreIssuesWith": [
+        "question",
+        "wontfix",
+        "invalid",
+        "on hold",
+        "help wanted",
+        "good first issue"
+    ],
     "groupBy": {
         "Bugs Fixed:": ["bug"],
         "Build Issues Fixed:": ["build"],
         "Enhancements": ["enhancement"],
         "Documentation Improvements:": ["documentation"],
         "Duplicate Issues:": ["duplicate"],
-        "Good First Issues:": ["good first issue"],
-        "Help Wanted:": ["help wanted"],
-        "Invalid Issues:": ["invalid"],
-        "On Hold Issues:": ["on hold"],
-        "Questions:": ["question"],
-        "Won't Fix:": ["wontfix"]
     },
     "changelogFilename": "CHANGELOG.md",
     "template": {
