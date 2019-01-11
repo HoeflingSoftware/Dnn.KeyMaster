@@ -52,6 +52,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     # todo - add a conditional that excludes all Pull Requests
+  condition: and(succeeded(), ne(variables['tag'], ''))
 
   steps:
   - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
