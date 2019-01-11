@@ -27,6 +27,7 @@ jobs:
     name: CustomVariables
     
 - job: Build
+  dependsOn: Prebuild
   displayName: Build and Create Installer
   pool:
     name: Hosted VS2017
