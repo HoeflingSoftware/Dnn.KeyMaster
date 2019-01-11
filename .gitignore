@@ -335,3 +335,5 @@ ASALocalRun/
 # Exclude Dnn Installer
 *_install.zip
 
+# vs code folder
+.vscode/
