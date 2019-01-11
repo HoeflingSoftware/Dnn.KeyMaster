@@ -13,26 +13,8 @@ variables:
   githubOrganization: 'HoeflingSoftware'
   githubRepo: 'Dnn.KeyMaster'
 
-jobs:
-- job: PreBuild
-  displayName: Get Build variables
-  pool:
-    name: Hosted VS2017
-
-  steps:
- # - powershell: |
- #     $tag = (git tag -l --points-at HEAD)
- #     if ($tag -ne '') {
- #       Write-Host "##vso[build.tag]$($tag)"
- #     }
- #   workingDirectory: $(System.DefaultWorkingDirectory)
- #   displayName: Get Build Tag
-
-  - powershell: Write-Host "#vso[build.version]$(major).$(minor).$(patch).$(revision)"
-    displayName: Get Version Number
-    
+jobs:    
 - job: Build
-  dependsOn: PreBuild
   displayName: Build and Create Installer
   pool:
     name: Hosted VS2017
@@ -42,7 +24,7 @@ jobs:
   steps:
   - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
     env:
-      VERSION: $(major).$(minor).$(patch).$(revision)
+      VERSION: "$(major).$(minor).$(patch).$(revision)"
     displayName: 'Cake Build - Clean, NuGet, Build and Package'
 
   - task: CopyFiles@2
@@ -58,15 +40,20 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
-# this job is scaffolded out and we need to do more work before it is ready
 - job: Release
   dependsOn: Build
-  displayName: GitHub Release
+  displayName: Release
   pool:
     name: "Hosted VS2017"
-  condition: and(succeeded(), ne(variables['Tag'], ''))
+  condition: and(succeeded(), startswith(variables['Build.SourceBranch'], 'refs/tags'))
 
   steps:
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download Build Artifacts'
+    inputs:
+      artifactName: drop
+      downloadPath: $(System.DefaultWorkingDirectory) 
+
   - task: Npm@1
     displayName: 'npm install github-release-notes'
     inputs:
@@ -77,5 +64,13 @@ jobs:
   - powershell: 'gren release --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
     env:
       TOKEN: $(githubToken)
-    displayName: 'gren release'
+    displayName: 'Create GitHub Release'
+
+  - powershell: 'gren changelog --override --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
+    env:
+      TOKEN: $(githubToken)
+    displayName: 'Update CHANGELOG.md'
+
+  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\uploadReleaseArtifacts.ps1 -Organization $(githubOrganization) -Repo $(githubRepo) -Token $(githubToken) -Artifact $(System.DefaultWorkingDirectory)/*_install.zip  -Name "$(githubRepo)_$(major).$(minor).$(patch).$(revision)_install.zip"; exit $LASTEXITCODE'
+    displayName: 'Upload Artifacts to GitHub Release'
 
