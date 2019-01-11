@@ -16,6 +16,16 @@ variables:
   githubRepo: 'Dnn.KeyMaster'
 
 jobs:
+- job: Prebuild
+  displayName: Pre-Build steps
+  pool:
+    name: Hosted VS2017
+
+  steps:
+  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
+    displayName: Build Variables
+    name: CustomVariables
+    
 - job: Build
   displayName: Build and Create Installer
   pool:
@@ -24,9 +34,6 @@ jobs:
     - MSBuild
 
   steps:
-  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
-    displayName: Build Variables
-
   - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
     env:
       VERSION: "$(major).$(minor).$(patch).$(revision)"
@@ -52,7 +59,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     # todo - add a conditional that excludes all Pull Requests
-  condition: and(succeeded(), ne(variables['tag'], ''))
+  condition: and(succeeded(), ne(dependencies.Prebuild.CustomVariables['tag'], ''))
 
   steps:
   - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
