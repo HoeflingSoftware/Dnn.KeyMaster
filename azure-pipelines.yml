@@ -13,17 +13,7 @@ variables:
   githubOrganization: 'HoeflingSoftware'
   githubRepo: 'Dnn.KeyMaster'
 
-jobs:
-- job: Prebuild
-  displayName: Pre-Build steps
-  pool:
-    name: Hosted VS2017
-
-  steps:
-  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
-    displayName: Build Variables
-    name: CustomVariables
-    
+jobs:    
 - job: Build
   dependsOn: Prebuild
   displayName: Build and Create Installer
