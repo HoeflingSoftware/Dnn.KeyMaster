@@ -64,7 +64,7 @@ jobs:
     # todo - add a conditional that excludes all Pull Requests
 
   steps:
-  - powershell: Write-Host "IsFork: $env:IS_FORK Branch: $env:SOURCE_BRANCH Branch Name: $env:BRANCH_NAME"
+  - powershell: Write-Host "IsFork $env:IS_FORK Branch $env:SOURCE_BRANCH Branch Name $env:BRANCH_NAME"
     displayName: Hello World
     env:
       IS_FORK: $(System.PullRequest.IsFork)
