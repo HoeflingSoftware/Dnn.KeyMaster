@@ -3,8 +3,6 @@ trigger:
     include:
       - master
       - refs/tags/*
-
-
       
 variables:
   major: 1
@@ -61,12 +59,11 @@ jobs:
   condition: and(succeeded(), startswith(variables['Build.SourceBranch'], 'refs/tags'))
 
   steps:
-  - powershell: Write-Host "IsFork $env:IS_FORK Branch $env:SOURCE_BRANCH Branch Name $env:BRANCH_NAME"
-    displayName: Hello World
-    env:
-      IS_FORK: $(System.PullRequest.IsFork)
-      SOURCE_BRANCH: $(Build.SourceBranch)
-      BRANCH_NAME: $(Build.SourceBranchName)
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download Build Artifacts'
+    inputs:
+      artifactName: drop
+      downloadPath: $(System.DefaultWorkingDirectory) 
 
   - task: Npm@1
     displayName: 'npm install github-release-notes'
@@ -78,5 +75,8 @@ jobs:
   - powershell: 'gren release --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
     env:
       TOKEN: $(githubToken)
-    displayName: 'gren release'
+    displayName: 'Create GitHub Release'
+
+  - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\uploadReleaseArtifacts.ps1 -Organiztion $(githubOrganization) -Repo $(githubRepo) -Token $(githubToken) -Artifact $(System.DefaultWorkingDirectory)/*_install.zip  -Name "$(githubRepo)_$(major).$(minor).$(patch).$(revision)_install.zip"; exit $LASTEXITCODE'
+    display: 'Upload Artifacts to GitHub Release'
 
