@@ -5,10 +5,8 @@ trigger:
       - refs/tags/*
       
 variables:
-  major: 1
-  minor: 0
-  patch: 0
-  revision: $[counter('$(major).$(minor).$(patch)', 0)]
+  majorMinorPatch: 1.0.0
+  revision: $[counter(variables['majorMinorPatch'], 0)]
   system.debug: "true"
   githubOrganization: 'HoeflingSoftware'
   githubRepo: 'Dnn.KeyMaster'
@@ -24,7 +22,7 @@ jobs:
   steps:
   - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
     env:
-      VERSION: "$(major).$(minor).$(patch).$(revision)"
+      VERSION: "$(majorMinorPatch).$(revision)"
     displayName: 'Cake Build - Clean, NuGet, Build and Package'
 
   - task: CopyFiles@2
@@ -78,4 +76,4 @@ jobs:
       githubOrganization: $(githubOrganization)
       githubToken: $(githubToken)
       artifact: '$(System.DefaultWorkingDirectory)/*_install.zip'
-      artifactDisplayName: '$(githubRepo)_$(major).$(minor).$(patch).$(revision)_install.zip'
+      artifactDisplayName: '$(githubRepo)_$(majorMinorPatch).$(revision)_install.zip'
