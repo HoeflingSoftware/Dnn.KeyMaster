@@ -27,6 +27,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildUtilities", "BuildUtilities", "{EC1E5ED7-858C-45B5-9B9B-FDBFF8D9EE22}"
 	ProjectSection(SolutionItems) = preProject
 		BuildUtilities\buildDnnManifest.ps1 = BuildUtilities\buildDnnManifest.ps1
+		BuildUtilities\getBuildVariables.ps1 = BuildUtilities\getBuildVariables.ps1
 	EndProjectSection
 EndProject
 Global
