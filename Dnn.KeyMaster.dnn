@@ -40,6 +40,10 @@
               <name>Dnn.KeyMaster.Web.Security.KeyVault.dll</name>
               <path>bin</path>
             </assembly>
+            <assembly>
+              <name>Dnn.KeyMaster.Exceptions.dll</name>
+              <path>bin</path>
+            </assembly>
           </assemblies>
         </component>
         <component type="PersonaBarMenu">
