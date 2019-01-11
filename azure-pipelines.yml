@@ -62,7 +62,7 @@ jobs:
   variables:
     tag: $[ dependencies.Prebuild.outputs['CustomVariables.tag'] ]
     # todo - add a conditional that excludes all Pull Requests
-  condition: and(succeeded(), ne($(tag), ''))
+  condition: and(succeeded(), ne(variables['tag'], ''))
 
   steps:
   - powershell: Write-Host "Hello World - $(tag)"
