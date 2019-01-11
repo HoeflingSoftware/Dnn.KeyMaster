@@ -35,10 +35,10 @@ jobs:
     - MSBuild
 
   steps:
-  #- powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
-  #  env:
-  #    VERSION: "$(major).$(minor).$(patch).$(revision)"
-  #  displayName: 'Cake Build - Clean, NuGet, Build and Package'
+  - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
+    env:
+      VERSION: "$(major).$(minor).$(patch).$(revision)"
+    displayName: 'Cake Build - Clean, NuGet, Build and Package'
 
   - task: CopyFiles@2
     displayName: 'Copy Files to Artifacts Staging Directory'
@@ -53,17 +53,12 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
-# this job is scaffolded out and we need to do more work before it is ready
 - job: Release
   dependsOn: Build
   displayName: Release
   pool:
     name: "Hosted VS2017"
   condition: and(succeeded(), startswith(variables['Build.SourceBranch'], 'refs/tags'))
-  #variables:
-  #  tag: $[ dependencies.Prebuild.outputs['CustomVariables.tag'] ]
-    # todo - add a conditional that excludes all Pull Requests
-
 
   steps:
   - powershell: Write-Host "IsFork $env:IS_FORK Branch $env:SOURCE_BRANCH Branch Name $env:BRANCH_NAME"
@@ -73,15 +68,15 @@ jobs:
       SOURCE_BRANCH: $(Build.SourceBranch)
       BRANCH_NAME: $(Build.SourceBranchName)
 
-  #- task: Npm@1
-  #  displayName: 'npm install github-release-notes'
-  #  inputs:
-  #    command: custom
-  #    verbose: false
-  #    customCommand: 'install github-release-notes -g'
+  - task: Npm@1
+    displayName: 'npm install github-release-notes'
+    inputs:
+      command: custom
+      verbose: false
+      customCommand: 'install github-release-notes -g'
 
-  #- powershell: 'gren release --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
-  #  env:
-  #    TOKEN: $(githubToken)
-  #  displayName: 'gren release'
+  - powershell: 'gren release --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
+    env:
+      TOKEN: $(githubToken)
+    displayName: 'gren release'
 
