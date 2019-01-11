@@ -13,7 +13,7 @@ module.exports = {
     "groupBy": {
         "Enhancements": ["enhancement"],
         "Bugs Fixed:": ["bug"],
-        "Build Issues Fixed:": ["build"],
+        "Build/Test/Deploy Improvements:": ["build"],
         "Documentation Improvements:": ["documentation"],
         "Duplicate Issues:": ["duplicate"],
     },
