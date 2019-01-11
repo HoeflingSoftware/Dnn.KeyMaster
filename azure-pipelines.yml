@@ -34,10 +34,10 @@ jobs:
     - MSBuild
 
   steps:
-  - powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
-    env:
-      VERSION: "$(major).$(minor).$(patch).$(revision)"
-    displayName: 'Cake Build - Clean, NuGet, Build and Package'
+  #- powershell: '$(System.DefaultWorkingDirectory)\build.ps1 -Target Package -ScriptArgs "-package_version=$env:VERSION"; exit $LASTEXITCODE'
+  #  env:
+  #    VERSION: "$(major).$(minor).$(patch).$(revision)"
+  #  displayName: 'Cake Build - Clean, NuGet, Build and Package'
 
   - task: CopyFiles@2
     displayName: 'Copy Files to Artifacts Staging Directory'
@@ -59,7 +59,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     # todo - add a conditional that excludes all Pull Requests
-  condition: and(succeeded(), ne(dependencies.Prebuild.CustomVariables['tag'], ''))
+  condition: and(succeeded(), ne($[ dependencies.Prebuild.outputs['CustomVariables.tag'] ], ''))
 
   steps:
   - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\getBuildVariables.ps1; exit $LASTEXITCODE' 
