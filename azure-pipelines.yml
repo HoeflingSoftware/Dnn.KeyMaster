@@ -77,6 +77,11 @@ jobs:
       TOKEN: $(githubToken)
     displayName: 'Create GitHub Release'
 
+  - powershell: 'gren changelog --override --username=$(githubOrganization) --token=$env:TOKEN --repo=$(githubRepo); exit $LASTEXITCODE'
+    env:
+      TOKEN: $(githubToken)
+    displayName: 'Update CHANGELOG.md'
+
   - powershell: '$(System.DefaultWorkingDirectory)\BuildUtilities\uploadReleaseArtifacts.ps1 -Organization $(githubOrganization) -Repo $(githubRepo) -Token $(githubToken) -Artifact $(System.DefaultWorkingDirectory)/*_install.zip  -Name "$(githubRepo)_$(major).$(minor).$(patch).$(revision)_install.zip"; exit $LASTEXITCODE'
     displayName: 'Upload Artifacts to GitHub Release'
 
