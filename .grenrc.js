@@ -11,9 +11,9 @@ module.exports = {
         "good first issue"
     ],
     "groupBy": {
+        "Enhancements": ["enhancement"],
         "Bugs Fixed:": ["bug"],
         "Build Issues Fixed:": ["build"],
-        "Enhancements": ["enhancement"],
         "Documentation Improvements:": ["documentation"],
         "Duplicate Issues:": ["duplicate"],
     },
