@@ -142,6 +142,12 @@ Task("Deploy")
 		CopyFile($"{projectDirectory}/{outputDirectory}/{assembly}.pdb", currentPDB);
 		Information($"Copied {assembly}.pdb");
 	}
+
+	var websiteModuleLocation = $"{websiteLocation}/DesktopModules/Admin/Dnn.PersonaBar/Modules/KeyMaster/";
+	Information($"Copying html/js/css to {websiteModuleLocation}");
+	CopyFile($"{projectDirectory}/src/Dnn.KeyMaster.PersonaBar/KeyMaster.html", $"{websiteModuleLocation}/KeyMaster.html");
+	CopyFile($"{projectDirectory}/src/Dnn.KeyMaster.PersonaBar/scripts/KeyMaster.js", $"{websiteModuleLocation}/scripts/KeyMaster.js");
+	CopyFile($"{projectDirectory}/src/Dnn.KeyMaster.PersonaBar/css/KeyMaster.css", $"{websiteModuleLocation}/css/KeyMaster.css");	
 });
 
 RunTarget(target);
