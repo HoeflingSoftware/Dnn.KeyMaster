@@ -2,7 +2,7 @@
   <packages>
     <package name="Dnn.KeyMaster" type="PersonaBar" version="1.0.0">
       <friendlyName>Dnn.KeyMaster</friendlyName>
-      <description />
+      <description></description>
       <iconFile />
       <owner>
         <name>Andrew Hoefling</name>
@@ -10,8 +10,8 @@
         <url>https://www.hoeflingsoftware.com/Dnn-Key-Master</url>
         <email>andrew@hoeflingsoftware.com</email>
       </owner>
-      <license />
-      <releaseNotes />
+      <license src="License"></license>
+      <releaseNotes></releaseNotes>
       <azureCompatible>true</azureCompatible>
       <components>
         <component type="ResourceFile">
