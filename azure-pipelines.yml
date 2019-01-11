@@ -62,10 +62,9 @@ jobs:
   variables:
     tag: $[ dependencies.Prebuild.outputs['CustomVariables.tag'] ]
     # todo - add a conditional that excludes all Pull Requests
-  condition: and(succeeded(), ne(dependencies.Prebuild.outputs['CustomVariables.tag'], ''))
 
   steps:
-  - powershell: Write-Host "Hello World - $(tag)"
+  - powershell: Write-Host "IsFork: $(System.PullRequest.IsFork) Branch: $(Build.SourceBranch) Branch Name: $(Build.SourceBranchName)"
     displayName: Hello World
 
   #- task: Npm@1
