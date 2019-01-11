@@ -1,6 +1,6 @@
 # Dnn Key Master
 
-[![Build Status](https://hoeflingsoftware.visualstudio.com/Dnn%20Key%20Master/_apis/build/status/HoeflingSoftware.Dnn.KeyMaster?branchName=master)](https://hoeflingsoftware.visualstudio.com/Dnn%20Key%20Master/_build/latest?definitionId=72?branchName=master)
+[![Build Status](https://hoeflingsoftware.visualstudio.com/Dnn%20Key%20Master/_apis/build/status/HoeflingSoftware.Dnn.KeyMaster?branchName=master)](https://hoeflingsoftware.visualstudio.com/Dnn%20Key%20Master/_build/latest?definitionId=72?branchName=master)[![Automated Release Notes by gren](https://img.shields.io/badge/%F0%9F%A4%96-release%20notes-00B2EE.svg)](https://github-tools.github.io/github-release-notes/)
 
 A Dnn configuration extension to secure your website with Azure Key Vault by removing database connection strings from the web.config and into an Azure Key Vault
 
