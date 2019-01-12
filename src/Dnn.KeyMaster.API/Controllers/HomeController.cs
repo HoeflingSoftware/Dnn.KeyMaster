@@ -3,9 +3,6 @@ using Dnn.KeyMaster.API.Utilities;
 using Dnn.PersonaBar.Library;
 using Dnn.PersonaBar.Library.Attributes;
 using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using System.Xml.Linq;
@@ -21,15 +18,7 @@ namespace Dnn.KeyMaster.API.Controllers
         public HttpResponseMessage Status()
         {
             PersonaBarResponse response = new PersonaBarResponse();
-            if (!File.Exists(SecretsProvider.SecretsFile))
-            {
-                response.Success = false;
-                return response.ToHttpResponseMessage();
-            }
-
-            var json = File.ReadAllText(SecretsProvider.SecretsFile);
-            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-            if (!SecretsProvider.ValidateSecrets(secrets))
+            if (!SecretsProvider.ValidateSecrets())
             {
                 response.Success = false;
                 return response.ToHttpResponseMessage();
@@ -67,7 +56,6 @@ namespace Dnn.KeyMaster.API.Controllers
                 response.Success = KeyMasterProvider.ToggleOff();
             }
 
-            
             return response.ToHttpResponseMessage();
         }
     }

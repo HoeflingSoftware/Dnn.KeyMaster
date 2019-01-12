@@ -1,4 +1,5 @@
-﻿using Dnn.KeyMaster.Exceptions;
+﻿using Dnn.KeyMaster.Configuration;
+using Dnn.KeyMaster.Exceptions;
 using Dnn.KeyMaster.Web.Security.KeyVault.Models;
 using DotNetNuke.Instrumentation;
 using Newtonsoft.Json;
@@ -36,16 +37,11 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             }
         }
         
-        private static KeyValuePair<string, string> GetSecret(KeyVaultSecretListItem item, AccessTokenResponse token = null, AppSettings config = null)
+        private static KeyValuePair<string, string> GetSecret(KeyVaultSecretListItem item, AccessTokenResponse token = null)
         {
-            if (config == null)
-            {
-                config = SecretsProvider.GetSecrets();
-            }
-
             if (token == null)
             {
-                token = AzureAccessTokenProvider.GetToken(config);
+                token = AzureAccessTokenProvider.GetToken();
             }
 
             try
@@ -61,7 +57,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
 
                         var name = item.Id
                             .Split('/').LastOrDefault()
-                            .Replace($"{config.SecretName}--AppSettings--", string.Empty)
+                            .Replace($"{SecretsProvider.Instance.Config.SecretName}--AppSettings--", string.Empty)
                             .Replace("---", ".")
                             .Replace("--", ":");
 
@@ -77,19 +73,14 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             throw new AzureSecretsKeyMasterException(item.Id.Split('/').LastOrDefault());
         }
 
-        private static NameValueCollection GetAppSettings(AppSettings config = null)
+        private static NameValueCollection GetAppSettings()
         {
             try
             {
-                if (config == null)
-                {
-                    config = SecretsProvider.GetSecrets();
-                }
-
-                var token = AzureAccessTokenProvider.GetToken(config);
+                var token = AzureAccessTokenProvider.GetToken();
                 using (var client = new HttpClient())
                 {
-                    var secrets = string.Format(API.GetAllSecrets, config.KeyVaultUrl);
+                    var secrets = string.Format(API.GetAllSecrets, SecretsProvider.Instance.Config.KeyVaultUrl);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
 
                     var response = client.GetAsync(secrets).Result;
@@ -103,10 +94,10 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
                             var appsettings = new NameValueCollection();
 
                             foreach (var secretListItem in items.Secrets
-                                .Where(x => x.Id.Split('/').LastOrDefault().StartsWith($"{config.SecretName}--AppSettings--")))
+                                .Where(x => x.Id.Split('/').LastOrDefault().StartsWith($"{SecretsProvider.Instance.Config.SecretName}--AppSettings--")))
                             {
 
-                                var current = GetSecret(secretListItem, token, config);
+                                var current = GetSecret(secretListItem, token);
                                 appsettings.Add(current.Key, current.Value);
                             }
 
@@ -123,25 +114,20 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             throw new KeyMasterException("Azure Key Vault App Settings are empty");
         }
 
-        public static async Task<bool> DeleteSecretAsync(string key, AppSettings config = null)
+        public static async Task<bool> DeleteSecretAsync(string key)
         {
             try
             {
-                if (config == null)
-                {
-                    config = SecretsProvider.GetSecrets();
-                }
-
-                var token = AzureAccessTokenProvider.GetToken(config);
+                var token = AzureAccessTokenProvider.GetToken();
                 using (var client = new HttpClient())
                 {
                     var name = key
                         .Replace(":", "--")
                         .Replace(".", "---");
 
-                    name = $"{config.SecretName}--AppSettings--{name}";
+                    name = $"{SecretsProvider.Instance.Config.SecretName}--AppSettings--{name}";
 
-                    var secret = string.Format(API.Secret, config.KeyVaultUrl, name);
+                    var secret = string.Format(API.Secret, SecretsProvider.Instance.Config.KeyVaultUrl, name);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
 
                     var response = await client.DeleteAsync(secret);
@@ -166,25 +152,20 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             return false;
         }
 
-        public static async Task<bool> CreateOrUpdateAppSettingAsync(string key, string value, AppSettings config = null)
+        public static async Task<bool> CreateOrUpdateAppSettingAsync(string key, string value)
         {
             try
             {
-                if (config == null)
-                {
-                    config = SecretsProvider.GetSecrets();
-                }
-
-                var token = AzureAccessTokenProvider.GetToken(config);
+                var token = AzureAccessTokenProvider.GetToken();
                 using (var client = new HttpClient())
                 {
                     var name = key
                         .Replace(":", "--")
                         .Replace(".", "---");
 
-                    name = $"{config.SecretName}--AppSettings--{name}";
+                    name = $"{SecretsProvider.Instance.Config.SecretName}--AppSettings--{name}";
 
-                    var secret = string.Format(API.Secret, config.KeyVaultUrl, name);
+                    var secret = string.Format(API.Secret, SecretsProvider.Instance.Config.KeyVaultUrl, name);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
 
                     var keyVaultSecret = new KeyVaultSecret
@@ -216,19 +197,14 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             return false;
         }
 
-        public static string GetConnectionString(AppSettings appsettings = null)
+        public static string GetConnectionString()
         {
             try
             {
-                if (appsettings == null)
-                {
-                    appsettings = SecretsProvider.GetSecrets();
-                }
-
-                var token = AzureAccessTokenProvider.GetToken(appsettings);
+                var token = AzureAccessTokenProvider.GetToken();
                 using (var client = new HttpClient())
                 {
-                    var secretVersions = string.Format(API.Secret, appsettings.KeyVaultUrl, appsettings.SecretName);
+                    var secretVersions = string.Format(API.Secret, SecretsProvider.Instance.Config.KeyVaultUrl, SecretsProvider.Instance.Config.SecretName);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
                     var response = client.GetAsync(secretVersions).Result;
                     if (response.IsSuccessStatusCode)

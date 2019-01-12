@@ -4,9 +4,7 @@ using Dnn.KeyMaster.API.Utilities;
 using Dnn.PersonaBar.Library;
 using Dnn.PersonaBar.Library.Attributes;
 using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -23,21 +21,9 @@ namespace Dnn.KeyMaster.API.Controllers
         {
             try
             {
-                PersonaBarResponse response = null;
-                if (!File.Exists(SecretsProvider.SecretsFile))
-                {
-                    response = new PersonaBarResponse
-                    {
-                        Success = false
-                    };
+                var secrets = SecretsProvider.GetConfiguration();
 
-                    return response.ToHttpResponseMessage();
-                }
-
-                var json = File.ReadAllText(SecretsProvider.SecretsFile);
-                var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-
-                response = new PersonaBarResponse<Secrets>
+                var response = new PersonaBarResponse<Secrets>
                 {
                     Success = true,
                     Result = secrets
@@ -67,7 +53,7 @@ namespace Dnn.KeyMaster.API.Controllers
 
             try
             {
-                response.Success = SecretsProvider.ValidateSecrets(secrets);
+                response.Success = SecretsProvider.ValidateSecrets();
                 return response.ToHttpResponseMessage();
             }
             catch (Exception ex)
@@ -92,14 +78,14 @@ namespace Dnn.KeyMaster.API.Controllers
 
             try
             {
-                var isValid = SecretsProvider.ValidateSecrets(secrets);
+                var isValid = SecretsProvider.ValidateSecrets();
                 if (!isValid)
                 {
                     response.Success = false;
                     return response.ToHttpResponseMessage();
                 }
 
-                File.WriteAllText(SecretsProvider.SecretsFile, JsonConvert.SerializeObject(secrets));
+                SecretsProvider.SaveOrUpdateConfiguration(secrets);
 
                 response.Success = true;
                 return response.ToHttpResponseMessage();

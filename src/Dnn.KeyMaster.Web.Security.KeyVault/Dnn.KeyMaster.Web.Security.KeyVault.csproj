@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dnn.KeyMaster.Exceptions\Dnn.KeyMaster.Exceptions.csproj" />
+    <ProjectReference Include="..\Dnn.KeyMaster.Configuration\Dnn.KeyMaster.Configuration.csproj" />
   </ItemGroup>
 
   <ItemGroup>

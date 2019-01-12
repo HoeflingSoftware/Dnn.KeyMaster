@@ -16,10 +16,7 @@ namespace Dnn.KeyMaster.API.Utilities
     {
         internal static bool ToggleOff()
         {
-            var json = File.ReadAllText(SecretsProvider.SecretsFile);
-            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-
-            var connectionString = SecretsProvider.GetConnectionString(secrets);
+            var connectionString = SecretsProvider.GetConnectionString();
             if (string.IsNullOrEmpty(connectionString))
             {
                 return false;
@@ -119,14 +116,7 @@ namespace Dnn.KeyMaster.API.Utilities
 
         internal static bool ToggleOn()
         {
-            if (!File.Exists(SecretsProvider.SecretsFile))
-            {
-                return false;
-            }
-
-            var json = File.ReadAllText(SecretsProvider.SecretsFile);
-            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-            if (!SecretsProvider.ValidateSecrets(secrets))
+            if (!SecretsProvider.ValidateSecrets())
             {
                 return false;
             }

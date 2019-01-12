@@ -1,4 +1,5 @@
-﻿using Dnn.KeyMaster.Exceptions;
+﻿using Dnn.KeyMaster.Configuration;
+using Dnn.KeyMaster.Exceptions;
 using Dnn.KeyMaster.Exceptions.Models;
 using Dnn.KeyMaster.Web.Security.KeyVault.Models;
 using Newtonsoft.Json;
@@ -15,17 +16,17 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             public const string AccessToken = "https://login.microsoftonline.com/{0}/oauth2/v2.0/token";
         }
 
-        public static AccessTokenResponse GetToken(AppSettings appsettings)
+        public static AccessTokenResponse GetToken()
         {
             using (var client = new HttpClient())
             {
-                var endpoint = string.Format(APIs.AccessToken, appsettings.DirectoryId);
+                var endpoint = string.Format(APIs.AccessToken, SecretsProvider.Instance.Config.DirectoryId);
 
                 var content = new FormUrlEncodedContent(new[]
                 {
                     new KeyValuePair<string, string>("grant_type", "client_credentials"),
-                    new KeyValuePair<string, string>("client_id", appsettings.ClientId),
-                    new KeyValuePair<string, string>("client_secret", appsettings.ClientSecret),
+                    new KeyValuePair<string, string>("client_id", SecretsProvider.Instance.Config.ClientId),
+                    new KeyValuePair<string, string>("client_secret", SecretsProvider.Instance.Config.ClientSecret),
                     new KeyValuePair<string, string>("scope", "https://vault.azure.net/.default")
                 });
 
