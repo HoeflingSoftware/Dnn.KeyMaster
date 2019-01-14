@@ -1,4 +1,4 @@
-﻿using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
+﻿using Dnn.KeyMaster.Configuration;
 using System.Collections.Specialized;
 using System.Configuration.Internal;
 
@@ -21,7 +21,7 @@ namespace Dnn.KeyMaster.Providers
 
             if (configKey == "appSettings" && section is NameValueCollection)
             {
-                section = this.appsettings = KeyVaultProvider.AppSettings;
+                section = this.appsettings = AppSettingsProvider.Instance;
             }
             return section;
         }

@@ -1,11 +1,7 @@
-﻿using Dnn.KeyMaster.API.Models;
+﻿using Dnn.KeyMaster.Configuration;
 using Dnn.KeyMaster.Exceptions;
-using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -61,7 +57,7 @@ namespace Dnn.KeyMaster.API.Utilities
             var tasks = new List<Task<bool>>();
             foreach (var key in ConfigurationManager.AppSettings.AllKeys)
             {
-                tasks.Add(Task.Run(async () => await KeyVaultProvider.CreateOrUpdateAppSettingAsync(key, ConfigurationManager.AppSettings[key])));
+                tasks.Add(Task.Run(async () => await AppSettingsProvider.Instance.KeyMaster.CreateOrUpdateAsync(key, ConfigurationManager.AppSettings[key])));
             }
 
             var results = Task.WhenAll(tasks).Result;
@@ -100,7 +96,7 @@ namespace Dnn.KeyMaster.API.Utilities
             var tasks = new List<Task<bool>>();
             foreach (var key in ConfigurationManager.AppSettings.AllKeys)
             {
-                tasks.Add(Task.Run(async () => await KeyVaultProvider.DeleteSecretAsync(key)));
+                tasks.Add(Task.Run(async () => await AppSettingsProvider.Instance.KeyMaster.DeleteSecretAsync(key)));
                 var secret = ConfigurationManager.AppSettings[key];
                 appSettings.Add(XElement.Parse($"<add key=\"{key}\" value=\"{secret}\" />"));
             }

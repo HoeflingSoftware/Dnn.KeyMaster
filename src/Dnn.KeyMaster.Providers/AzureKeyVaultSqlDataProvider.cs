@@ -15,10 +15,10 @@ using DotNetNuke.Instrumentation;
 using DotNetNuke.Services.Log.EventLog;
 
 using Dnn.KeyMaster.Data.Providers.KeyVault.Utilities;
-using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
 
 using Microsoft.ApplicationBlocks.Data;
 using Dnn.KeyMaster.Exceptions;
+using Dnn.KeyMaster.Configuration;
 
 namespace Dnn.KeyMaster.Providers
 {
@@ -46,7 +46,7 @@ namespace Dnn.KeyMaster.Providers
                 {
                     try
                     {
-                        connectionString = KeyVaultProvider.GetConnectionString();
+                        connectionString = AppSettingsProvider.Instance.KeyMaster.GetConnectionString();
                     }
                     catch (KeyMasterException ex)
                     {

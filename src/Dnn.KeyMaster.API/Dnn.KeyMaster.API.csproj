@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dnn.KeyMaster.Web.Security.KeyVault\Dnn.KeyMaster.Web.Security.KeyVault.csproj" />
+    <ProjectReference Include="..\Dnn.KeyMaster.Configuration\Dnn.KeyMaster.Configuration.csproj" />
+    <ProjectReference Include="..\Dnn.KeyMaster.Exceptions\Dnn.KeyMaster.Exceptions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,10 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Specialized;
 
-namespace Dnn.KeyMaster.Configuration
+namespace Dnn.KeyMaster.Configuration.AzureKeyVault.Models
 {
+
+
     [JsonObject]
     public class Secrets
     {
@@ -30,13 +33,23 @@ namespace Dnn.KeyMaster.Configuration
         [JsonProperty(Keys.SecretName)]
         public string SecretName { get; internal set; }
 
-        internal class Keys
+        internal bool IsValid()
         {
-            public const string KeyVaultUrl = "KeyVaultUrl";
-            public const string DirectoryId = "DirectoryId";
-            public const string ClientId = "ClientId";
-            public const string ClientSecret = "ClientSecret";
-            public const string SecretName = "SecretName";
+            return
+                !string.IsNullOrEmpty(KeyVaultUrl) &&
+                !string.IsNullOrEmpty(DirectoryId) &&
+                !string.IsNullOrEmpty(ClientId) &&
+                !string.IsNullOrEmpty(ClientSecret) &&
+                !string.IsNullOrEmpty(SecretName);
         }
+    }
+
+    internal class Keys
+    {
+        public const string KeyVaultUrl = "KeyVaultUrl";
+        public const string DirectoryId = "DirectoryId";
+        public const string ClientId = "ClientId";
+        public const string ClientSecret = "ClientSecret";
+        public const string SecretName = "SecretName";
     }
 }
