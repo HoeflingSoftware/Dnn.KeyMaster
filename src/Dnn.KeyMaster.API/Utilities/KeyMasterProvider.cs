@@ -1,9 +1,7 @@
 ﻿using Dnn.KeyMaster.Configuration;
 using Dnn.KeyMaster.Exceptions;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Dnn.KeyMaster.API.Utilities
@@ -54,16 +52,13 @@ namespace Dnn.KeyMaster.API.Utilities
 
         internal static void SendAppSettings()
         {
-            var tasks = new List<Task<bool>>();
             foreach (var key in ConfigurationManager.AppSettings.AllKeys)
             {
-                tasks.Add(Task.Run(async () => await AppSettingsProvider.Instance.KeyMaster.CreateOrUpdateAsync(key, ConfigurationManager.AppSettings[key])));
-            }
-
-            var results = Task.WhenAll(tasks).Result;
-            if (results.Any(x => !x))
-            {
-                throw new KeyMasterException("Key master couldn't send app secrets to azure");
+                var isSuccessful = AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, ConfigurationManager.AppSettings[key]);
+                if (!isSuccessful)
+                {
+                    throw new KeyMasterException("Key master couldn't send app secrets to azure");
+                }
             }
 
             var xml = XDocument.Load(SecretsProvider.WebconfigFile);
@@ -93,21 +88,19 @@ namespace Dnn.KeyMaster.API.Utilities
 
             appSettings.Elements().Remove();
 
-            var tasks = new List<Task<bool>>();
             foreach (var key in ConfigurationManager.AppSettings.AllKeys)
             {
-                tasks.Add(Task.Run(async () => await AppSettingsProvider.Instance.KeyMaster.DeleteSecretAsync(key)));
+                var isSuccessful = AppSettingsProvider.Instance.KeyMaster.DeleteSecret(key);
+                if (!isSuccessful)
+                {
+                    throw new KeyMasterException("Key Master couldn't delete all secrets from azure");
+                }
+
                 var secret = ConfigurationManager.AppSettings[key];
                 appSettings.Add(XElement.Parse($"<add key=\"{key}\" value=\"{secret}\" />"));
             }
 
             xml.Save(SecretsProvider.WebconfigFile);
-
-            var results = Task.WhenAll(tasks).Result;
-            if (results.Any(x => !x))
-            {
-                throw new KeyMasterException("Key Master couldn't delete all secrets from azure");
-            }
         }
 
         internal static bool ToggleOn()

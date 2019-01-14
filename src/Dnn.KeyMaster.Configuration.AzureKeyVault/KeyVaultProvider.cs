@@ -61,7 +61,7 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
             throw new AzureSecretsKeyMasterException(item.Id.Split('/').LastOrDefault());
         }
 
-        public async Task<bool> CreateOrUpdateAsync(string key, string value)
+        public bool CreateOrUpdate(string key, string value)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
             return false;
         }
 
-        public async Task<bool> DeleteSecretAsync(string key)
+        public bool DeleteSecret(string key)
         {
             try
             {

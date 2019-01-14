@@ -7,8 +7,8 @@ namespace Dnn.KeyMaster.Configuration
     {
         NameValueCollection GetAppSettings();
         string GetSecret(string key);
-        Task<bool> DeleteSecretAsync(string key);
-        Task<bool> CreateOrUpdateAsync(string key, string value);
+        bool DeleteSecret(string key);
+        bool CreateOrUpdate(string key, string value);
         string GetConnectionString();
     }
 }

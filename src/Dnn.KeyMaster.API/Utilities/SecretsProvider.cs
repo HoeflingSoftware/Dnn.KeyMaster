@@ -44,12 +44,12 @@ namespace Dnn.KeyMaster.API.Utilities
 
         internal static bool DeleteAppSetting(string key)
         {            
-            return Configuration.AppSettingsProvider.Instance.KeyMaster.DeleteSecretAsync(key).Result;
+            return Configuration.AppSettingsProvider.Instance.KeyMaster.DeleteSecret(key);
         }
 
         internal static bool CreateOrUpdateAppSetting(string key, string value)
         {
-            return Configuration.AppSettingsProvider.Instance.KeyMaster.CreateOrUpdateAsync(key, value).Result;
+            return Configuration.AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, value);
         }
 
 
