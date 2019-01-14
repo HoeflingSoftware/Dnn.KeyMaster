@@ -2,21 +2,23 @@ namespace Dnn.KeyMaster.Configuration
 {
     public class ConfigurationProvider
     {
-        //private static readonly object _lockobject = new object();
+        private static readonly object _lockobject = new object();
         private static ConfigurationProvider _instance;
         public static ConfigurationProvider Instance
         {
             get
-
             {
-                //lock (_lockobject)
-                //{
-                    if (_instance == null)
+                if (_instance == null)
+                {
+                    lock (_lockobject)
                     {
-                        var configuration = ModuleLoader.LoadImplementation<IKeyMasterConfiguration>(ModuleLoader.Default);
-                        _instance = new ConfigurationProvider(configuration);
+                        if (_instance == null)
+                        {
+                            var configuration = ModuleLoader.LoadImplementation<IKeyMasterConfiguration>(ModuleLoader.Default);
+                            _instance = new ConfigurationProvider(configuration);
+                        }
                     }
-                //}
+                }
 
                 return _instance;
             }

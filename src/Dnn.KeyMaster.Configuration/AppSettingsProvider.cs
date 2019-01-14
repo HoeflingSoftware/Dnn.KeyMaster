@@ -4,20 +4,23 @@ namespace Dnn.KeyMaster.Configuration
 {
     public class AppSettingsProvider : NameValueCollection
     {
-        //private static readonly object _lockobject = new object();
+        private static readonly object _lockobject = new object();
         private static AppSettingsProvider _instance;
         public static AppSettingsProvider Instance
         {
             get
             {
-                //lock (_lockobject)
-                //{
-                    if (_instance == null)
+                if (_instance == null)
+                {
+                    lock (_lockobject)
                     {
-                        var appsettings = ModuleLoader.LoadImplementation<IKeyMasterAppSettings>(ModuleLoader.Default);
-                        _instance = new AppSettingsProvider(appsettings);
+                        if (_instance == null)
+                        {
+                            var appsettings = ModuleLoader.LoadImplementation<IKeyMasterAppSettings>(ModuleLoader.Default);
+                            _instance = new AppSettingsProvider(appsettings);
+                        }
                     }
-                //}
+                }
 
                 return _instance;
             }
