@@ -31,19 +31,23 @@
               <path>bin</path>
             </assembly>
             <assembly>
+              <name>Dnn.KeyMaster.Configuration.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Dnn.KeyMaster.Configuration.AzureKeyVault.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Dnn.KeyMaster.Exceptions.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
               <name>Dnn.KeyMaster.PersonaBar.dll</name>
               <path>bin</path>
             </assembly>
             <assembly>
               <name>Dnn.KeyMaster.Providers.dll</name>
-              <path>bin</path>
-            </assembly>
-            <assembly>
-              <name>Dnn.KeyMaster.Web.Security.KeyVault.dll</name>
-              <path>bin</path>
-            </assembly>
-            <assembly>
-              <name>Dnn.KeyMaster.Exceptions.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

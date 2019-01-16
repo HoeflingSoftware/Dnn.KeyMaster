@@ -1,13 +1,8 @@
-﻿using Dnn.KeyMaster.API.Models;
+﻿using Dnn.KeyMaster.Configuration;
 using Dnn.KeyMaster.Exceptions;
-using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using DotNetNuke.Instrumentation;
 using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Dnn.KeyMaster.API.Utilities
@@ -16,10 +11,7 @@ namespace Dnn.KeyMaster.API.Utilities
     {
         internal static bool ToggleOff()
         {
-            var json = File.ReadAllText(SecretsProvider.SecretsFile);
-            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-
-            var connectionString = SecretsProvider.GetConnectionString(secrets);
+            var connectionString = SecretsProvider.GetConnectionString();
             if (string.IsNullOrEmpty(connectionString))
             {
                 return false;
@@ -61,16 +53,15 @@ namespace Dnn.KeyMaster.API.Utilities
 
         internal static void SendAppSettings()
         {
-            var tasks = new List<Task<bool>>();
-            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            var secretKeys = new[] { "ClientId", "ClientSecret", "DirectoryId", "KeyVaultUrl", "SecretName" };
+            foreach (var key in ConfigurationManager.AppSettings.AllKeys.Where(x => !secretKeys.Contains(x)))
             {
-                tasks.Add(Task.Run(async () => await KeyVaultProvider.CreateOrUpdateAppSettingAsync(key, ConfigurationManager.AppSettings[key])));
-            }
-
-            var results = Task.WhenAll(tasks).Result;
-            if (results.Any(x => !x))
-            {
-                throw new KeyMasterException("Key master couldn't send app secrets to azure");
+                var isSuccessful = AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, ConfigurationManager.AppSettings[key]);
+                if (!isSuccessful)
+                {
+                    var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                    logger.Error($"Key master couldn't send app secrets to azure: {key}. ** This app secret may be added by your hosting environment and not required **");
+                }
             }
 
             var xml = XDocument.Load(SecretsProvider.WebconfigFile);
@@ -100,33 +91,25 @@ namespace Dnn.KeyMaster.API.Utilities
 
             appSettings.Elements().Remove();
 
-            var tasks = new List<Task<bool>>();
-            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            foreach (var key in AppSettingsProvider.Instance.AllKeys)
             {
-                tasks.Add(Task.Run(async () => await KeyVaultProvider.DeleteSecretAsync(key)));
-                var secret = ConfigurationManager.AppSettings[key];
+                var secret = AppSettingsProvider.Instance[key];
+                var isSuccessful = AppSettingsProvider.Instance.KeyMaster.DeleteSecret(key);
+                if (!isSuccessful)
+                {
+                    var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                    logger.Error($"Key Master couldn't delete app secrets from azure: {key}. ** This app secret may be added by your hosting environment and not required **");
+                }
+
                 appSettings.Add(XElement.Parse($"<add key=\"{key}\" value=\"{secret}\" />"));
             }
 
             xml.Save(SecretsProvider.WebconfigFile);
-
-            var results = Task.WhenAll(tasks).Result;
-            if (results.Any(x => !x))
-            {
-                throw new KeyMasterException("Key Master couldn't delete all secrets from azure");
-            }
         }
 
         internal static bool ToggleOn()
         {
-            if (!File.Exists(SecretsProvider.SecretsFile))
-            {
-                return false;
-            }
-
-            var json = File.ReadAllText(SecretsProvider.SecretsFile);
-            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-            if (!SecretsProvider.ValidateSecrets(secrets))
+            if (!SecretsProvider.ValidateSecrets())
             {
                 return false;
             }

@@ -4,9 +4,7 @@ using Dnn.KeyMaster.API.Utilities;
 using Dnn.PersonaBar.Library;
 using Dnn.PersonaBar.Library.Attributes;
 using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -21,21 +19,10 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Get()
         {
+            var response = new PersonaBarResponse();
             try
             {
-                PersonaBarResponse response = null;
-                if (!File.Exists(SecretsProvider.SecretsFile))
-                {
-                    response = new PersonaBarResponse
-                    {
-                        Success = false
-                    };
-
-                    return response.ToHttpResponseMessage();
-                }
-
-                var json = File.ReadAllText(SecretsProvider.SecretsFile);
-                var secrets = JsonConvert.DeserializeObject<Secrets>(json);
+                var secrets = SecretsProvider.GetConfiguration();
 
                 response = new PersonaBarResponse<Secrets>
                 {
@@ -48,8 +35,10 @@ namespace Dnn.KeyMaster.API.Controllers
             catch (Exception ex)
             {
                 ex.Handle();
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                response.Success = false;
             }
+
+            return response.ToHttpResponseMessage();
         }
 
         [HttpPost]
@@ -99,7 +88,7 @@ namespace Dnn.KeyMaster.API.Controllers
                     return response.ToHttpResponseMessage();
                 }
 
-                File.WriteAllText(SecretsProvider.SecretsFile, JsonConvert.SerializeObject(secrets));
+                SecretsProvider.SaveOrUpdateConfiguration(secrets);
 
                 response.Success = true;
                 return response.ToHttpResponseMessage();
