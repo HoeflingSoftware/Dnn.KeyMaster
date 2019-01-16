@@ -185,13 +185,13 @@ jobs:
 - job: Release
   dependsOn: 
   - Build
-  - AutomationTest900
-  - AutomationTest901
-  - AutomationTest902
-  - AutomationTest910
-  - AutomationTest911
-  - AutomationTest920
-  - AutomationTest921
+  # - AutomationTest900
+  # - AutomationTest901
+  # - AutomationTest902
+  # - AutomationTest910
+  # - AutomationTest911
+  # - AutomationTest920
+  # - AutomationTest921
   - AutomationTest922
   displayName: Release
   pool:
