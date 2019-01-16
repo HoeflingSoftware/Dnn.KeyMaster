@@ -14,7 +14,6 @@ steps:
     resourceGroupName: '${{ parameters.resourceGroup }}'
     location: 'East US'
     csmFile: template.json
-    #csmParametersFile: parameters.json
     overrideParameters: '-subscriptionId ${{ parameters.subscriptionId }} -serverName ${{ parameters.name }} -databaseName ${{ parameters.name }} -databasePassword ${{ parameters.hostPassword }} -databaseUsername app -administratorLoginPassword ${{ parameters.hostPassword }} -administratorLogin app -webAppName ${{ parameters.name }} -hostingPlanName ${{ parameters.name }} -serverFarmResourceGroup ${{ parameters.resourceGroup }}'
     deploymentMode: Complete
 
