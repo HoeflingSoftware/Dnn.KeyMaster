@@ -31,11 +31,11 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
         {
             _secrets = new NameValueCollection
             {
-                [Keys.KeyVaultUrl] = /*"https://hoeflingsoftware.vault.azure.net/",*/Environment.GetEnvironmentVariable(Keys.KeyVaultUrl),
-                [Keys.ClientId] = /*"7b3a0461-d5dd-48db-9d58-7ee931b335de",*/Environment.GetEnvironmentVariable(Keys.ClientId),
-                [Keys.ClientSecret] = /*"=@*6#9)$/!.[?=M(p;[$!%;C#?+y&", */Environment.GetEnvironmentVariable(Keys.ClientSecret),
-                [Keys.DirectoryId] = /*"dc431e77-b6a6-4540-a71c-ed34e769d5be",*/Environment.GetEnvironmentVariable(Keys.DirectoryId),
-                [Keys.SecretName] = /*"DNN--SQL--RX--LOCALHOST"*/Environment.GetEnvironmentVariable(Keys.SecretName)
+                [Keys.KeyVaultUrl] = Environment.GetEnvironmentVariable(Keys.KeyVaultUrl),
+                [Keys.ClientId] = Environment.GetEnvironmentVariable(Keys.ClientId),
+                [Keys.ClientSecret] = Environment.GetEnvironmentVariable(Keys.ClientSecret),
+                [Keys.DirectoryId] = Environment.GetEnvironmentVariable(Keys.DirectoryId),
+                [Keys.SecretName] = Environment.GetEnvironmentVariable(Keys.SecretName)
             };
 
             if (IsValid())
