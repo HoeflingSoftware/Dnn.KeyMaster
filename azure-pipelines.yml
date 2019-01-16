@@ -10,7 +10,6 @@ variables:
   system.debug: "true"
   githubOrganization: 'HoeflingSoftware'
   githubRepo: 'Dnn.KeyMaster'
-  ServiceConnection: 'AzureServiceConnection'
 
 jobs:    
 - job: Build
