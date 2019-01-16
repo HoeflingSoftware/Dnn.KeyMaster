@@ -38,131 +38,131 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
-- job: AutomationTest900
-  dependsOn: Build
-  displayName: Test DNN 9.0.0
-  pool:
-    name: "Hosted VS2017"
-    demands: DotNetFramework
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+# - job: AutomationTest900
+#   dependsOn: Build
+#   displayName: Test DNN 9.0.0
+#   pool:
+#     name: "Hosted VS2017"
+#     demands: DotNetFramework
+#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-  steps:
-  - template: azure-pipelines-test-dnn.yml
-    parameters: 
-      name: 'kmd-900-$(Build.BuildId)'
-      resourceGroup: 'kmd-900-$(Build.BuildId)-rg'
-      serviceConnection: '$(ServiceConnection)'
-      hostPassword: '$(HostPassword)'
-      platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.0/DNN_Platform_9.0.0.1002_Install.zip'
-      subscriptionId: '$(SubscriptionId)'
+#   steps:
+#   - template: azure-pipelines-test-dnn.yml
+#     parameters: 
+#       name: 'kmd-900-$(Build.BuildId)'
+#       resourceGroup: 'kmd-900-$(Build.BuildId)-rg'
+#       serviceConnection: '$(ServiceConnection)'
+#       hostPassword: '$(HostPassword)'
+#       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.0/DNN_Platform_9.0.0.1002_Install.zip'
+#       subscriptionId: '$(SubscriptionId)'
 
-- job: AutomationTest901
-  dependsOn: Build
-  displayName: Test DNN 9.0.1
-  pool:
-    name: "Hosted VS2017"
-    demands: DotNetFramework
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+# - job: AutomationTest901
+#   dependsOn: Build
+#   displayName: Test DNN 9.0.1
+#   pool:
+#     name: "Hosted VS2017"
+#     demands: DotNetFramework
+#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-  steps:
-  - template: azure-pipelines-test-dnn.yml
-    parameters: 
-      name: 'kmd-901-$(Build.BuildId)'
-      resourceGroup: 'kmd-901-$(Build.BuildId)-rg'
-      serviceConnection: '$(ServiceConnection)'
-      hostPassword: '$(HostPassword)'
-      platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.1/DNN_Platform_9.0.1.142_Install.zip'
-      subscriptionId: '$(SubscriptionId)'
+#   steps:
+#   - template: azure-pipelines-test-dnn.yml
+#     parameters: 
+#       name: 'kmd-901-$(Build.BuildId)'
+#       resourceGroup: 'kmd-901-$(Build.BuildId)-rg'
+#       serviceConnection: '$(ServiceConnection)'
+#       hostPassword: '$(HostPassword)'
+#       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.1/DNN_Platform_9.0.1.142_Install.zip'
+#       subscriptionId: '$(SubscriptionId)'
 
-- job: AutomationTest902
-  dependsOn: Build
-  displayName: Test DNN 9.0.2
-  pool:
-    name: "Hosted VS2017"
-    demands: DotNetFramework
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+# - job: AutomationTest902
+#   dependsOn: Build
+#   displayName: Test DNN 9.0.2
+#   pool:
+#     name: "Hosted VS2017"
+#     demands: DotNetFramework
+#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-  steps:
-  - template: azure-pipelines-test-dnn.yml
-    parameters: 
-      name: 'kmd-902-$(Build.BuildId)'
-      resourceGroup: 'kmd-902-$(Build.BuildId)-rg'
-      serviceConnection: '$(ServiceConnection)'
-      hostPassword: '$(HostPassword)'
-      platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.2/DNN_Platform_9.0.2_Install.zip'
-      subscriptionId: '$(SubscriptionId)'
+#   steps:
+#   - template: azure-pipelines-test-dnn.yml
+#     parameters: 
+#       name: 'kmd-902-$(Build.BuildId)'
+#       resourceGroup: 'kmd-902-$(Build.BuildId)-rg'
+#       serviceConnection: '$(ServiceConnection)'
+#       hostPassword: '$(HostPassword)'
+#       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.2/DNN_Platform_9.0.2_Install.zip'
+#       subscriptionId: '$(SubscriptionId)'
 
-- job: AutomationTest910
-  dependsOn: Build
-  displayName: Test DNN 9.1.0
-  pool:
-    name: "Hosted VS2017"
-    demands: DotNetFramework
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+# - job: AutomationTest910
+#   dependsOn: Build
+#   displayName: Test DNN 9.1.0
+#   pool:
+#     name: "Hosted VS2017"
+#     demands: DotNetFramework
+#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-  steps:
-  - template: azure-pipelines-test-dnn.yml
-    parameters: 
-      name: 'kmd-910-$(Build.BuildId)'
-      resourceGroup: 'kmd-910-$(Build.BuildId)-rg'
-      serviceConnection: '$(ServiceConnection)'
-      hostPassword: '$(HostPassword)'
-      platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.1.0/DNN_Platform_9.1.0.367_Install.zip'
-      subscriptionId: '$(SubscriptionId)'
+#   steps:
+#   - template: azure-pipelines-test-dnn.yml
+#     parameters: 
+#       name: 'kmd-910-$(Build.BuildId)'
+#       resourceGroup: 'kmd-910-$(Build.BuildId)-rg'
+#       serviceConnection: '$(ServiceConnection)'
+#       hostPassword: '$(HostPassword)'
+#       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.1.0/DNN_Platform_9.1.0.367_Install.zip'
+#       subscriptionId: '$(SubscriptionId)'
 
-- job: AutomationTest911
-  dependsOn: Build
-  displayName: Test DNN 9.1.1
-  pool:
-    name: "Hosted VS2017"
-    demands: DotNetFramework
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+# - job: AutomationTest911
+#   dependsOn: Build
+#   displayName: Test DNN 9.1.1
+#   pool:
+#     name: "Hosted VS2017"
+#     demands: DotNetFramework
+#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-  steps:
-  - template: azure-pipelines-test-dnn.yml
-    parameters: 
-      name: 'kmd-911-$(Build.BuildId)'
-      resourceGroup: 'kmd-911-$(Build.BuildId)-rg'
-      serviceConnection: '$(ServiceConnection)'
-      hostPassword: '$(HostPassword)'
-      platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.1.1/DNN_Platform_9.1.1.129-232_Install.zip'
-      subscriptionId: '$(SubscriptionId)'
+#   steps:
+#   - template: azure-pipelines-test-dnn.yml
+#     parameters: 
+#       name: 'kmd-911-$(Build.BuildId)'
+#       resourceGroup: 'kmd-911-$(Build.BuildId)-rg'
+#       serviceConnection: '$(ServiceConnection)'
+#       hostPassword: '$(HostPassword)'
+#       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.1.1/DNN_Platform_9.1.1.129-232_Install.zip'
+#       subscriptionId: '$(SubscriptionId)'
 
-- job: AutomationTest920
-  dependsOn: Build
-  displayName: Test DNN 9.2.0
-  pool:
-    name: "Hosted VS2017"
-    demands: DotNetFramework
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+# - job: AutomationTest920
+#   dependsOn: Build
+#   displayName: Test DNN 9.2.0
+#   pool:
+#     name: "Hosted VS2017"
+#     demands: DotNetFramework
+#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-  steps:
-  - template: azure-pipelines-test-dnn.yml
-    parameters: 
-      name: 'kmd-920-$(Build.BuildId)'
-      resourceGroup: 'kmd-920-$(Build.BuildId)-rg'
-      serviceConnection: '$(ServiceConnection)'
-      hostPassword: '$(HostPassword)'
-      platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.2.0/DNN_Platform_9.2.0.366-777_Install.zip'
-      subscriptionId: '$(SubscriptionId)'
+#   steps:
+#   - template: azure-pipelines-test-dnn.yml
+#     parameters: 
+#       name: 'kmd-920-$(Build.BuildId)'
+#       resourceGroup: 'kmd-920-$(Build.BuildId)-rg'
+#       serviceConnection: '$(ServiceConnection)'
+#       hostPassword: '$(HostPassword)'
+#       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.2.0/DNN_Platform_9.2.0.366-777_Install.zip'
+#       subscriptionId: '$(SubscriptionId)'
 
-- job: AutomationTest921
-  dependsOn: Build
-  displayName: Test DNN 9.2.1
-  pool:
-    name: "Hosted VS2017"
-    demands: DotNetFramework
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+# - job: AutomationTest921
+#   dependsOn: Build
+#   displayName: Test DNN 9.2.1
+#   pool:
+#     name: "Hosted VS2017"
+#     demands: DotNetFramework
+#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-  steps:
-  - template: azure-pipelines-test-dnn.yml
-    parameters: 
-      name: 'kmd-921-$(Build.BuildId)'
-      resourceGroup: 'kmd-921-$(Build.BuildId)-rg'
-      serviceConnection: '$(ServiceConnection)'
-      hostPassword: '$(HostPassword)'
-      platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.2.1/DNN_Platform_9.2.1.533-298_Install.zip'
-      subscriptionId: '$(SubscriptionId)'
+#   steps:
+#   - template: azure-pipelines-test-dnn.yml
+#     parameters: 
+#       name: 'kmd-921-$(Build.BuildId)'
+#       resourceGroup: 'kmd-921-$(Build.BuildId)-rg'
+#       serviceConnection: '$(ServiceConnection)'
+#       hostPassword: '$(HostPassword)'
+#       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.2.1/DNN_Platform_9.2.1.533-298_Install.zip'
+#       subscriptionId: '$(SubscriptionId)'
 
 - job: AutomationTest922
   dependsOn: Build

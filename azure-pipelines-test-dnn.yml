@@ -7,6 +7,14 @@ parameters:
   subscriptionId: ''
 
 steps:
+- checkout: none
+
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download Key Master Artifacts'
+  inputs:
+    artifactName: drop
+    downloadPath: $(System.DefaultWorkingDirectory)  
+
 - task: AzureResourceGroupDeployment@2
   displayName: 'Azure Deployment:Create Or Update Resource Group action on $(ResourceGroup)'
   inputs:
@@ -27,6 +35,9 @@ steps:
   ignoreLASTEXITCODE: true
   workingDirectory: '$(Build.ArtifactStagingDirectory)'
   displayName: 'Download and Extract DNN Installer'
+
+- powershell: Move-Item $(System.DefaultWorkingDirectory)\drop\*.zip $(Build.ArtifactStagingDirectory)\DNN_Publish\Install\Module
+  displayName: Add Dnn Key Master to Dnn Installer
 
 - task: sergeyzwezdin.magic-chunks.magic.chunks.MagicChunks@2
   displayName: 'Config transform - $(Build.ArtifactStagingDirectory)/DNN_Publish/web.config'
