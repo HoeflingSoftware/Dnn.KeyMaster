@@ -68,3 +68,11 @@ steps:
   inputs:
     website: 'https://${{ parameters.name }}.azurewebsites.net'
     hostPassword: '${{ parameters.hostPassword }}'
+
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Azure Deployment:DeleteRG action on $(ResourceGroup)'
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    action: DeleteRG
+    resourceGroupName: '${{ parameters.resourceGroup }}'
+  condition: always()

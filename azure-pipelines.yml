@@ -10,8 +10,6 @@ variables:
   system.debug: "true"
   githubOrganization: 'HoeflingSoftware'
   githubRepo: 'Dnn.KeyMaster'
-  Name: 'KMD-900-$(Build.BuildId)'
-  ResourceGroup: 'KMD-900-$(Build.BuildId)-rg'
   ServiceConnection: 'AzureServiceConnection'
 
 
@@ -51,20 +49,12 @@ jobs:
   steps:
   - template: azure-pipelines-test-dnn.yml
     parameters: 
-      name: '$(Name)'
-      resourceGroup: '$(ResourceGroup)'
+      name: 'KMD-900-$(Build.BuildId)'
+      resourceGroup: 'KMD-990-$(Build.BuildId)-rg'
       serviceConnection: '$(ServiceConnection)'
       hostPassword: '$(HostPassword)'
       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.0/DNN_Platform_9.0.0.1002_Install.zip'
       subscriptionId: '$(SubscriptionId)'
-
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Azure Deployment:DeleteRG action on $(ResourceGroup)'
-    inputs:
-      azureSubscription: '$(ServiceConnection)'
-      action: DeleteRG
-      resourceGroupName: '$(ResourceGroup)'
-     
 
 - job: Release
   dependsOn: Build
