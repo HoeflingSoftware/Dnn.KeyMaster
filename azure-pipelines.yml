@@ -44,6 +44,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     demands: DotNetFramework
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   steps:
   - template: azure-pipelines-test-dnn.yml
@@ -61,6 +62,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     demands: DotNetFramework
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   steps:
   - template: azure-pipelines-test-dnn.yml
@@ -78,6 +80,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     demands: DotNetFramework
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   steps:
   - template: azure-pipelines-test-dnn.yml
@@ -95,6 +98,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     demands: DotNetFramework
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   steps:
   - template: azure-pipelines-test-dnn.yml
@@ -112,6 +116,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     demands: DotNetFramework
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   steps:
   - template: azure-pipelines-test-dnn.yml
@@ -129,6 +134,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     demands: DotNetFramework
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   steps:
   - template: azure-pipelines-test-dnn.yml
@@ -146,6 +152,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     demands: DotNetFramework
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   steps:
   - template: azure-pipelines-test-dnn.yml
@@ -163,6 +170,7 @@ jobs:
   pool:
     name: "Hosted VS2017"
     demands: DotNetFramework
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   steps:
   - template: azure-pipelines-test-dnn.yml
