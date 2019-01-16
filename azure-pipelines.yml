@@ -39,7 +39,7 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
-- job: AutomationTest9
+- job: AutomationTest900
   dependsOn: Build
   displayName: Test DNN 9.0.0
   pool:
