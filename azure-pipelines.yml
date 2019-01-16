@@ -53,6 +53,7 @@ jobs:
     parameters: 
       name: '$(Name)'
       resourceGroup: '$(ResourceGroup)'
+      serviceConnection: '$(ServiceConnection)'
       hostPassword: '$(HostPassword)'
       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.0/DNN_Platform_9.0.0.1002_Install.zip'
   
@@ -69,6 +70,7 @@ jobs:
   displayName: Release
   pool:
     name: "Hosted VS2017"
+    demands: DotNetFramework
   condition: and(succeeded(), startswith(variables['Build.SourceBranch'], 'refs/tags'))
 
   steps:

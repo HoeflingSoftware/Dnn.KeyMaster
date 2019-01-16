@@ -3,14 +3,70 @@ parameters:
   resourceGroup: 'dnn-demo-arm-rg'
   hostPassword: ''
   platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.2.2/DNN_Platform_9.2.2.178_Install.zip'
+  serviceConnection: ''
+  subscriptionId: ''
 
 steps:
-- powershell: Write-Host "Hello World"
-  displayName: 'Hello World'
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Azure Deployment:Create Or Update Resource Group action on $(ResourceGroup)'
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    resourceGroupName: '${{ parameters.resourceGroup }}'
+    location: 'East US'
+    csmFile: template.json
+    csmParametersFile: parameters.json
+    overrideParameters: '-subscriptionId ${{ parameters.subscriptionId }} -serverName ${{ parameters.name }} -databaseName ${{ parameters.name }} -webAppName ${{ parameters.name }} -hostingPlanName ${{ parameters.name }} -serverFarmResourceGroup ${{ parameters.resourceGroup }}'
+    deploymentMode: Complete
 
 
+- powershell: '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12'
+  displayName: 'Ensure Invoke-WebRequest Accepts TLS'
+
+- powershell: |
+    Invoke-WebRequest "${{ parameters.platformInstaller }}" -outfile "DNN_Platform_Install.zip"
+    Expand-Archive DNN_Platform_Install.zip DNN_Publish
+  ignoreLASTEXITCODE: true
+  workingDirectory: '$(Build.ArtifactStagingDirectory)'
+  displayName: 'Download and Extract DNN Installer'
+
+- task: sergeyzwezdin.magic-chunks.magic.chunks.MagicChunks@2
+  displayName: 'Config transform - $(Build.ArtifactStagingDirectory)/DNN_Publish/web.config'
+  inputs:
+    sourcePath: '$(Build.ArtifactStagingDirectory)/DNN_Publish/web.config'
+    fileType: Xml
+    transformations: |
+     {
+       "configuration/connectionStrings/add/@connectionString": "Server=tcp:${{ parameters.name }}.database.windows.net,1433;Initial Catalog=${{ parameters.name }};Persist Security Info=False;User ID=app;Password=Password01!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+     }
 
 
+- task: AzureAppServiceManage@0
+  displayName: 'Stop Azure App Service: $(Name)'
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}' 
+    Action: 'Stop Azure App Service'
+    WebAppName: '${{ parameters.name }}'
 
 
+- task: AzureRmWebAppDeployment@3
+  displayName: 'Azure App Service Deploy: $(Name)'
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    WebAppName: '${{ parameters.name }}'
+    Package: '$(Build.ArtifactStagingDirectory)/DNN_Publish'
+    TakeAppOfflineFlag: true
+    UseWebDeploy: true
+    RemoveAdditionalFilesFlag: true
 
+- task: AzureAppServiceManage@0
+  displayName: 'Stop Azure App Service: $(Name) copy'
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    Action: 'Start Azure App Service'
+    WebAppName: '${{ parameters.name }}'
+
+- task: hoefling-software.DnnInstall.DnnInstall.DnnInstall@0
+  displayName: 'Execute DNN Install'
+  inputs:
+    website: 'https://${{ parameters.name }}.azurewebsites.net'
+    hostPassword: '${{ parameters.hostPassword }}'
