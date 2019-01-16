@@ -1,7 +1,7 @@
 #addin "Cake.Powershell&version=0.4.7"
 
 var target = Argument ("target", Argument ("t", "Build"));
-var version = Argument ("package_version", "1.0.6");
+var version = Argument ("package_version", "1.0.0");
 var configuration = "Release"; 
 var buildVerbosity = Verbosity.Minimal;
 var outputDirectory = "bin";
