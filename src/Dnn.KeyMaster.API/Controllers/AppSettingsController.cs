@@ -3,9 +3,7 @@ using Dnn.KeyMaster.API.Utilities;
 using Dnn.PersonaBar.Library;
 using Dnn.PersonaBar.Library.Attributes;
 using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
@@ -15,28 +13,16 @@ namespace Dnn.KeyMaster.API.Controllers
     [MenuPermission(Scope = ServiceScope.Host)]
     public class AppSettingsController : PersonaBarApiController
     {
+        // todo - add exception handling
+
         [HttpGet]
         [ValidateAntiForgeryToken]
         [RequireHost]
         public HttpResponseMessage List()
         {
-            PersonaBarResponse response = null;
-            if (!File.Exists(SecretsProvider.SecretsFile))
-            {
-                response = new PersonaBarResponse
-                {
-                    Success = false
-                };
+            var keys = SecretsProvider.GetAppSettingsKeys();
 
-                return response.ToHttpResponseMessage();
-            }
-
-            var json = File.ReadAllText(SecretsProvider.SecretsFile);
-            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-
-            var keys = SecretsProvider.GetAppSettingsKeys(secrets);
-
-            response = new PersonaBarResponse<IEnumerable<AppSetting>>
+            var response = new PersonaBarResponse<IEnumerable<AppSetting>>
             {
                 Success = true,
                 Result = keys.Select(x => new AppSetting
@@ -53,23 +39,9 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Get(string key)
         {
-            PersonaBarResponse response = null;
-            if (!File.Exists(SecretsProvider.SecretsFile))
-            {
-                response = new PersonaBarResponse
-                {
-                    Success = false
-                };
+            var value = SecretsProvider.GetAppSettingValue(key);
 
-                return response.ToHttpResponseMessage();
-            }
-
-            var json = File.ReadAllText(SecretsProvider.SecretsFile);
-            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-
-            var value = SecretsProvider.GetAppSettingValue(secrets, key);
-
-            response = new PersonaBarResponse<AppSetting>
+            var response = new PersonaBarResponse<AppSetting>
             {
                 Success = true,
                 Result = new AppSetting
@@ -94,20 +66,7 @@ namespace Dnn.KeyMaster.API.Controllers
                 return response.ToHttpResponseMessage();
             }
             
-            if (!File.Exists(SecretsProvider.SecretsFile))
-            {
-                response = new PersonaBarResponse
-                {
-                    Success = false
-                };
-
-                return response.ToHttpResponseMessage();
-            }
-
-            var json = File.ReadAllText(SecretsProvider.SecretsFile);
-            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-
-            response.Success = SecretsProvider.DeleteAppSetting(secrets, appsetting.Key);
+            response.Success = SecretsProvider.DeleteAppSetting(appsetting.Key);
             return response.ToHttpResponseMessage();
         }
 
@@ -122,21 +81,8 @@ namespace Dnn.KeyMaster.API.Controllers
                 response.Success = false;
                 return response.ToHttpResponseMessage();
             };
-
-            if (!File.Exists(SecretsProvider.SecretsFile))
-            {
-                response = new PersonaBarResponse
-                {
-                    Success = false
-                };
-
-                return response.ToHttpResponseMessage();
-            }
-
-            var json = File.ReadAllText(SecretsProvider.SecretsFile);
-            var secrets = JsonConvert.DeserializeObject<Secrets>(json);
-
-            response.Success = SecretsProvider.CreateOrUpdateAppSetting(appsetting.Key, appsetting.Value, secrets);
+        
+            response.Success = SecretsProvider.CreateOrUpdateAppSetting(appsetting.Key, appsetting.Value);
             return response.ToHttpResponseMessage();
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dnn.KeyMaster.Exceptions
+namespace Dnn.KeyMaster.Configurations.AzureKeyVault.Exceptions
 {
     public class AzureSecretsKeyMasterException : Exception
     {

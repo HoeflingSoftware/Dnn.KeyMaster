@@ -1,5 +1,5 @@
-﻿using Dnn.KeyMaster.Exceptions;
-using Dnn.KeyMaster.Web.Security.KeyVault.Utilities;
+﻿using Dnn.KeyMaster.Configuration;
+using Dnn.KeyMaster.Exceptions;
 using DotNetNuke.Instrumentation;
 using System.Collections.Specialized;
 using System.Web.Security;
@@ -17,7 +17,7 @@ namespace Dnn.KeyMaster.Providers
                 // this should be moved to another entry point hook, but this is the easiest way for now.
                 AzureKeyVaultConfigurationProvider.Initialize();
 
-                var connectionString = KeyVaultProvider.GetConnectionString();
+                var connectionString = AppSettingsProvider.Instance.KeyMaster.GetConnectionString();
 
                 config.Add(ConnectionStringName, connectionString);
                                 

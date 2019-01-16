@@ -1,19 +1,22 @@
-﻿using Dnn.KeyMaster.Exceptions;
-using Dnn.KeyMaster.Web.Security.KeyVault.Models;
+﻿using Dnn.KeyMaster.Configuration.AzureKeyVault.Exceptions;
+using Dnn.KeyMaster.Configuration.AzureKeyVault.Models;
+using Dnn.KeyMaster.Configurations.AzureKeyVault.Exceptions;
+using Dnn.KeyMaster.Exceptions;
 using DotNetNuke.Instrumentation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
+namespace Dnn.KeyMaster.Configuration.AzureKeyVault
 {
-    public static class KeyVaultProvider
+    public class KeyVaultProvider : IKeyMasterAppSettings
     {
         private class API
         {
@@ -22,25 +25,11 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             public const string GetAllSecrets = "{0}/secrets?" + ApiVersion;
         }
 
-        private static NameValueCollection _appsettings;
-        public static NameValueCollection AppSettings
-        {
-            get
-            {
-                if (_appsettings == null)
-                {
-                    _appsettings = GetAppSettings();
-                }
-
-                return _appsettings;
-            }
-        }
-        
-        private static KeyValuePair<string, string> GetSecret(KeyVaultSecretListItem item, AccessTokenResponse token = null)
+        private KeyValuePair<string,string> GetSecret(KeyVaultSecretListItem item, AccessToken token = null)
         {
             if (token == null)
             {
-                token = AzureAccessTokenProvider.GetToken();
+                token = AccessTokenProvider.GetToken();
             }
 
             try
@@ -56,7 +45,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
 
                         var name = item.Id
                             .Split('/').LastOrDefault()
-                            .Replace($"{SecretsProvider.Instance.Config.SecretName}--AppSettings--", string.Empty)
+                            .Replace($"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--", string.Empty)
                             .Replace("---", ".")
                             .Replace("--", ":");
 
@@ -72,14 +61,101 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             throw new AzureSecretsKeyMasterException(item.Id.Split('/').LastOrDefault());
         }
 
-        private static NameValueCollection GetAppSettings()
+        public bool CreateOrUpdate(string key, string value)
         {
             try
             {
-                var token = AzureAccessTokenProvider.GetToken();
+                var token = AccessTokenProvider.GetToken();
                 using (var client = new HttpClient())
                 {
-                    var secrets = string.Format(API.GetAllSecrets, SecretsProvider.Instance.Config.KeyVaultUrl);
+                    var name = key
+                        .Replace(":", "--")
+                        .Replace(".", "---");
+
+                    name = $"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--{name}";
+
+                    var secret = string.Format(API.Secret, SecretsConfiguration._secrets["KeyVaultUrl"], name);
+                    client.DefaultRequestHeaders.Add("Authorization", token.ToString());
+
+                    var keyVaultSecret = new KeyVaultSecret
+                    {
+                        Id = secret,
+                        Value = value
+                    };
+                    var json = JsonConvert.SerializeObject(keyVaultSecret);
+
+                    var response = client.PutAsync(secret, new StringContent(json, Encoding.UTF8, "application/json")).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        ConfigurationManager.AppSettings[key] = value;
+                        return true;
+                    }
+                    else if (response.ReasonPhrase == "FORBIDDEN")
+                    {
+                        throw new ForbiddenKeyMasterException();
+                    }
+
+                    var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                    logger.Error("unable to Create or Update Secret, see response for details");
+                    logger.Error(JsonConvert.SerializeObject(response));
+                }
+            }
+            catch (Exception ex)
+            {
+                var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                logger.Error(ex.Message, ex);
+                throw new KeyMasterException("Unable to Create or Update secret", ex);
+            }
+
+            return false;
+        }
+
+        public bool DeleteSecret(string key)
+        {
+            try
+            {
+                var token = AccessTokenProvider.GetToken();
+                using (var client = new HttpClient())
+                {
+                    var name = key
+                        .Replace(":", "--")
+                        .Replace(".", "---");
+
+                    name = $"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--{name}";
+
+                    var secret = string.Format(API.Secret, SecretsConfiguration._secrets["KeyVaultUrl"], name);
+                    client.DefaultRequestHeaders.Add("Authorization", token.ToString());
+
+                    var response = client.DeleteAsync(secret).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        ConfigurationManager.AppSettings.Remove(key);
+                        return true;
+                    }
+                    else if (response.ReasonPhrase == "FORBIDDEN")
+                    {
+                        throw new ForbiddenKeyMasterException();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                logger.Error(ex.Message, ex);
+                throw new KeyMasterException("Unable to delete secret", ex);
+            }
+
+            return false;
+        }
+
+        public NameValueCollection GetAppSettings()
+        {
+            try
+            {
+                var token = AccessTokenProvider.GetToken();
+                using (var client = new HttpClient())
+                {
+                    var secrets = string.Format(API.GetAllSecrets, SecretsConfiguration._secrets["KeyVaultUrl"]);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
 
                     var response = client.GetAsync(secrets).Result;
@@ -93,7 +169,7 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
                             var appsettings = new NameValueCollection();
 
                             foreach (var secretListItem in items.Secrets
-                                .Where(x => x.Id.Split('/').LastOrDefault().StartsWith($"{SecretsProvider.Instance.Config.SecretName}--AppSettings--")))
+                                .Where(x => x.Id.Split('/').LastOrDefault().StartsWith($"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--")))
                             {
 
                                 var current = GetSecret(secretListItem, token);
@@ -107,103 +183,23 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             }
             catch (Exception ex)
             {
-                throw new KeyMasterException("Unable to retrieve App Settings", ex);
+                var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                logger.Error("Unable to retrieve App Settings", ex);
+                return ConfigurationManager.AppSettings;
             }
 
             throw new KeyMasterException("Azure Key Vault App Settings are empty");
         }
 
-        public static async Task<bool> DeleteSecretAsync(string key)
+        public string GetConnectionString(NameValueCollection secrets = null)
         {
             try
             {
-                var token = AzureAccessTokenProvider.GetToken();
+                secrets = secrets ?? ConfigurationProvider.Instance.Configuration.Secrets;
+                var token = AccessTokenProvider.GetToken(secrets);
                 using (var client = new HttpClient())
                 {
-                    var name = key
-                        .Replace(":", "--")
-                        .Replace(".", "---");
-
-                    name = $"{SecretsProvider.Instance.Config.SecretName}--AppSettings--{name}";
-
-                    var secret = string.Format(API.Secret, SecretsProvider.Instance.Config.KeyVaultUrl, name);
-                    client.DefaultRequestHeaders.Add("Authorization", token.ToString());
-
-                    var response = await client.DeleteAsync(secret);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        AppSettings.Remove(key);
-                        return true;
-                    }
-                    else if (response.ReasonPhrase == "FORBIDDEN")
-                    {
-                        throw new ForbiddenKeyMasterException();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                var logger = LoggerSource.Instance.GetLogger("KeyMaster");
-                logger.Error(ex.Message, ex);
-                throw new KeyMasterException("Unable to delete secret", ex);
-            }
-
-            return false;
-        }
-
-        public static async Task<bool> CreateOrUpdateAppSettingAsync(string key, string value)
-        {
-            try
-            {
-                var token = AzureAccessTokenProvider.GetToken();
-                using (var client = new HttpClient())
-                {
-                    var name = key
-                        .Replace(":", "--")
-                        .Replace(".", "---");
-
-                    name = $"{SecretsProvider.Instance.Config.SecretName}--AppSettings--{name}";
-
-                    var secret = string.Format(API.Secret, SecretsProvider.Instance.Config.KeyVaultUrl, name);
-                    client.DefaultRequestHeaders.Add("Authorization", token.ToString());
-
-                    var keyVaultSecret = new KeyVaultSecret
-                    {
-                        Id = secret,
-                        Value = value
-                    };
-                    var json = JsonConvert.SerializeObject(keyVaultSecret);
-
-                    var response = await client.PutAsync(secret, new StringContent(json, Encoding.UTF8, "application/json"));
-                    if (response.IsSuccessStatusCode)
-                    {
-                        AppSettings[key] = value;
-                        return true;
-                    }
-                    else if (response.ReasonPhrase == "FORBIDDEN")
-                    {
-                        throw new ForbiddenKeyMasterException();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                var logger = LoggerSource.Instance.GetLogger("KeyMaster");
-                logger.Error(ex.Message, ex);
-                throw new KeyMasterException("Unable to delete secret", ex);
-            }
-
-            return false;
-        }
-
-        public static string GetConnectionString()
-        {
-            try
-            {
-                var token = AzureAccessTokenProvider.GetToken();
-                using (var client = new HttpClient())
-                {
-                    var secretVersions = string.Format(API.Secret, SecretsProvider.Instance.Config.KeyVaultUrl, SecretsProvider.Instance.Config.SecretName);
+                    var secretVersions = string.Format(API.Secret, secrets[Keys.KeyVaultUrl], secrets[Keys.SecretName]);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
                     var response = client.GetAsync(secretVersions).Result;
                     if (response.IsSuccessStatusCode)
@@ -238,6 +234,11 @@ namespace Dnn.KeyMaster.Web.Security.KeyVault.Utilities
             {
                 throw new KeyMasterException("Internal Key Master Error Occurred. Check the logs for more details", ex);
             }
+        }
+
+        public string GetSecret(string key)
+        {
+            throw new NotImplementedException();
         }
     }
 }

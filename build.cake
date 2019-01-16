@@ -9,11 +9,12 @@ var solution = "Dnn.KeyMaster.sln";
 var projectDirectory = MakeAbsolute(Directory("./"));
 var assemblies = new []
 {
-	"Dnn.KeyMaster.Providers",
 	"Dnn.KeyMaster.API",
-	"Dnn.KeyMaster.Web.Security.KeyVault",
+	"Dnn.KeyMaster.Configuration",
+	"Dnn.KeyMaster.Configuration.AzureKeyVault",
+	"Dnn.KeyMaster.Exceptions",
 	"Dnn.KeyMaster.PersonaBar",
-	"Dnn.KeyMaster.Exceptions"
+	"Dnn.KeyMaster.Providers"
 };
 
 // Assumes you have a DNN website installed at the following location
