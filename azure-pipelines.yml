@@ -10,6 +10,9 @@ variables:
   system.debug: "true"
   githubOrganization: 'HoeflingSoftware'
   githubRepo: 'Dnn.KeyMaster'
+  Name: 'KMD-900-$(Build.BuildId)'
+  ResourceGroup: 'KMD-900-$(Build.BuildId)-rg'
+
 
 jobs:    
 - job: Build
@@ -44,15 +47,11 @@ jobs:
   pool:
     name: "Hosted VS2017"
 
-  parameters:
-    name: 'KMD-900-$(Build.BuildId)'
-    resourceGroup: 'KMD-900-$(Build.BuildId)-rg'
-
   steps:
   - template: azure-pipelines-test-dnn.yml
     parameters: 
-      name: '{{ parameters.name }}'
-      resourceGroup: '{{ parameters.resourceGroup }}'
+      name: '$(Name)'
+      resourceGroup: '$(ResourceGroup)'
       hostPassword: '$(HostPassword)'
       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.0/DNN_Platform_9.0.0.1002_Install.zip'
   
@@ -61,7 +60,7 @@ jobs:
     inputs:
       azureSubscription: '$(SubscriptionId)'
       action: DeleteRG
-      resourceGroupName: '${{ parameters.resourceGroup }}'
+      resourceGroupName: '$(ResourceGroup)'
      
 
 - job: Release
