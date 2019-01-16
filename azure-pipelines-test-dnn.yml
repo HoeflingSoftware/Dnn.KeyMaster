@@ -14,7 +14,7 @@ steps:
     resourceGroupName: '${{ parameters.resourceGroup }}'
     location: 'East US'
     csmFile: template.json
-    csmParametersFile: parameters.json
+    #csmParametersFile: parameters.json
     overrideParameters: '-subscriptionId ${{ parameters.subscriptionId }} -serverName ${{ parameters.name }} -databaseName ${{ parameters.name }} -webAppName ${{ parameters.name }} -hostingPlanName ${{ parameters.name }} -serverFarmResourceGroup ${{ parameters.resourceGroup }}'
     deploymentMode: Complete
 
@@ -39,14 +39,12 @@ steps:
        "configuration/connectionStrings/add/@connectionString": "Server=tcp:${{ parameters.name }}.database.windows.net,1433;Initial Catalog=${{ parameters.name }};Persist Security Info=False;User ID=app;Password=Password01!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
      }
 
-
 - task: AzureAppServiceManage@0
   displayName: 'Stop Azure App Service: $(Name)'
   inputs:
     azureSubscription: '${{ parameters.serviceConnection }}' 
     Action: 'Stop Azure App Service'
     WebAppName: '${{ parameters.name }}'
-
 
 - task: AzureRmWebAppDeployment@3
   displayName: 'Azure App Service Deploy: $(Name)'
