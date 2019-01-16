@@ -38,6 +38,32 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
+- job: AutomationTest9
+  dependsOn: Build
+  displayName: Automation Test DNN 9.0.0
+  pool:
+    name: "Hosted VS2017"
+
+  parameters:
+    name: 'KMD-900-$(Build.BuildId)'
+    resourceGroup: 'KMD-900-$(Build.BuildId)-rg'
+
+  steps:
+  - template: azure-pipelines-test-dnn.yml
+    parameters: 
+      name: '{{ parameters.name }}'
+      resourceGroup: '{{ parameters.resourceGroup }}'
+      hostPassword: '$(HostPassword)'
+      platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.0/DNN_Platform_9.0.0.1002_Install.zip'
+  
+  - task: AzureResourceGroupDeployment@2
+    displayName: 'Azure Deployment:DeleteRG action on $(ResourceGroup)'
+    inputs:
+      azureSubscription: '$(SubscriptionId)'
+      action: DeleteRG
+      resourceGroupName: '${{ parameters.resourceGroup }}'
+     
+
 - job: Release
   dependsOn: Build
   displayName: Release

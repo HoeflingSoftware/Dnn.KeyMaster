@@ -1,0 +1,16 @@
+parameters:
+  name: 'dnn-demo-arm'
+  resourceGroup: 'dnn-demo-arm-rg'
+  hostPassword: ''
+  platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.2.2/DNN_Platform_9.2.2.178_Install.zip'
+
+steps:
+- powershell: Write-Host "Hello World"
+  displayName: 'Hello World'
+
+
+
+
+
+
+
