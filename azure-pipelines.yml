@@ -56,7 +56,8 @@ jobs:
       serviceConnection: '$(ServiceConnection)'
       hostPassword: '$(HostPassword)'
       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.0/DNN_Platform_9.0.0.1002_Install.zip'
-  
+      subscriptionId: '$(SubscriptionId)'
+
   - task: AzureResourceGroupDeployment@2
     displayName: 'Azure Deployment:DeleteRG action on $(ResourceGroup)'
     inputs:

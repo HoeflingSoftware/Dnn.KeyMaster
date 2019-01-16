@@ -10,12 +10,12 @@ steps:
 - task: AzureResourceGroupDeployment@2
   displayName: 'Azure Deployment:Create Or Update Resource Group action on $(ResourceGroup)'
   inputs:
-    azureSubscription: '${{ parameters.serviceConnection }}'
+    azureSubscription: '${{ parameters.serviceConnection }}'databasePassword
     resourceGroupName: '${{ parameters.resourceGroup }}'
     location: 'East US'
     csmFile: template.json
     #csmParametersFile: parameters.json
-    overrideParameters: '-subscriptionId ${{ parameters.subscriptionId }} -serverName ${{ parameters.name }} -databaseName ${{ parameters.name }} -webAppName ${{ parameters.name }} -hostingPlanName ${{ parameters.name }} -serverFarmResourceGroup ${{ parameters.resourceGroup }}'
+    overrideParameters: '-subscriptionId ${{ parameters.subscriptionId }} -serverName ${{ parameters.name }} -databaseName ${{ parameters.name }} -databasePassword ${{ parameters.hostPassword }} -databaseUsername app -administratorLoginPassword ${{ parameters.hostPassword }} -administratorLogin app -webAppName ${{ parameters.name }} -hostingPlanName ${{ parameters.name }} -serverFarmResourceGroup ${{ parameters.resourceGroup }}'
     deploymentMode: Complete
 
 
