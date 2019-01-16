@@ -12,7 +12,6 @@ variables:
   githubRepo: 'Dnn.KeyMaster'
   ServiceConnection: 'AzureServiceConnection'
 
-
 jobs:    
 - job: Build
   displayName: Build and Create Installer
