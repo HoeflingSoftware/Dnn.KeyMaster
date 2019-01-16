@@ -10,7 +10,7 @@ steps:
 - task: AzureResourceGroupDeployment@2
   displayName: 'Azure Deployment:Create Or Update Resource Group action on $(ResourceGroup)'
   inputs:
-    azureSubscription: '${{ parameters.serviceConnection }}'databasePassword
+    azureSubscription: '${{ parameters.serviceConnection }}'
     resourceGroupName: '${{ parameters.resourceGroup }}'
     location: 'East US'
     csmFile: template.json
