@@ -12,6 +12,7 @@ variables:
   githubRepo: 'Dnn.KeyMaster'
   Name: 'KMD-900-$(Build.BuildId)'
   ResourceGroup: 'KMD-900-$(Build.BuildId)-rg'
+  ServiceConnection: 'AzureServiceConnection'
 
 
 jobs:    
@@ -58,7 +59,7 @@ jobs:
   - task: AzureResourceGroupDeployment@2
     displayName: 'Azure Deployment:DeleteRG action on $(ResourceGroup)'
     inputs:
-      azureSubscription: '$(SubscriptionId)'
+      azureSubscription: '$(ServiceConnection)'
       action: DeleteRG
       resourceGroupName: '$(ResourceGroup)'
      
