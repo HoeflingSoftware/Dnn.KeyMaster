@@ -12,11 +12,16 @@ namespace Dnn.KeyMaster.API.Utilities
     {
         internal readonly static string WebconfigFile = $"{HostingEnvironment.MapPath("~/")}web.config";
 
-        internal static bool ValidateSecrets()
+        internal static bool IsEnvVars()
+        {
+            return ConfigurationProvider.Instance.Configuration.Secrets["IsEnvVars"] == "true";
+        }
+
+        internal static bool ValidateSecrets(Secrets secrets = null)
         {
             try
             {
-                var connectionString = GetConnectionString();
+                var connectionString = GetConnectionString(secrets);
 
                 return !string.IsNullOrWhiteSpace(connectionString);
             }
@@ -27,9 +32,9 @@ namespace Dnn.KeyMaster.API.Utilities
             }
         }
 
-        internal static string GetConnectionString()
+        internal static string GetConnectionString(Secrets secrets = null)
         {
-            return Configuration.AppSettingsProvider.Instance.KeyMaster.GetConnectionString();
+            return Configuration.AppSettingsProvider.Instance.KeyMaster.GetConnectionString(secrets?.ToNameValueCollection());
         }
 
         internal static IEnumerable<string> GetAppSettingsKeys()
@@ -52,28 +57,25 @@ namespace Dnn.KeyMaster.API.Utilities
             return Configuration.AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, value);
         }
 
-
-        // TODO - Figure out a way to dynamically load the configuration object
-        //        Maybe we add some javascript to help with this
         internal static Secrets GetConfiguration()
         {
             return new Secrets
             {
-                ClientId = ConfigurationProvider.Instance.Configuration.Secrets["ClientId"],
-                ClientSecret = ConfigurationProvider.Instance.Configuration.Secrets["ClientSecret"],
-                DirectoryId = ConfigurationProvider.Instance.Configuration.Secrets["DirectoryId"],
-                KeyVaultUrl = ConfigurationProvider.Instance.Configuration.Secrets["KeyVaultUrl"],
-                SecretName = ConfigurationProvider.Instance.Configuration.Secrets["SecretName"]
+                ClientId = ConfigurationProvider.Instance["ClientId"],
+                ClientSecret = ConfigurationProvider.Instance["ClientSecret"],
+                DirectoryId = ConfigurationProvider.Instance["DirectoryId"],
+                KeyVaultUrl = ConfigurationProvider.Instance["KeyVaultUrl"],
+                SecretName = ConfigurationProvider.Instance["SecretName"]
             };
         }
 
         internal static void SaveOrUpdateConfiguration(Secrets secrets)
         {
-            ConfigurationProvider.Instance.Configuration.Secrets["ClientId"] = secrets.ClientId;
-            ConfigurationProvider.Instance.Configuration.Secrets["ClientSecret"] = secrets.ClientSecret;
-            ConfigurationProvider.Instance.Configuration.Secrets["DirectoryId"] = secrets.DirectoryId;
-            ConfigurationProvider.Instance.Configuration.Secrets["KeyVaultUrl"] = secrets.KeyVaultUrl;
-            ConfigurationProvider.Instance.Configuration.Secrets["SecretName"] = secrets.SecretName;
+            ConfigurationProvider.Instance["ClientId"] = secrets.ClientId;
+            ConfigurationProvider.Instance["ClientSecret"] = secrets.ClientSecret;
+            ConfigurationProvider.Instance["DirectoryId"] = secrets.DirectoryId;
+            ConfigurationProvider.Instance["KeyVaultUrl"] = secrets.KeyVaultUrl;
+            ConfigurationProvider.Instance["SecretName"] = secrets.SecretName;
         }
     }
 }

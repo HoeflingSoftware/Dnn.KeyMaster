@@ -94,13 +94,17 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
                     {
                         throw new ForbiddenKeyMasterException();
                     }
+
+                    var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                    logger.Error("unable to Create or Update Secret, see response for details");
+                    logger.Error(JsonConvert.SerializeObject(response));
                 }
             }
             catch (Exception ex)
             {
                 var logger = LoggerSource.Instance.GetLogger("KeyMaster");
                 logger.Error(ex.Message, ex);
-                throw new KeyMasterException("Unable to delete secret", ex);
+                throw new KeyMasterException("Unable to Create or Update secret", ex);
             }
 
             return false;
@@ -179,20 +183,23 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
             }
             catch (Exception ex)
             {
-                throw new KeyMasterException("Unable to retrieve App Settings", ex);
+                var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                logger.Error("Unable to retrieve App Settings", ex);
+                return ConfigurationManager.AppSettings;
             }
 
             throw new KeyMasterException("Azure Key Vault App Settings are empty");
         }
 
-        public string GetConnectionString()
+        public string GetConnectionString(NameValueCollection secrets = null)
         {
             try
             {
-                var token = AccessTokenProvider.GetToken();
+                secrets = secrets ?? ConfigurationProvider.Instance.Configuration.Secrets;
+                var token = AccessTokenProvider.GetToken(secrets);
                 using (var client = new HttpClient())
                 {
-                    var secretVersions = string.Format(API.Secret, SecretsConfiguration._secrets["KeyVaultUrl"], SecretsConfiguration._secrets["SecretName"]);
+                    var secretVersions = string.Format(API.Secret, secrets[Keys.KeyVaultUrl], secrets[Keys.SecretName]);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
                     var response = client.GetAsync(secretVersions).Result;
                     if (response.IsSuccessStatusCode)

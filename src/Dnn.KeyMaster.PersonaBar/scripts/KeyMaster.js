@@ -202,6 +202,20 @@ define(
                         });
                     };
 
+                    var isEnvVars = {
+                        route: baseRoute + '/Home/IsEnvVars',
+                        success: function (response) {
+                            if (response.Success) {
+                                $('#keymaster-env-vars').show();
+                                $('#keymaster-save-config').hide();
+                            } else {
+                                $('#keymaster-env-vars').hide();
+                                $('#keymaster-save-config').show();
+                            }
+                        }
+                    };
+
+                    sf.get(isEnvVars.route, {}, isEnvVars.success);
 
                     var status = {
                         route: baseRoute + '/Home/Status',
@@ -239,6 +253,7 @@ define(
                                 
                             } else {
                                 $('#keymaster-appsettings-add').hide();
+
                                 $('#keymaster-live').hide();
                                 $('#keymaster-start').show();
                                 $('#keymaster-stop').hide();

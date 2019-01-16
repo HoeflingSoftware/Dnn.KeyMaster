@@ -31,7 +31,7 @@ namespace Dnn.KeyMaster.Configuration
             Configuration.Initialize();
         }
 
-        string this[string key]
+        public string this[string key]
         {
             get
             {

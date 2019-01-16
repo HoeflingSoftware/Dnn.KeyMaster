@@ -9,6 +9,6 @@ namespace Dnn.KeyMaster.Configuration
         string GetSecret(string key);
         bool DeleteSecret(string key);
         bool CreateOrUpdate(string key, string value);
-        string GetConnectionString();
+        string GetConnectionString(NameValueCollection secrets = null);
     }
 }

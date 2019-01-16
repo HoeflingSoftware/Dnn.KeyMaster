@@ -1,5 +1,6 @@
 ﻿using Dnn.KeyMaster.Configuration;
 using Dnn.KeyMaster.Exceptions;
+using DotNetNuke.Instrumentation;
 using System.Configuration;
 using System.Linq;
 using System.Xml.Linq;
@@ -57,7 +58,8 @@ namespace Dnn.KeyMaster.API.Utilities
                 var isSuccessful = AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, ConfigurationManager.AppSettings[key]);
                 if (!isSuccessful)
                 {
-                    throw new KeyMasterException("Key master couldn't send app secrets to azure");
+                    var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                    logger.Error($"Key master couldn't send app secrets to azure: {key}. ** This app secret may be added by your hosting environment and not required **");
                 }
             }
 
@@ -88,15 +90,16 @@ namespace Dnn.KeyMaster.API.Utilities
 
             appSettings.Elements().Remove();
 
-            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            foreach (var key in AppSettingsProvider.Instance.AllKeys)
             {
+                var secret = AppSettingsProvider.Instance[key];
                 var isSuccessful = AppSettingsProvider.Instance.KeyMaster.DeleteSecret(key);
                 if (!isSuccessful)
                 {
-                    throw new KeyMasterException("Key Master couldn't delete all secrets from azure");
+                    var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                    logger.Error($"Key Master couldn't delete app secrets from azure: {key}. ** This app secret may be added by your hosting environment and not required **");
                 }
 
-                var secret = ConfigurationManager.AppSettings[key];
                 appSettings.Add(XElement.Parse($"<add key=\"{key}\" value=\"{secret}\" />"));
             }
 

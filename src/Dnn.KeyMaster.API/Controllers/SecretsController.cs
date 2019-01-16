@@ -19,11 +19,12 @@ namespace Dnn.KeyMaster.API.Controllers
         [RequireHost]
         public HttpResponseMessage Get()
         {
+            var response = new PersonaBarResponse();
             try
             {
                 var secrets = SecretsProvider.GetConfiguration();
 
-                var response = new PersonaBarResponse<Secrets>
+                response = new PersonaBarResponse<Secrets>
                 {
                     Success = true,
                     Result = secrets
@@ -34,8 +35,10 @@ namespace Dnn.KeyMaster.API.Controllers
             catch (Exception ex)
             {
                 ex.Handle();
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                response.Success = false;
             }
+
+            return response.ToHttpResponseMessage();
         }
 
         [HttpPost]
@@ -53,7 +56,7 @@ namespace Dnn.KeyMaster.API.Controllers
 
             try
             {
-                response.Success = SecretsProvider.ValidateSecrets();
+                response.Success = SecretsProvider.ValidateSecrets(secrets);
                 return response.ToHttpResponseMessage();
             }
             catch (Exception ex)
@@ -78,7 +81,7 @@ namespace Dnn.KeyMaster.API.Controllers
 
             try
             {
-                var isValid = SecretsProvider.ValidateSecrets();
+                var isValid = SecretsProvider.ValidateSecrets(secrets);
                 if (!isValid)
                 {
                     response.Success = false;

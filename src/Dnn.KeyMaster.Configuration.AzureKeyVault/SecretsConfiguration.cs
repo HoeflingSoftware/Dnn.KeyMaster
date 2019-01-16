@@ -1,4 +1,5 @@
 ﻿using Dnn.KeyMaster.Configuration.AzureKeyVault.Models;
+using DotNetNuke.Instrumentation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -30,18 +31,26 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
         {
             _secrets = new NameValueCollection
             {
-                [Keys.KeyVaultUrl] = Environment.GetEnvironmentVariable(Keys.KeyVaultUrl),
-                [Keys.ClientId] = Environment.GetEnvironmentVariable(Keys.ClientId),
-                [Keys.ClientSecret] = Environment.GetEnvironmentVariable(Keys.ClientSecret),
-                [Keys.DirectoryId] = Environment.GetEnvironmentVariable(Keys.DirectoryId),
-                [Keys.SecretName] = Environment.GetEnvironmentVariable(Keys.SecretName)
+                [Keys.KeyVaultUrl] = /*"https://hoeflingsoftware.vault.azure.net/",*/Environment.GetEnvironmentVariable(Keys.KeyVaultUrl),
+                [Keys.ClientId] = /*"7b3a0461-d5dd-48db-9d58-7ee931b335de",*/Environment.GetEnvironmentVariable(Keys.ClientId),
+                [Keys.ClientSecret] = /*"=@*6#9)$/!.[?=M(p;[$!%;C#?+y&", */Environment.GetEnvironmentVariable(Keys.ClientSecret),
+                [Keys.DirectoryId] = /*"dc431e77-b6a6-4540-a71c-ed34e769d5be",*/Environment.GetEnvironmentVariable(Keys.DirectoryId),
+                [Keys.SecretName] = /*"DNN--SQL--RX--LOCALHOST"*/Environment.GetEnvironmentVariable(Keys.SecretName)
             };
-            
-            if (!IsValid())
+
+            if (IsValid())
             {
+                _secrets.Add("IsEnvVars", "true");
+            }
+            else
+            {
+                _secrets.Add("IsEnvVars", "false");
+
                 if (!File.Exists(_secretsFile))
                 {
-                    throw new FileNotFoundException($"Unable to find secrets file: {_secretsFile}");
+                    var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                    logger.Error($"Unable to find secrets file: {_secretsFile}");
+                    return;
                 }
 
                 using (var reader = File.OpenText(_secretsFile))
@@ -70,7 +79,10 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
 
         public void SaveOrUpdate()
         {
-            var dictionary = Secrets.AllKeys.ToDictionary(k => Secrets[k]);
+            var dictionary = Secrets.AllKeys
+                .Where(k => k != "IsEnvVars")
+                .ToDictionary(k => k, k => Secrets[k]);
+
             var json = JsonConvert.SerializeObject(dictionary);
             File.WriteAllText(_secretsFile, json);
         }
