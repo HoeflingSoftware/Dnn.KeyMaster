@@ -48,8 +48,8 @@ jobs:
   steps:
   - template: azure-pipelines-test-dnn.yml
     parameters: 
-      name: 'KMD-900-$(Build.BuildId)'
-      resourceGroup: 'KMD-990-$(Build.BuildId)-rg'
+      name: 'kmd-900-$(Build.BuildId)'
+      resourceGroup: 'kmd-990-$(Build.BuildId)-rg'
       serviceConnection: '$(ServiceConnection)'
       hostPassword: '$(HostPassword)'
       platformInstaller: 'https://github.com/dnnsoftware/Dnn.Platform/releases/download/v9.0.0/DNN_Platform_9.0.0.1002_Install.zip'
