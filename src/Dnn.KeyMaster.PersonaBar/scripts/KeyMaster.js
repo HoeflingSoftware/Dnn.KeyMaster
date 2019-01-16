@@ -201,22 +201,7 @@ define(
                             }
                         });
                     };
-
-                    var isEnvVars = {
-                        route: baseRoute + '/Home/IsEnvVars',
-                        success: function (response) {
-                            if (response.Success) {
-                                $('#keymaster-env-vars').show();
-                                $('#keymaster-save-config').hide();
-                            } else {
-                                $('#keymaster-env-vars').hide();
-                                $('#keymaster-save-config').show();
-                            }
-                        }
-                    };
-
-                    sf.get(isEnvVars.route, {}, isEnvVars.success);
-
+                    
                     var status = {
                         route: baseRoute + '/Home/Status',
                         success: function (response) {
@@ -277,6 +262,31 @@ define(
                     };
 
                     sf.get(getSecrets.route, {}, getSecrets.success);
+
+                    var isEnvVars = {
+                        route: baseRoute + '/Home/IsEnvVars',
+                        success: function (response) {
+                            if (response.Success) {
+                                $('#keymaster-env-vars').show();
+                                $('#keymaster-save-config').hide();
+                                $('#keymaster-client-id').attr('disabled', true);
+                                $('#keymaster-client-secret').attr('disabled', true);
+                                $('#keymaster-secret-name').attr('disabled', true);
+                                $('#keymaster-directory-id').attr('disabled', true);
+                                $('#keymaster-key-vault-url').attr('disabled', true);
+                            } else {
+                                $('#keymaster-env-vars').hide();
+                                $('#keymaster-save-config').show();
+                                $('#keymaster-client-id').removeAttr('disabled', false);
+                                $('#keymaster-client-secret').removeAttr('disabled', false);
+                                $('#keymaster-secret-name').removeAttr('disabled', false);
+                                $('#keymaster-directory-id').removeAttr('disabled', false);
+                                $('#keymaster-key-vault-url').removeAttr('disabled', false);
+                            }
+                        }
+                    };
+
+                    sf.get(isEnvVars.route, {}, isEnvVars.success);
 
                     $('#keymaster-start').click(function () {
                         var toggle = {
