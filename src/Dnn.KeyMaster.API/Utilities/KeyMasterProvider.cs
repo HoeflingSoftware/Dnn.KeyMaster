@@ -53,7 +53,8 @@ namespace Dnn.KeyMaster.API.Utilities
 
         internal static void SendAppSettings()
         {
-            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            var secretKeys = new[] { "ClientId", "ClientSecret", "DirectoryId", "KeyVaultUrl", "SecretName" };
+            foreach (var key in ConfigurationManager.AppSettings.AllKeys.Where(x => !secretKeys.Contains(x)))
             {
                 var isSuccessful = AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, ConfigurationManager.AppSettings[key]);
                 if (!isSuccessful)
