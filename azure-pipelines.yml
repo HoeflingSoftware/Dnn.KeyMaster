@@ -46,18 +46,10 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
-- job: Release
-  dependsOn: Build
-  displayName: Release
-  pool:
-    name: "Hosted VS2017"
-  condition: and(succeeded(), startswith(variables['Build.SourceBranch'], 'refs/tags'))
-
-  steps:
-  - template: GitHub/azure-pipelines.yml@Templates
-    parameters:
-      githubOrganization: '$(githubOrganization)'
-      githubRepo: '$(githubRepo)'
-      githubToken: '$(githubToken)'
-      publishedArtifactPath: '*_install.zip'
-      publishedArtifactDisplayName: '$(githubRepo)_$(majorMinorPatch).$(revision)_install.zip'
+- template: GitHub/azure-pipelines.yml@Templates
+  parameters:
+    githubOrganization: '$(githubOrganization)'
+    githubRepo: '$(githubRepo)'
+    githubToken: '$(githubToken)'
+    publishedArtifactPath: '*_install.zip'
+    publishedArtifactDisplayName: '$(githubRepo)_$(majorMinorPatch).$(revision)_install.zip'
