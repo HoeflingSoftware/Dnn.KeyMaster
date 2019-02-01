@@ -48,6 +48,13 @@ namespace Dnn.KeyMaster.API.Utilities
 
             xml.Save(SecretsProvider.WebconfigFile);
 
+            var isDeleteSuccessful = AppSettingsProvider.Instance.KeyMaster.DeleteSecret("ConnectionString", false);
+            if (!isDeleteSuccessful)
+            {
+                var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                logger.Error($"Key master couldn't delete connection string from Azure");
+            }
+
             return true;
         }
 
@@ -67,6 +74,21 @@ namespace Dnn.KeyMaster.API.Utilities
             var xml = XDocument.Load(SecretsProvider.WebconfigFile);
             var doc = xml.Element("configuration");
 
+            var connectionStrings = doc.Element("connectionStrings");
+            if (connectionStrings != null)
+            {
+                var siteConnection = connectionStrings.Elements().FirstOrDefault();
+                var connectionValue = siteConnection.Attribute("connectionString")?.Value;
+
+                var isSuccessful = AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate("ConnectionString", connectionValue, false);
+                if (!isSuccessful)
+                {
+                    var logger = LoggerSource.Instance.GetLogger("KeyMaster");
+                    logger.Error($"Key master couldn't send connection string to Azure");
+                }
+            }
+
+
             var appSettings = doc.Element("appSettings");
             if (appSettings != null)
             {
@@ -80,7 +102,6 @@ namespace Dnn.KeyMaster.API.Utilities
         {
             var xml = XDocument.Load(SecretsProvider.WebconfigFile);
             var doc = xml.Element("configuration");
-
 
             var appSettings = doc.Element("appSettings");
             if (appSettings == null)
@@ -103,7 +124,7 @@ namespace Dnn.KeyMaster.API.Utilities
 
                 appSettings.Add(XElement.Parse($"<add key=\"{key}\" value=\"{secret}\" />"));
             }
-
+            
             xml.Save(SecretsProvider.WebconfigFile);
         }
 
