@@ -26,11 +26,18 @@ Need more help? Take a look at our detailed [Getting Started Guide](GETTING-STAR
 
 
 ### Platform Support
+Dnn.KeyMaster runs through an extensive verification process to certify it will work on each version of DNN that it supports.
 
-| Supported Platforms | Supported | Version     |
-|---------------------|-----------|-------------|
-| Dnn 9			      | Yes       | 9.2.2 +     |
-| Dnn 8               | No        | No          |
+| Platform Version    | Supported | Automation Status  |
+|---------------------|-----------|--------------------|
+| Dnn 9.0.0		      | Yes       | [![Automation Status](https://vsrm.dev.azure.com/hoeflingsoftware/_apis/public/Release/badge/187fd6ec-a622-423f-a1f8-248c09db82f6/1/1)](https://dev.azure.com/hoeflingsoftware/Dnn%20Key%20Master/_release?view=mine&definitionId=1) |
+| DNN 9.0.1           | Yes       | [![Automation Status](https://vsrm.dev.azure.com/hoeflingsoftware/_apis/public/Release/badge/187fd6ec-a622-423f-a1f8-248c09db82f6/1/2)](https://dev.azure.com/hoeflingsoftware/Dnn%20Key%20Master/_release?view=mine&definitionId=1) |
+| DNN 9.0.2           | Yes       | [![Automation Status](https://vsrm.dev.azure.com/hoeflingsoftware/_apis/public/Release/badge/187fd6ec-a622-423f-a1f8-248c09db82f6/1/3)](https://dev.azure.com/hoeflingsoftware/Dnn%20Key%20Master/_release?view=mine&definitionId=1) |
+| DNN 9.1.0           | Yes       | [![Automation Status](https://vsrm.dev.azure.com/hoeflingsoftware/_apis/public/Release/badge/187fd6ec-a622-423f-a1f8-248c09db82f6/1/4)](https://dev.azure.com/hoeflingsoftware/Dnn%20Key%20Master/_release?view=mine&definitionId=1) |
+| DNN 9.1.1           | Yes       | [![Automation Status](https://vsrm.dev.azure.com/hoeflingsoftware/_apis/public/Release/badge/187fd6ec-a622-423f-a1f8-248c09db82f6/1/5)](https://dev.azure.com/hoeflingsoftware/Dnn%20Key%20Master/_release?view=mine&definitionId=1) |
+| DNN 9.2.0           | Yes       | [![Automation Status](https://vsrm.dev.azure.com/hoeflingsoftware/_apis/public/Release/badge/187fd6ec-a622-423f-a1f8-248c09db82f6/1/6)](https://dev.azure.com/hoeflingsoftware/Dnn%20Key%20Master/_release?view=mine&definitionId=1) |
+| DNN 9.2.1           | Yes       | [![Automation Status](https://vsrm.dev.azure.com/hoeflingsoftware/_apis/public/Release/badge/187fd6ec-a622-423f-a1f8-248c09db82f6/1/7)](https://dev.azure.com/hoeflingsoftware/Dnn%20Key%20Master/_release?view=mine&definitionId=1) |
+| DNN 9.2.2           | Yes       | [![Automation Status](https://vsrm.dev.azure.com/hoeflingsoftware/_apis/public/Release/badge/187fd6ec-a622-423f-a1f8-248c09db82f6/1/8)](https://dev.azure.com/hoeflingsoftware/Dnn%20Key%20Master/_release?view=mine&definitionId=1) |
 
 | Supported Admin Controls | Supported |
 |--------------------------|-----------|
