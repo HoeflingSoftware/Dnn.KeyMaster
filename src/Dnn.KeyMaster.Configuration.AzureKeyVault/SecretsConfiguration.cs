@@ -48,17 +48,17 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
 
                 if (!File.Exists(_secretsFile))
                 {
-                    var logger = LoggerSource.Instance.GetLogger("KeyMaster");
-                    logger.Error($"Unable to find secrets file: {_secretsFile}");
-                    return;
+                    File.Create(_secretsFile);
                 }
 
                 using (var reader = File.OpenText(_secretsFile))
                 {
+                    _secrets = new NameValueCollection();
+
                     var json = reader.ReadToEnd();
                     var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-
-                    _secrets = new NameValueCollection();
+                    if (dictionary == null) return;
+                    
                     foreach (var item in dictionary)
                     {
                         Secrets.Add(item.Key, item.Value);

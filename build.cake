@@ -19,7 +19,7 @@ var assemblies = new []
 
 // Assumes you have a DNN website installed at the following location
 // Update to your path to use the deploy task.
-var websiteLocation = "E:/AzureKeyVault/Website";
+var websiteLocation = "E:/KeyMasterTest/Website";
 
 Task("Package")
 	.IsDependentOn("Build")
