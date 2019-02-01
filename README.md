@@ -17,9 +17,15 @@ A Dnn configuration extension to secure your website with Azure Key Vault by rem
 
 Need more help? Take a look at our detailed [Getting Started Guide](GETTING-STARTED.md)
 
+## What's Protected?
+
+| Feature                    | Protected |
+|----------------------------|-----------|
+| Database Connection String | Yes       |
+| App Settings               | Yes       |
+
 
 ### Platform Support
-Dnn.KeyMaster is in a pre-alpha stage and should not be used in production environments.
 
 | Supported Platforms | Supported | Version     |
 |---------------------|-----------|-------------|
