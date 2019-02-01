@@ -47,6 +47,7 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
 - template: GitHub/azure-pipelines.yml@Templates
+  dependsOn: Build
   parameters:
     githubOrganization: '$(githubOrganization)'
     githubRepo: '$(githubRepo)'
