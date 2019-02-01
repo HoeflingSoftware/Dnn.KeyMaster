@@ -1,1 +1,1 @@
-TODO - fill this out before 1.0.0 release
+Release notes are available on GitHub: https://github.com/HoeflingSoftware/Dnn.KeyMaster/releases
