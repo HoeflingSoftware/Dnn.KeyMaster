@@ -53,4 +53,3 @@ jobs:
     githubToken: '$(githubToken)'
     publishedArtifactPath: '*_install.zip'
     publishedArtifactDisplayName: '$(githubRepo)_$(majorMinorPatch).$(revision)_install.zip'
-  condition: and(succeeded(), startswith(variables['Build.SourceBranch'], 'refs/tags'))
