@@ -12,7 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Dnn.KeyMaster.Configuration.AzureKeyVault
 {
@@ -61,18 +60,26 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
             throw new AzureSecretsKeyMasterException(item.Id.Split('/').LastOrDefault());
         }
 
-        public bool CreateOrUpdate(string key, string value)
+        public bool CreateOrUpdate(string key, string value, bool updateAppsettings = true)
         {
             try
             {
                 var token = AccessTokenProvider.GetToken();
                 using (var client = new HttpClient())
                 {
-                    var name = key
-                        .Replace(":", "--")
-                        .Replace(".", "---");
+                    string name = string.Empty;
+                    if (key == "ConnectionString")
+                    {
+                        name = SecretsConfiguration._secrets["SecretName"];
+                    }
+                    else
+                    {
+                        name = key
+                            .Replace(":", "--")
+                            .Replace(".", "---");
 
-                    name = $"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--{name}";
+                        name = $"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--{name}";
+                    }
 
                     var secret = string.Format(API.Secret, SecretsConfiguration._secrets["KeyVaultUrl"], name);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
@@ -87,7 +94,11 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
                     var response = client.PutAsync(secret, new StringContent(json, Encoding.UTF8, "application/json")).Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        ConfigurationManager.AppSettings[key] = value;
+                        if (updateAppsettings)
+                        {
+                            ConfigurationManager.AppSettings[key] = value;
+                        }
+
                         return true;
                     }
                     else if (response.ReasonPhrase == "FORBIDDEN")
@@ -110,18 +121,26 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
             return false;
         }
 
-        public bool DeleteSecret(string key)
+        public bool DeleteSecret(string key, bool updateAppsettings = true)
         {
             try
             {
                 var token = AccessTokenProvider.GetToken();
                 using (var client = new HttpClient())
                 {
-                    var name = key
-                        .Replace(":", "--")
-                        .Replace(".", "---");
+                    string name = string.Empty;
+                    if (key == "ConnectionString")
+                    {
+                        name = SecretsConfiguration._secrets["SecretName"];
+                    }
+                    else
+                    {
+                        name = key
+                            .Replace(":", "--")
+                            .Replace(".", "---");
 
-                    name = $"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--{name}";
+                        name = $"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--{name}";
+                    }
 
                     var secret = string.Format(API.Secret, SecretsConfiguration._secrets["KeyVaultUrl"], name);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
@@ -129,7 +148,11 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
                     var response = client.DeleteAsync(secret).Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        ConfigurationManager.AppSettings.Remove(key);
+                        if (updateAppsettings)
+                        {
+                            ConfigurationManager.AppSettings.Remove(key);
+                        }
+
                         return true;
                     }
                     else if (response.ReasonPhrase == "FORBIDDEN")

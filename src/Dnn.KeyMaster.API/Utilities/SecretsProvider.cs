@@ -21,9 +21,16 @@ namespace Dnn.KeyMaster.API.Utilities
         {
             try
             {
-                var connectionString = GetConnectionString(secrets);
+                var testSecret = "DNN--KEYMASTER--VALIDATION--TEST";
+                var testSecretValue = testSecret + "VALUE";
+                CreateOrUpdateAppSetting(testSecret, testSecretValue, false);
+                
+                if (!DeleteAppSetting(testSecret, false))
+                {
+                    throw new Exception("Unable to validate secrets");
+                }
 
-                return !string.IsNullOrWhiteSpace(connectionString);
+                return true;
             }
             catch (Exception ex)
             {
@@ -31,7 +38,7 @@ namespace Dnn.KeyMaster.API.Utilities
                 return false;
             }
         }
-
+        
         internal static string GetConnectionString(Secrets secrets = null)
         {
             return Configuration.AppSettingsProvider.Instance.KeyMaster.GetConnectionString(secrets?.ToNameValueCollection());
@@ -47,14 +54,14 @@ namespace Dnn.KeyMaster.API.Utilities
             return Configuration.AppSettingsProvider.Instance[key];
         }
 
-        internal static bool DeleteAppSetting(string key)
+        internal static bool DeleteAppSetting(string key, bool updateAppSettings = true)
         {            
-            return Configuration.AppSettingsProvider.Instance.KeyMaster.DeleteSecret(key);
+            return Configuration.AppSettingsProvider.Instance.KeyMaster.DeleteSecret(key, updateAppSettings);
         }
 
-        internal static bool CreateOrUpdateAppSetting(string key, string value)
+        internal static bool CreateOrUpdateAppSetting(string key, string value, bool updateAppSettings = true)
         {
-            return Configuration.AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, value);
+            return Configuration.AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, value, updateAppSettings);
         }
 
         internal static Secrets GetConfiguration()
