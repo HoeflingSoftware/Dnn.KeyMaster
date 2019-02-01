@@ -60,5 +60,5 @@ jobs:
       githubRepo: '$(githubRepo)'
       githubToken: '$(githubToken)'
       publish: 'true'
-      publishedArtifactPath: 'Dnn.KeyMaster_$(majorMinorPatch).$(revision)_install.zip'
+      publishedArtifactPath: '*_install.zip'
       publishedArtifactDisplayName: '$(githubRepo)_$(majorMinorPatch).$(revision)_install.zip'
