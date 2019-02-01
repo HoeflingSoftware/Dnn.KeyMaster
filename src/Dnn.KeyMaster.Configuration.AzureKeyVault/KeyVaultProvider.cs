@@ -60,17 +60,18 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
             throw new AzureSecretsKeyMasterException(item.Id.Split('/').LastOrDefault());
         }
 
-        public bool CreateOrUpdate(string key, string value, bool updateAppsettings = true)
+        public bool CreateOrUpdate(string key, string value, bool updateAppsettings = true, NameValueCollection secrets = null)
         {
             try
             {
-                var token = AccessTokenProvider.GetToken();
+                secrets = secrets ?? ConfigurationProvider.Instance.Configuration.Secrets;
+                var token = AccessTokenProvider.GetToken(secrets);
                 using (var client = new HttpClient())
                 {
                     string name = string.Empty;
                     if (key == "ConnectionString")
                     {
-                        name = SecretsConfiguration._secrets["SecretName"];
+                        name = secrets["SecretName"];
                     }
                     else
                     {
@@ -78,10 +79,10 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
                             .Replace(":", "--")
                             .Replace(".", "---");
 
-                        name = $"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--{name}";
+                        name = $"{secrets["SecretName"]}--AppSettings--{name}";
                     }
 
-                    var secret = string.Format(API.Secret, SecretsConfiguration._secrets["KeyVaultUrl"], name);
+                    var secret = string.Format(API.Secret, secrets["KeyVaultUrl"], name);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
 
                     var keyVaultSecret = new KeyVaultSecret
@@ -121,17 +122,18 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
             return false;
         }
 
-        public bool DeleteSecret(string key, bool updateAppsettings = true)
+        public bool DeleteSecret(string key, bool updateAppsettings = true, NameValueCollection secrets = null)
         {
             try
             {
-                var token = AccessTokenProvider.GetToken();
+                secrets = secrets ?? ConfigurationProvider.Instance.Configuration.Secrets;
+                var token = AccessTokenProvider.GetToken(secrets);
                 using (var client = new HttpClient())
                 {
                     string name = string.Empty;
                     if (key == "ConnectionString")
                     {
-                        name = SecretsConfiguration._secrets["SecretName"];
+                        name = secrets["SecretName"];
                     }
                     else
                     {
@@ -139,10 +141,10 @@ namespace Dnn.KeyMaster.Configuration.AzureKeyVault
                             .Replace(":", "--")
                             .Replace(".", "---");
 
-                        name = $"{SecretsConfiguration._secrets["SecretName"]}--AppSettings--{name}";
+                        name = $"{secrets["SecretName"]}--AppSettings--{name}";
                     }
 
-                    var secret = string.Format(API.Secret, SecretsConfiguration._secrets["KeyVaultUrl"], name);
+                    var secret = string.Format(API.Secret, secrets["KeyVaultUrl"], name);
                     client.DefaultRequestHeaders.Add("Authorization", token.ToString());
 
                     var response = client.DeleteAsync(secret).Result;

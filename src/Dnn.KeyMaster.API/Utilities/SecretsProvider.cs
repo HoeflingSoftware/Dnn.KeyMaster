@@ -23,9 +23,9 @@ namespace Dnn.KeyMaster.API.Utilities
             {
                 var testSecret = "DNN--KEYMASTER--VALIDATION--TEST";
                 var testSecretValue = testSecret + "VALUE";
-                CreateOrUpdateAppSetting(testSecret, testSecretValue, false);
+                CreateOrUpdateAppSetting(testSecret, testSecretValue, false, secrets);
                 
-                if (!DeleteAppSetting(testSecret, false))
+                if (!DeleteAppSetting(testSecret, false, secrets))
                 {
                     throw new Exception("Unable to validate secrets");
                 }
@@ -54,14 +54,14 @@ namespace Dnn.KeyMaster.API.Utilities
             return Configuration.AppSettingsProvider.Instance[key];
         }
 
-        internal static bool DeleteAppSetting(string key, bool updateAppSettings = true)
+        internal static bool DeleteAppSetting(string key, bool updateAppSettings = true, Secrets secrets = null)
         {            
-            return Configuration.AppSettingsProvider.Instance.KeyMaster.DeleteSecret(key, updateAppSettings);
+            return Configuration.AppSettingsProvider.Instance.KeyMaster.DeleteSecret(key, updateAppSettings, secrets?.ToNameValueCollection());
         }
 
-        internal static bool CreateOrUpdateAppSetting(string key, string value, bool updateAppSettings = true)
+        internal static bool CreateOrUpdateAppSetting(string key, string value, bool updateAppSettings = true, Secrets secrets = null)
         {
-            return Configuration.AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, value, updateAppSettings);
+            return Configuration.AppSettingsProvider.Instance.KeyMaster.CreateOrUpdate(key, value, updateAppSettings, secrets?.ToNameValueCollection());
         }
 
         internal static Secrets GetConfiguration()
