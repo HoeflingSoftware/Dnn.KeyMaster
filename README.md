@@ -15,6 +15,8 @@ A Dnn configuration extension to secure your website with Azure Key Vault by rem
     2. Click Save to create secrets file on your website
     3. Click Start Key Master to update the web.config and start using Key Master
 
+Need more help? Take a look at our detailed [Getting Started Guide](GETTING-STARTED.md)
+
 
 ### Platform Support
 Dnn.KeyMaster is in a pre-alpha stage and should not be used in production environments.
