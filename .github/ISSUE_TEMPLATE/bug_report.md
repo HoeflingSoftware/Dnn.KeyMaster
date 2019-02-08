@@ -17,15 +17,17 @@ Steps to reproduce the behavior:
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+**Expected Behavior**
 A clear and concise description of what you expected to happen.
+
+**Actual Behavior**
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
 **Version:**
  - DNN: [e.g. 9.3.0]
- - Dnn.KeyMaster: [eg. 1.0.0] [e.g. chrome, safari]
+ - Dnn.KeyMaster: [eg. 1.0.0]
 
 **Additional context**
 Add any other context about the problem here.
